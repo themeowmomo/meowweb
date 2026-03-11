@@ -5,6 +5,7 @@ import { UtensilsCrossed, Menu as MenuIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState } from "react";
+import { CartSheet } from "./cart-sheet";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -27,7 +28,7 @@ export function Navbar() {
         </Link>
 
         {/* Desktop Links */}
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden md:flex items-center gap-6">
           {navLinks.map((link) => (
             <Link
               key={link.name}
@@ -37,13 +38,17 @@ export function Navbar() {
               {link.name}
             </Link>
           ))}
-          <Button className="bg-primary hover:bg-primary/90" asChild>
-            <a href="https://wa.me/919867977942" target="_blank" rel="noopener noreferrer">Order Now</a>
-          </Button>
+          <div className="flex items-center gap-3 ml-2 border-l pl-6">
+            <CartSheet />
+            <Button className="bg-primary hover:bg-primary/90" asChild>
+              <a href="https://wa.me/919867977942" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+            </Button>
+          </div>
         </div>
 
         {/* Mobile Menu */}
-        <div className="md:hidden">
+        <div className="md:hidden flex items-center gap-4">
+          <CartSheet />
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon">
