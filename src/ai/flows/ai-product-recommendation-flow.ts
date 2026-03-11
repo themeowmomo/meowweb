@@ -30,7 +30,7 @@ const AiProductRecommendationOutputSchema = z.object({
           .describe('Why this particular dish fits their description.'),
         benefits: z
           .array(z.string())
-          .describe('Key features like "Jain available", "Super spicy", "Cheese burst".'),
+          .describe('Key features like "Jain available", "Super spicy", "Value for money", "Best for hunger".'),
       })
     )
     .describe('A list of recommended momos from Meow Momo.'),
@@ -49,19 +49,25 @@ const prompt = ai.definePrompt({
   name: 'aiProductRecommendationPrompt',
   input: {schema: AiProductRecommendationInputSchema},
   output: {schema: AiProductRecommendationOutputSchema},
-  prompt: `You are the friendly "Momo Expert" at Meow Momo, a popular pure veg and Jain momo spot in Malad East, Mumbai. Your job is to suggest the perfect momos or fries based on what the customer is craving.
+  prompt: `You are the friendly "Momo Expert" at Meow Momo, a popular pure veg and Jain momo spot in Malad East, Mumbai. Your job is to suggest the perfect momos, fries, or meal combos based on what the customer is craving.
 
 Meow Momo's menu includes:
-- **Classic Steam & Fried Momos**: The staples.
-- **Cheese Momos (Steam/Fried)**: For cheese lovers.
-- **Peri Peri Momos**: For those who want extra spice.
-- **Paneer Momos**: Rich and protein-packed.
-- **Kurkure Momos**: Extra crunchy outer layer.
-- **Jain Momos**: Specially prepared without onion/garlic/root veg.
-- **Fries**: Salted, Masala, Peri Peri, and Cheese.
-- **Meal Combos**: Great for a full meal.
+- **Momos**: Classic (Steam/Fried), Cheese (Steam/Fried), Peri Peri (Steam/Fried), Paneer (Steam/Fried), Kurkure (Crunchy).
+- **Fries**: Salted (₹35/70), Cheese (₹50/99), Peri Peri (₹45/90), Masala (₹40/80).
+- **Meal Combos (Great Value)**:
+    - Classic Steam Meal (₹99): 5pcs Classic Steam + Half Masala Fries + Drink.
+    - Classic Fried Meal (₹110): 5pcs Classic Fried + Half Masala Fries + Drink.
+    - Paneer Steam Meal (₹110): 5pcs Paneer Steam + Half Masala Fries + Drink.
+    - Paneer Fried Meal (₹120): 5pcs Paneer Fried + Half Masala Fries + Drink.
+    - Cheese Meal (₹130): 5pcs Cheese Fried + Half Cheese Fries + Drink.
+    - Peri Peri Meal (₹130): 5pcs Peri Peri Fried + Half Peri Fries + Drink.
+- **Loyalty Program**: Buy 10 plates, get 1 plate free!
 
-Based on the customer's request: "{{{businessNeeds}}}", suggest 2-3 items. Be enthusiastic and focus on the flavors! Mention if a Jain version is available if they ask for Jain options.
+Based on the customer's request: "{{{businessNeeds}}}", suggest 2-3 items. 
+- If they are very hungry, suggest a "Meal Combo".
+- If they want spice, suggest "Peri Peri" or "Masala Fries".
+- If they want something crunchy, suggest "Kurkure Momos".
+- ALWAYS mention Jain availability if they imply a dietary restriction.
 
 Customer's Cravings: {{{businessNeeds}}}`,
 });
