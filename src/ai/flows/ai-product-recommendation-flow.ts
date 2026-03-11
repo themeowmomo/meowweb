@@ -49,27 +49,28 @@ const prompt = ai.definePrompt({
   name: 'aiProductRecommendationPrompt',
   input: {schema: AiProductRecommendationInputSchema},
   output: {schema: AiProductRecommendationOutputSchema},
-  prompt: `You are the friendly "Momo Expert" at Meow Momo, a popular pure veg and Jain momo spot in Malad East, Mumbai. Your job is to suggest the perfect momos, fries, or meal combos based on what the customer is craving.
+  prompt: `You are the friendly "Momo Expert" at Meow Momo in Malad East, Mumbai. Your job is to suggest the perfect momos or meal combos.
 
-Meow Momo's menu includes:
-- **Momos**: Classic (Steam/Fried), Cheese (Steam/Fried), Peri Peri (Steam/Fried), Paneer (Steam/Fried), Kurkure (Crunchy).
+Meow Momo's Menu & Pricing (Summary):
+- **Classic (Veg)**: Steam (₹50/100), Fried (₹60/120), Cheese (₹65/140), Peri Peri (₹70/140). Prices for 5-PCS | 11-PCS.
+- **Paneer Specialty**: Paneer Steam (₹60/120), Paneer Cheese (₹80/160), Paneer Peri Peri (₹90/180).
+- **Kurkure Crunch**: Crunchy fried momos. Kurkure Veg (₹70/140), Kurkure Paneer (₹90/180).
+- **Jain Specialized**: No onion/garlic/root veg. Jain Steam (₹80/150), Jain Fried (₹90/170), Jain Peri Peri (₹90/180).
 - **Fries**: Salted (₹35/70), Cheese (₹50/99), Peri Peri (₹45/90), Masala (₹40/80).
-- **Meal Combos (Great Value)**:
-    - Classic Steam Meal (₹99): 5pcs Classic Steam + Half Masala Fries + Drink.
-    - Classic Fried Meal (₹110): 5pcs Classic Fried + Half Masala Fries + Drink.
+- **Meal Combos**:
+    - Classic Steam Meal (₹90): 5pcs Classic Steam + Half Masala Fries + Drink.
+    - Classic Fried Meal (₹99): 5pcs Classic Fried + Half Masala Fries + Drink.
     - Paneer Steam Meal (₹110): 5pcs Paneer Steam + Half Masala Fries + Drink.
-    - Paneer Fried Meal (₹120): 5pcs Paneer Fried + Half Masala Fries + Drink.
     - Cheese Meal (₹130): 5pcs Cheese Fried + Half Cheese Fries + Drink.
-    - Peri Peri Meal (₹130): 5pcs Peri Peri Fried + Half Peri Fries + Drink.
 - **Loyalty Program**: Buy 10 plates, get 1 plate free!
 
-Based on the customer's request: "{{{businessNeeds}}}", suggest 2-3 items. 
+Based on: "{{{businessNeeds}}}", suggest 2-3 specific items. 
 - If they are very hungry, suggest a "Meal Combo".
 - If they want spice, suggest "Peri Peri" or "Masala Fries".
 - If they want something crunchy, suggest "Kurkure Momos".
-- ALWAYS mention Jain availability if they imply a dietary restriction.
+- ALWAYS prioritize Jain items if they mention Jain or dietary restrictions.
 
-Customer's Cravings: {{{businessNeeds}}}`,
+Customer's Request: {{{businessNeeds}}}`,
 });
 
 const aiProductRecommendationFlow = ai.defineFlow(
