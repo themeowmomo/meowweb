@@ -1,8 +1,7 @@
-
 "use client";
 
 import Link from "next/link";
-import { Cloud, Menu } from "lucide-react";
+import { UtensilsCrossed, Menu as MenuIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState } from "react";
@@ -11,10 +10,10 @@ export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   const navLinks = [
-    { name: "Products", href: "#products" },
-    { name: "Pricing", href: "#pricing" },
-    { name: "Testimonials", href: "#testimonials" },
-    { name: "AI Tool", href: "#ai-tool" },
+    { name: "Menu", href: "#menu" },
+    { name: "Reviews", href: "#testimonials" },
+    { name: "Momo Finder", href: "#ai-tool" },
+    { name: "Location", href: "#footer" },
   ];
 
   return (
@@ -22,9 +21,9 @@ export function Navbar() {
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 group">
           <div className="bg-primary p-1.5 rounded-lg group-hover:bg-accent transition-colors">
-            <Cloud className="w-6 h-6 text-white" />
+            <UtensilsCrossed className="w-6 h-6 text-white" />
           </div>
-          <span className="font-headline font-bold text-xl tracking-tight text-primary">Aether Cloud</span>
+          <span className="font-headline font-bold text-xl tracking-tight text-primary">Meow Momo</span>
         </Link>
 
         {/* Desktop Links */}
@@ -38,7 +37,9 @@ export function Navbar() {
               {link.name}
             </Link>
           ))}
-          <Button className="bg-primary hover:bg-primary/90">Request Consultation</Button>
+          <Button className="bg-primary hover:bg-primary/90" asChild>
+            <a href="https://wa.me/919867977942" target="_blank" rel="noopener noreferrer">Order Now</a>
+          </Button>
         </div>
 
         {/* Mobile Menu */}
@@ -46,7 +47,7 @@ export function Navbar() {
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon">
-                <Menu className="w-6 h-6" />
+                <MenuIcon className="w-6 h-6" />
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-[300px] flex flex-col pt-20">
@@ -61,7 +62,9 @@ export function Navbar() {
                 </Link>
               ))}
               <div className="mt-8">
-                <Button className="w-full h-12 bg-primary">Request Consultation</Button>
+                <Button className="w-full h-12 bg-primary" asChild>
+                  <a href="https://wa.me/919867977942" target="_blank" rel="noopener noreferrer">Order Now</a>
+                </Button>
               </div>
             </SheetContent>
           </Sheet>

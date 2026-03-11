@@ -1,37 +1,28 @@
-
 "use client";
 
 import Image from "next/image";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
-import { Quote } from "lucide-react";
+import { Quote, Star } from "lucide-react";
 
 const testimonials = [
   {
-    name: "Sarah Chen",
-    role: "CTO, TechFlow Inc.",
-    quote: "Switching to Aether Cloud was the best infrastructure decision we made this year. Their global edge network cut our latencies by 40% overnight.",
-    avatar: PlaceHolderImages.find(img => img.id === "testimonial-user-1")!
+    name: "Rohan Jadhav",
+    role: "Local Guide",
+    quote: "Good momos, good service 👍. The chutney is just the right level of spicy!",
+    avatar: PlaceHolderImages.find(img => img.id === "user-1")!
   },
   {
-    name: "James Wilson",
-    role: "VP of Engineering, DataScale",
-    quote: "The reliability of Aether Compute is unmatched. We haven't had a single second of unplanned downtime in over 12 months.",
-    avatar: PlaceHolderImages.find(img => img.id === "testimonial-user-1")!
+    name: "Akash Gupta",
+    role: "Frequent Customer",
+    quote: "Best place for pure vegetarian momos in Malad. Their cheese steam momos are out of this world.",
+    avatar: PlaceHolderImages.find(img => img.id === "user-2")!
   },
   {
-    name: "Elena Rodriguez",
-    role: "Head of Infrastructure, GlobalRetail",
-    quote: "The AI recommendation tool actually saved us thousands. It pinpointed exactly where we were over-provisioned and helped us optimize costs.",
-    avatar: PlaceHolderImages.find(img => img.id === "testimonial-user-1")!
+    name: "Sandeep Sahu",
+    role: "Food Blogger",
+    quote: "Best momos for vegetarian people. Hygienic, fresh, and very affordable pricing for the quality they provide.",
+    avatar: PlaceHolderImages.find(img => img.id === "user-1")!
   }
-];
-
-const logos = [
-  PlaceHolderImages.find(img => img.id === "logo-tech-1")!,
-  PlaceHolderImages.find(img => img.id === "logo-tech-2")!,
-  PlaceHolderImages.find(img => img.id === "logo-tech-3")!,
-  PlaceHolderImages.find(img => img.id === "logo-tech-1")!,
-  PlaceHolderImages.find(img => img.id === "logo-tech-2")!
 ];
 
 export function Testimonials() {
@@ -39,25 +30,15 @@ export function Testimonials() {
     <section id="testimonials" className="py-24 bg-background overflow-hidden">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-5xl font-extrabold font-headline mb-4">Trusted by the World's Best</h2>
+          <div className="flex justify-center gap-1 mb-4">
+            {[1, 2, 3, 4, 5].map((s) => (
+              <Star key={s} className="w-5 h-5 fill-accent text-accent" />
+            ))}
+          </div>
+          <h2 className="text-3xl md:text-5xl font-extrabold font-headline mb-4">Loved by Momo Lovers</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            From startups to Fortune 500s, enterprises rely on Aether Cloud for their mission-critical operations.
+            Meow Momo is highly rated with a 4.9/5 on Google Maps. Here is what our community says.
           </p>
-        </div>
-
-        {/* Logo cloud */}
-        <div className="flex flex-wrap justify-center items-center gap-12 md:gap-20 opacity-50 grayscale hover:grayscale-0 transition-all mb-20">
-          {logos.map((logo, idx) => (
-            <div key={idx} className="relative w-32 h-16">
-              <Image 
-                src={logo.imageUrl} 
-                alt={logo.description} 
-                fill 
-                className="object-contain"
-                data-ai-hint={logo.imageHint}
-              />
-            </div>
-          ))}
         </div>
 
         {/* Testimonials grid */}

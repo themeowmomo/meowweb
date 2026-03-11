@@ -1,35 +1,34 @@
-
 {
   "placeholderImages": [
     {
       "id": "hero-bg",
-      "description": "Abstract blue cloud technology background",
-      "imageUrl": "https://picsum.photos/seed/aether-hero/1200/800",
-      "imageHint": "cloud computing"
+      "description": "Delicious steaming momos in a basket",
+      "imageUrl": "https://picsum.photos/seed/meow-momo-hero/1200/800",
+      "imageHint": "steam momos"
     },
     {
-      "id": "logo-tech-1",
-      "description": "Tech company logo placeholder 1",
-      "imageUrl": "https://picsum.photos/seed/tech1/200/100",
-      "imageHint": "company logo"
+      "id": "momo-plate",
+      "description": "A plate of fried golden momos",
+      "imageUrl": "https://picsum.photos/seed/momo-plate/600/400",
+      "imageHint": "fried momos"
     },
     {
-      "id": "logo-tech-2",
-      "description": "Tech company logo placeholder 2",
-      "imageUrl": "https://picsum.photos/seed/tech2/200/100",
-      "imageHint": "company logo"
+      "id": "momo-cheese",
+      "description": "Cheese bursting momos with chutney",
+      "imageUrl": "https://picsum.photos/seed/cheese-momo/600/400",
+      "imageHint": "cheese momos"
     },
     {
-      "id": "logo-tech-3",
-      "description": "Tech company logo placeholder 3",
-      "imageUrl": "https://picsum.photos/seed/tech3/200/100",
-      "imageHint": "company logo"
+      "id": "user-1",
+      "description": "Happy customer Rohan",
+      "imageUrl": "https://picsum.photos/seed/rohan/100/100",
+      "imageHint": "happy person"
     },
     {
-      "id": "testimonial-user-1",
-      "description": "Portrait of a professional executive",
-      "imageUrl": "https://picsum.photos/seed/exec1/100/100",
-      "imageHint": "business person"
+      "id": "user-2",
+      "description": "Happy customer Akash",
+      "imageUrl": "https://picsum.photos/seed/akash/100/100",
+      "imageHint": "person eating"
     }
   ]
 }

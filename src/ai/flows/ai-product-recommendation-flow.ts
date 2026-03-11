@@ -1,11 +1,7 @@
 'use server';
 /**
- * @fileOverview An AI agent that recommends suitable cloud services from Aether Cloud
- * based on provided business needs.
- *
- * - aiProductRecommendation - A function that handles the cloud service recommendation process.
- * - AiProductRecommendationInput - The input type for the aiProductRecommendation function.
- * - AiProductRecommendationOutput - The return type for the aiProductRecommendation function.
+ * @fileOverview An AI agent that recommends suitable momos from Meow Momo
+ * based on user preferences and dietary requirements.
  */
 
 import {ai} from '@/ai/genkit';
@@ -15,7 +11,7 @@ const AiProductRecommendationInputSchema = z.object({
   businessNeeds: z
     .string()
     .describe(
-      'A detailed description of the enterprise business needs and requirements, including scale, data types, security concerns, and performance expectations.'
+      "User's taste preferences, hunger level, spice tolerance, and dietary requirements (e.g., 'I want something spicy and Jain', 'I love cheese and want a heavy snack')."
     ),
 });
 export type AiProductRecommendationInput = z.infer<
@@ -28,20 +24,16 @@ const AiProductRecommendationOutputSchema = z.object({
       z.object({
         serviceName: z
           .string()
-          .describe(
-            'The name of the recommended Aether Cloud service (e.g., "Aether Compute Engine", "Aether Object Storage", "Aether SQL Database").'
-          ),
+          .describe('The name of the recommended momo or dish.'),
         explanation: z
           .string()
-          .describe(
-            'A brief explanation of why this service is suitable for the given business needs.'
-          ),
+          .describe('Why this particular dish fits their description.'),
         benefits: z
           .array(z.string())
-          .describe('Key benefits of this service for the business.'),
+          .describe('Key features like "Jain available", "Super spicy", "Cheese burst".'),
       })
     )
-    .describe('A list of recommended cloud services from Aether Cloud.'),
+    .describe('A list of recommended momos from Meow Momo.'),
 });
 export type AiProductRecommendationOutput = z.infer<
   typeof AiProductRecommendationOutputSchema
@@ -57,21 +49,21 @@ const prompt = ai.definePrompt({
   name: 'aiProductRecommendationPrompt',
   input: {schema: AiProductRecommendationInputSchema},
   output: {schema: AiProductRecommendationOutputSchema},
-  prompt: `You are an expert cloud solutions architect for Aether Cloud, a leading cloud provider for enterprise businesses. Your task is to recommend the most suitable cloud services based on the user's provided business needs.
+  prompt: `You are the friendly "Momo Expert" at Meow Momo, a popular pure veg and Jain momo spot in Malad East, Mumbai. Your job is to suggest the perfect momos or fries based on what the customer is craving.
 
-Aether Cloud offers a comprehensive suite of cloud services designed for enterprise-grade performance, security, and scalability. These include, but are not limited to:
--   **Compute Services**: Virtual Machines, Containers, Serverless Functions, Kubernetes Engine.
--   **Storage Services**: Object Storage, Block Storage, File Storage, Archival Storage.
--   **Database Services**: Relational Databases (SQL), NoSQL Databases, Data Warehousing, In-memory Databases.
--   **Networking Services**: Virtual Private Cloud (VPC), Load Balancing, Content Delivery Network (CDN), VPN, Dedicated Interconnect.
--   **Security Services**: Identity and Access Management (IAM), DDoS Protection, Key Management, Web Application Firewall (WAF), Security Information and Event Management (SIEM).
--   **Data Analytics Services**: Big Data Processing, Machine Learning Platforms, Business Intelligence Tools, Data Lakes.
--   **Developer Tools**: CI/CD Pipelines, Monitoring, Logging, API Management, SDKs.
--   **Managed Services**: Fully managed versions of all core services, reducing operational overhead.
+Meow Momo's menu includes:
+- **Classic Steam & Fried Momos**: The staples.
+- **Cheese Momos (Steam/Fried)**: For cheese lovers.
+- **Peri Peri Momos**: For those who want extra spice.
+- **Paneer Momos**: Rich and protein-packed.
+- **Kurkure Momos**: Extra crunchy outer layer.
+- **Jain Momos**: Specially prepared without onion/garlic/root veg.
+- **Fries**: Salted, Masala, Peri Peri, and Cheese.
+- **Meal Combos**: Great for a full meal.
 
-Based on the following business needs, recommend specific Aether Cloud services from the categories listed above. For each recommendation, provide a concise explanation of why it is suitable and list 2-3 key benefits for the business. Focus on services that directly address the pain points and requirements described.
+Based on the customer's request: "{{{businessNeeds}}}", suggest 2-3 items. Be enthusiastic and focus on the flavors! Mention if a Jain version is available if they ask for Jain options.
 
-Business Needs: {{{businessNeeds}}}`,
+Customer's Cravings: {{{businessNeeds}}}`,
 });
 
 const aiProductRecommendationFlow = ai.defineFlow(
