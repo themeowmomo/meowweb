@@ -3,17 +3,31 @@
 import { useCart } from "@/context/cart-context";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetFooter } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, Plus, Minus, Trash2, Send } from "lucide-react";
+import { ShoppingCart, Plus, Minus, Trash2, Send, User, MapPin } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
 
 export function CartSheet() {
-  const { cart, removeFromCart, updateQuantity, totalPrice, totalItems } = useCart();
+  const { cart, removeFromCart, updateQuantity, totalPrice, totalItems, customerInfo, updateCustomerInfo } = useCart();
+  const { toast } = useToast();
 
   const handleWhatsAppOrder = () => {
     if (cart.length === 0) return;
+    
+    if (!customerInfo.name.trim() || !customerInfo.address.trim()) {
+      toast({
+        title: "Missing Details",
+        description: "Please enter your name and delivery address.",
+        variant: "destructive",
+      });
+      return;
+    }
 
     const messageHeader = "*Order Details from Meow Momo App*%0A%0A";
+    const customerDetails = `*Customer:* ${customerInfo.name}%0A*Address:* ${customerInfo.address}%0A%0A`;
     const itemsList = cart
       .map(item => {
         const variantText = item.variant ? ` (${item.variant})` : "";
@@ -22,7 +36,7 @@ export function CartSheet() {
       .join("%0A");
     
     const footer = `%0A%0A*Total Amount: ₹${totalPrice}*%0A%0APlease confirm my order!`;
-    const fullMessage = messageHeader + itemsList + footer;
+    const fullMessage = messageHeader + customerDetails + "*Items ordered:*%0A" + itemsList + footer;
 
     window.open(`https://wa.me/919867977942?text=${fullMessage}`, "_blank");
   };
@@ -56,48 +70,81 @@ export function CartSheet() {
           <>
             <ScrollArea className="flex-grow pr-4 -mr-4 mt-6">
               <div className="space-y-6">
-                {cart.map((item) => (
-                  <div key={`${item.id}-${item.variant}`} className="flex gap-4">
-                    <div className="flex-grow space-y-1">
-                      <h4 className="font-bold text-sm leading-none">
-                        {item.name}
-                        {item.variant && <span className="ml-2 text-xs font-normal text-muted-foreground">({item.variant})</span>}
-                      </h4>
-                      <p className="text-xs text-muted-foreground">₹{item.price} each</p>
-                      
-                      <div className="flex items-center gap-2 mt-2">
+                <div className="space-y-4 pb-4">
+                  <h3 className="text-sm font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+                    <User className="w-4 h-4" /> Delivery Details
+                  </h3>
+                  <div className="grid gap-4">
+                    <div className="grid gap-2">
+                      <Label htmlFor="name" className="text-xs">Your Name</Label>
+                      <Input 
+                        id="name" 
+                        placeholder="e.g. Rahul Sharma" 
+                        value={customerInfo.name}
+                        onChange={(e) => updateCustomerInfo({ name: e.target.value })}
+                        className="h-10"
+                      />
+                    </div>
+                    <div className="grid gap-2">
+                      <Label htmlFor="address" className="text-xs">Full Address</Label>
+                      <Input 
+                        id="address" 
+                        placeholder="e.g. Bldg 4, Apt 201, Kurar Village..." 
+                        value={customerInfo.address}
+                        onChange={(e) => updateCustomerInfo({ address: e.target.value })}
+                        className="h-10"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <Separator />
+
+                <div className="space-y-4 pt-4">
+                  <h3 className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Order Items</h3>
+                  {cart.map((item) => (
+                    <div key={`${item.id}-${item.variant}`} className="flex gap-4">
+                      <div className="flex-grow space-y-1">
+                        <h4 className="font-bold text-sm leading-none">
+                          {item.name}
+                          {item.variant && <span className="ml-2 text-xs font-normal text-muted-foreground">({item.variant})</span>}
+                        </h4>
+                        <p className="text-xs text-muted-foreground">₹{item.price} each</p>
+                        
+                        <div className="flex items-center gap-2 mt-2">
+                          <Button 
+                            variant="outline" 
+                            size="icon" 
+                            className="h-7 w-7 rounded-full"
+                            onClick={() => updateQuantity(item.id, item.quantity - 1, item.variant)}
+                          >
+                            <Minus className="h-3 w-3" />
+                          </Button>
+                          <span className="text-sm font-bold w-4 text-center">{item.quantity}</span>
+                          <Button 
+                            variant="outline" 
+                            size="icon" 
+                            className="h-7 w-7 rounded-full"
+                            onClick={() => updateQuantity(item.id, item.quantity + 1, item.variant)}
+                          >
+                            <Plus className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      </div>
+                      <div className="text-right space-y-2">
+                        <p className="font-bold text-sm text-primary">₹{item.price * item.quantity}</p>
                         <Button 
-                          variant="outline" 
+                          variant="ghost" 
                           size="icon" 
-                          className="h-7 w-7 rounded-full"
-                          onClick={() => updateQuantity(item.id, item.quantity - 1, item.variant)}
+                          className="h-7 w-7 text-muted-foreground hover:text-destructive"
+                          onClick={() => removeFromCart(item.id, item.variant)}
                         >
-                          <Minus className="h-3 w-3" />
-                        </Button>
-                        <span className="text-sm font-bold w-4 text-center">{item.quantity}</span>
-                        <Button 
-                          variant="outline" 
-                          size="icon" 
-                          className="h-7 w-7 rounded-full"
-                          onClick={() => updateQuantity(item.id, item.quantity + 1, item.variant)}
-                        >
-                          <Plus className="h-3 w-3" />
+                          <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
                     </div>
-                    <div className="text-right space-y-2">
-                      <p className="font-bold text-sm text-primary">₹{item.price * item.quantity}</p>
-                      <Button 
-                        variant="ghost" 
-                        size="icon" 
-                        className="h-7 w-7 text-muted-foreground hover:text-destructive"
-                        onClick={() => removeFromCart(item.id, item.variant)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </ScrollArea>
 

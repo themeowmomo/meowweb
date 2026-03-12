@@ -10,6 +10,11 @@ export type CartItem = {
   variant?: string;
 };
 
+export type CustomerInfo = {
+  name: string;
+  address: string;
+};
+
 type CartContextType = {
   cart: CartItem[];
   addToCart: (item: Omit<CartItem, 'quantity'>) => void;
@@ -18,14 +23,17 @@ type CartContextType = {
   clearCart: () => void;
   totalItems: number;
   totalPrice: number;
+  customerInfo: CustomerInfo;
+  updateCustomerInfo: (info: Partial<CustomerInfo>) => void;
 };
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
+  const [customerInfo, setCustomerInfo] = useState<CustomerInfo>({ name: '', address: '' });
 
-  // Load cart from local storage on mount
+  // Load data from local storage on mount
   useEffect(() => {
     const savedCart = localStorage.getItem('meow_momo_cart');
     if (savedCart) {
@@ -35,12 +43,26 @@ export function CartProvider({ children }: { children: ReactNode }) {
         console.error("Failed to load cart", e);
       }
     }
+
+    const savedInfo = localStorage.getItem('meow_momo_customer');
+    if (savedInfo) {
+      try {
+        setCustomerInfo(JSON.parse(savedInfo));
+      } catch (e) {
+        console.error("Failed to load customer info", e);
+      }
+    }
   }, []);
 
   // Save cart to local storage on change
   useEffect(() => {
     localStorage.setItem('meow_momo_cart', JSON.stringify(cart));
   }, [cart]);
+
+  // Save customer info to local storage on change
+  useEffect(() => {
+    localStorage.setItem('meow_momo_customer', JSON.stringify(customerInfo));
+  }, [customerInfo]);
 
   const addToCart = (newItem: Omit<CartItem, 'quantity'>) => {
     setCart(prevCart => {
@@ -74,13 +96,27 @@ export function CartProvider({ children }: { children: ReactNode }) {
     );
   };
 
+  const updateCustomerInfo = (info: Partial<CustomerInfo>) => {
+    setCustomerInfo(prev => ({ ...prev, ...info }));
+  };
+
   const clearCart = () => setCart([]);
 
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
   const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart, updateQuantity, clearCart, totalItems, totalPrice }}>
+    <CartContext.Provider value={{ 
+      cart, 
+      addToCart, 
+      removeFromCart, 
+      updateQuantity, 
+      clearCart, 
+      totalItems, 
+      totalPrice,
+      customerInfo,
+      updateCustomerInfo
+    }}>
       {children}
     </CartContext.Provider>
   );
