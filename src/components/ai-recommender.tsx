@@ -12,6 +12,8 @@ export function AiRecommender() {
   const [loading, setLoading] = useState(false);
   const [recommendations, setRecommendations] = useState<AiProductRecommendationOutput | null>(null);
 
+  const shopNumber = "918850859140";
+
   const handleRecommend = async () => {
     if (!businessNeeds.trim()) return;
     setLoading(true);
@@ -103,7 +105,7 @@ export function AiRecommender() {
                   </div>
                   <div className="mt-8 text-center">
                     <Button variant="link" className="text-primary font-bold" asChild>
-                      <a href="https://wa.me/919867977942">Satisfied? Order these on WhatsApp now!</a>
+                      <a href={`https://wa.me/${shopNumber}`}>Satisfied? Order these on WhatsApp now!</a>
                     </Button>
                   </div>
                 </div>

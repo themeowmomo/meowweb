@@ -7,6 +7,7 @@ import { PlaceHolderImages } from "@/lib/placeholder-images";
 
 export function Hero() {
   const heroImage = PlaceHolderImages.find(img => img.id === "hero-bg")!;
+  const shopNumber = "918850859140";
 
   return (
     <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden">
@@ -27,7 +28,7 @@ export function Hero() {
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 animate-in fade-in slide-in-from-bottom-8 duration-1000">
             <Button size="lg" className="w-full sm:w-auto px-8 h-14 text-base bg-primary hover:bg-primary/90 shadow-lg shadow-primary/25" asChild>
-              <a href="https://wa.me/919867977942" target="_blank" rel="noopener noreferrer">
+              <a href={`https://wa.me/${shopNumber}`} target="_blank" rel="noopener noreferrer">
                 Order via WhatsApp <ArrowRight className="ml-2 w-4 h-4" />
               </a>
             </Button>

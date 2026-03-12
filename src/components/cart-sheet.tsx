@@ -1,7 +1,7 @@
 "use client";
 
 import { useCart } from "@/context/cart-context";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetFooter } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart, Plus, Minus, Trash2, Send, User, MapPin } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 
 export function CartSheet() {
-  const { cart, removeFromCart, updateQuantity, totalPrice, totalItems, customerInfo, updateCustomerInfo } = useCart();
+  const { cart, removeFromCart, updateQuantity, totalPrice, totalItems, customerInfo, updateCustomerInfo, clearCart } = useCart();
   const { toast } = useToast();
 
   const handleWhatsAppOrder = () => {
@@ -26,19 +26,35 @@ export function CartSheet() {
       return;
     }
 
-    const messageHeader = "*Order Details from Meow Momo App*%0A%0A";
-    const customerDetails = `*Customer:* ${customerInfo.name}%0A*Address:* ${customerInfo.address}%0A%0A`;
-    const itemsList = cart
+    const shopNumber = "918850859140";
+    
+    // Professional Message Formatting
+    const header = "*🍔 NEW ORDER - MEOW MOMO*%0A";
+    const separator = "--------------------------%0A";
+    const customerSection = `*Customer Details:*%0A👤 Name: ${customerInfo.name}%0A📍 Address: ${customerInfo.address}%0A%0A`;
+    
+    const itemsSection = "*Order Items:*%0A" + cart
       .map(item => {
         const variantText = item.variant ? ` (${item.variant})` : "";
-        return `- ${item.name}${variantText} x ${item.quantity}: ₹${item.price * item.quantity}`;
+        return `• ${item.name}${variantText} x ${item.quantity}: ₹${item.price * item.quantity}`;
       })
-      .join("%0A");
+      .join("%0A") + "%0A%0A";
     
-    const footer = `%0A%0A*Total Amount: ₹${totalPrice}*%0A%0APlease confirm my order!`;
-    const fullMessage = messageHeader + customerDetails + "*Items ordered:*%0A" + itemsList + footer;
+    const summarySection = `*Order Summary:*%0A📦 Total Items: ${totalItems}%0A💰 *Grand Total: ₹${totalPrice}*%0A`;
+    const footer = "--------------------------%0A_Sent via Meow Momo Web App_";
 
-    window.open(`https://wa.me/919867977942?text=${fullMessage}`, "_blank");
+    const fullMessage = header + separator + customerSection + itemsSection + summarySection + footer;
+
+    window.open(`https://wa.me/${shopNumber}?text=${fullMessage}`, "_blank");
+
+    // Clear cart after a short delay to allow the window to open
+    setTimeout(() => {
+      clearCart();
+      toast({
+        title: "Order Initiated!",
+        description: "Your cart has been cleared. Thank you for ordering!",
+      });
+    }, 1000);
   };
 
   return (

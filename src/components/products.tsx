@@ -124,6 +124,7 @@ const mealCombos = [
 export function Products() {
   const { addToCart } = useCart();
   const { toast } = useToast();
+  const shopNumber = "918850859140";
 
   const handleAddToCart = (name: string, price: number, variant?: string) => {
     addToCart({
@@ -303,7 +304,7 @@ export function Products() {
               <p className="text-primary-foreground/80">Every bite counts! Buy 10 plates and get 1 plate of Classic Steam Momos ABSOLUTELY FREE! Join our digital loyalty club on WhatsApp today.</p>
             </div>
             <Button size="lg" className="bg-accent text-accent-foreground hover:bg-white hover:text-primary transition-all font-bold h-14 px-8" asChild>
-              <a href="https://wa.me/919867977942?text=I'd like to join the Meow Momo Loyalty Club!">Join Loyalty Club</a>
+              <a href={`https://wa.me/${shopNumber}?text=I'd like to join the Meow Momo Loyalty Club!`}>Join Loyalty Club</a>
             </Button>
           </div>
         </div>

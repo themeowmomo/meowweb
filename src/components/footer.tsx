@@ -4,6 +4,8 @@ import { UtensilsCrossed, Phone, MapPin, Clock } from "lucide-react";
 import Link from "next/link";
 
 export function Footer() {
+  const shopNumber = "918850859140";
+  
   return (
     <footer id="footer" className="bg-foreground text-white pt-20 pb-10">
       <div className="container mx-auto px-4">
@@ -25,7 +27,7 @@ export function Footer() {
               </div>
               <div className="flex items-center gap-3 text-sm text-muted-foreground">
                 <Phone className="w-5 h-5 text-primary flex-shrink-0" />
-                <span>+91 9867977942 / 8850859140</span>
+                <span>+91 8850859140 / 9867977942</span>
               </div>
               <div className="flex items-center gap-3 text-sm text-muted-foreground">
                 <Clock className="w-5 h-5 text-primary flex-shrink-0" />
@@ -49,7 +51,7 @@ export function Footer() {
           <div>
             <h4 className="font-bold text-lg mb-6">Quick Actions</h4>
             <ul className="space-y-4 text-sm text-muted-foreground">
-              <li><a href="https://wa.me/919867977942" className="hover:text-primary transition-colors">Order via WhatsApp</a></li>
+              <li><a href={`https://wa.me/${shopNumber}`} className="hover:text-primary transition-colors">Order via WhatsApp</a></li>
               <li><a href="https://maps.app.goo.gl/8JYg6egUJ4N3vFj19" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">Get Directions</a></li>
               <li><Link href="#menu" className="hover:text-primary transition-colors">View Menu</Link></li>
               <li><Link href="#ai-tool" className="hover:text-primary transition-colors">Momo Recommendation Tool</Link></li>

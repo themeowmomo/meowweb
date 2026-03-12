@@ -17,6 +17,8 @@ export function Navbar() {
     { name: "Location", href: "#footer" },
   ];
 
+  const shopNumber = "918850859140";
+
   return (
     <nav className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
@@ -41,7 +43,7 @@ export function Navbar() {
           <div className="flex items-center gap-3 ml-2 border-l pl-6">
             <CartSheet />
             <Button className="bg-primary hover:bg-primary/90" asChild>
-              <a href="https://wa.me/919867977942" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+              <a href={`https://wa.me/${shopNumber}`} target="_blank" rel="noopener noreferrer">WhatsApp</a>
             </Button>
           </div>
         </div>
@@ -68,7 +70,7 @@ export function Navbar() {
               ))}
               <div className="mt-8">
                 <Button className="w-full h-12 bg-primary" asChild>
-                  <a href="https://wa.me/919867977942" target="_blank" rel="noopener noreferrer">Order Now</a>
+                  <a href={`https://wa.me/${shopNumber}`} target="_blank" rel="noopener noreferrer">Order Now</a>
                 </Button>
               </div>
             </SheetContent>
