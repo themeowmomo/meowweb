@@ -69,10 +69,10 @@ const momoCategories = [
 ];
 
 const friesItems = [
-  { id: "f-salted", name: "Salted Fries", half: 35, full: 70, icon: "🍟" },
-  { id: "f-cheese", name: "Cheese Fries", half: 50, full: 99, icon: "🧀" },
-  { id: "f-peri", name: "Peri Peri Fries", half: 45, full: 90, icon: "🔥" },
-  { id: "f-masala", name: "Masala Fries", half: 40, full: 80, icon: "🌶️" },
+  { id: "f-salted", name: "Salted Fries", half: 35, full: 70, icon: "Fries" },
+  { id: "f-cheese", name: "Cheese Fries", half: 50, full: 99, icon: "Cheese" },
+  { id: "f-peri", name: "Peri Peri Fries", half: 45, full: 90, icon: "Spicy" },
+  { id: "f-masala", name: "Masala Fries", half: 40, full: 80, icon: "Masala" },
 ];
 
 const mealCombos = [
@@ -124,7 +124,6 @@ const mealCombos = [
 export function Products() {
   const { addToCart } = useCart();
   const { toast } = useToast();
-  const shopNumber = "918850859140";
 
   const handleAddToCart = (name: string, price: number, variant?: string) => {
     addToCart({
@@ -194,7 +193,7 @@ export function Products() {
                             className="h-8 px-2 text-xs flex flex-col items-center hover:bg-primary/10 hover:text-primary"
                             onClick={() => handleAddToCart(item.name, item.p5, "5-PCS")}
                           >
-                            <span className="font-bold">₹{item.p5}</span>
+                            <span className="font-bold">Rs.{item.p5}</span>
                             <span className="text-[8px] uppercase">Add</span>
                           </Button>
                         </div>
@@ -205,7 +204,7 @@ export function Products() {
                             className="h-8 px-2 text-xs flex flex-col items-center bg-secondary/50"
                             onClick={() => handleAddToCart(item.name, item.p11, "11-PCS")}
                           >
-                            <span className="font-bold">₹{item.p11}</span>
+                            <span className="font-bold">Rs.{item.p11}</span>
                             <span className="text-[8px] uppercase">Add</span>
                           </Button>
                         </div>
@@ -222,14 +221,14 @@ export function Products() {
               {friesItems.map((item) => (
                 <Card key={item.id} className="border-none bg-secondary/30 hover:bg-secondary/50 transition-colors">
                   <CardHeader className="text-center pb-2">
-                    <span className="text-4xl mb-2">{item.icon}</span>
+                    <span className="text-lg font-bold mb-2 block text-primary uppercase tracking-tighter">{item.icon}</span>
                     <CardTitle className="text-xl font-bold">{item.name}</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="flex justify-between items-center py-2 border-b border-primary/10">
                       <div className="flex flex-col">
                         <span className="text-muted-foreground font-medium text-[10px] uppercase">Half Portion</span>
-                        <span className="text-lg font-bold text-primary">₹{item.half}</span>
+                        <span className="text-lg font-bold text-primary">Rs.{item.half}</span>
                       </div>
                       <Button 
                         size="sm" 
@@ -243,7 +242,7 @@ export function Products() {
                     <div className="flex justify-between items-center py-2">
                       <div className="flex flex-col">
                         <span className="text-muted-foreground font-medium text-[10px] uppercase">Full Portion</span>
-                        <span className="text-lg font-bold text-primary">₹{item.full}</span>
+                        <span className="text-lg font-bold text-primary">Rs.{item.full}</span>
                       </div>
                       <Button 
                         size="sm" 
@@ -267,7 +266,7 @@ export function Products() {
                   <CardHeader>
                     <div className="flex justify-between items-start">
                       <CardTitle className="text-xl font-bold text-primary">{combo.title}</CardTitle>
-                      <Badge variant="secondary" className="text-lg font-bold">₹{combo.price}</Badge>
+                      <Badge variant="secondary" className="text-lg font-bold">Rs.{combo.price}</Badge>
                     </div>
                   </CardHeader>
                   <CardContent className="flex-grow">
@@ -304,7 +303,7 @@ export function Products() {
               <p className="text-primary-foreground/80">Every bite counts! Buy 10 plates and get 1 plate of Classic Steam Momos ABSOLUTELY FREE! Join our digital loyalty club on WhatsApp today.</p>
             </div>
             <Button size="lg" className="bg-accent text-accent-foreground hover:bg-white hover:text-primary transition-all font-bold h-14 px-8" asChild>
-              <a href={`https://wa.me/${shopNumber}?text=I'd like to join the Meow Momo Loyalty Club!`}>Join Loyalty Club</a>
+              <a href={`https://wa.me/918850859140?text=I'd like to join the Meow Momo Loyalty Club!`}>Join Loyalty Club</a>
             </Button>
           </div>
         </div>

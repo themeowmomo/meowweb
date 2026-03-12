@@ -28,33 +28,33 @@ export function CartSheet() {
 
     const shopNumber = "918850859140";
     
-    // Professional Message Formatting
-    const header = "*🍔 NEW ORDER - MEOW MOMO*%0A";
+    // Professional Message Formatting - Using plain text for better compatibility
+    const header = "*NEW ORDER - MEOW MOMO*%0A";
     const separator = "--------------------------%0A";
-    const customerSection = `*Customer Details:*%0A👤 Name: ${customerInfo.name}%0A📍 Address: ${customerInfo.address}%0A%0A`;
+    const customerSection = `*Customer Details*%0AName: ${customerInfo.name}%0AAddress: ${customerInfo.address}%0A%0A`;
     
-    const itemsSection = "*Order Items:*%0A" + cart
+    const itemsSection = "*Order Items*%0A" + cart
       .map(item => {
         const variantText = item.variant ? ` (${item.variant})` : "";
-        return `• ${item.name}${variantText} x ${item.quantity}: ₹${item.price * item.quantity}`;
+        return `- ${item.name}${variantText} x ${item.quantity}: Rs.${item.price * item.quantity}`;
       })
       .join("%0A") + "%0A%0A";
     
-    const summarySection = `*Order Summary:*%0A📦 Total Items: ${totalItems}%0A💰 *Grand Total: ₹${totalPrice}*%0A`;
+    const summarySection = `*Order Summary*%0ATotal Items: ${totalItems}%0A*Grand Total: Rs.${totalPrice}*%0A`;
     const footer = "--------------------------%0A_Sent via Meow Momo Web App_";
 
     const fullMessage = header + separator + customerSection + itemsSection + summarySection + footer;
 
     window.open(`https://wa.me/${shopNumber}?text=${fullMessage}`, "_blank");
 
-    // Clear cart after a short delay to allow the window to open
+    // Clear cart after a short delay
     setTimeout(() => {
       clearCart();
       toast({
-        title: "Order Initiated!",
-        description: "Your cart has been cleared. Thank you for ordering!",
+        title: "Order Sent",
+        description: "WhatsApp opened! Your cart has been cleared.",
       });
-    }, 1000);
+    }, 1500);
   };
 
   return (
@@ -125,7 +125,7 @@ export function CartSheet() {
                           {item.name}
                           {item.variant && <span className="ml-2 text-xs font-normal text-muted-foreground">({item.variant})</span>}
                         </h4>
-                        <p className="text-xs text-muted-foreground">₹{item.price} each</p>
+                        <p className="text-xs text-muted-foreground">Rs.{item.price} each</p>
                         
                         <div className="flex items-center gap-2 mt-2">
                           <Button 
@@ -148,7 +148,7 @@ export function CartSheet() {
                         </div>
                       </div>
                       <div className="text-right space-y-2">
-                        <p className="font-bold text-sm text-primary">₹{item.price * item.quantity}</p>
+                        <p className="font-bold text-sm text-primary">Rs.{item.price * item.quantity}</p>
                         <Button 
                           variant="ghost" 
                           size="icon" 
@@ -168,11 +168,11 @@ export function CartSheet() {
               <div className="space-y-1.5">
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Subtotal</span>
-                  <span>₹{totalPrice}</span>
+                  <span>Rs.{totalPrice}</span>
                 </div>
                 <div className="flex justify-between text-lg font-bold">
                   <span>Total</span>
-                  <span className="text-primary">₹{totalPrice}</span>
+                  <span className="text-primary">Rs.{totalPrice}</span>
                 </div>
               </div>
               <Button onClick={handleWhatsAppOrder} className="w-full h-14 bg-primary text-lg font-bold shadow-lg shadow-primary/20">
