@@ -1,7 +1,7 @@
 "use client";
 
-import { Star, Plus, ShoppingBag, Info, Leaf } from "lucide-react";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Star, Plus, ShoppingBag, Leaf, Check } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -9,6 +9,7 @@ import { useCart } from "@/context/cart-context";
 import { useToast } from "@/hooks/use-toast";
 import Image from "next/image";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
+import { cn } from "@/lib/utils";
 
 const momoCategories = [
   {
@@ -82,8 +83,12 @@ const mealCombos = [
 ];
 
 export function Products() {
-  const { addToCart } = useCart();
+  const { addToCart, cart } = useCart();
   const { toast } = useToast();
+
+  const isItemInCart = (name: string, variant?: string) => {
+    return cart.some(item => item.name === name && item.variant === variant);
+  };
 
   const handleAddToCart = (name: string, price: number, variant?: string) => {
     addToCart({
@@ -101,6 +106,29 @@ export function Products() {
 
   const getImage = (id: string) => PlaceHolderImages.find(img => img.id === id)?.imageUrl || "";
 
+  const AddButton = ({ name, price, variant, className }: { name: string, price: number, variant: string, className?: string }) => {
+    const inCart = isItemInCart(name, variant);
+    return (
+      <Button 
+        size="sm" 
+        className={cn(
+          "rounded-full h-9 px-4 font-bold transition-all shadow-md",
+          inCart 
+            ? "bg-green-500 hover:bg-green-600 text-white" 
+            : "bg-primary hover:bg-primary/90 text-white",
+          className
+        )}
+        onClick={() => handleAddToCart(name, price, variant)}
+      >
+        {inCart ? (
+          <><Check className="w-4 h-4 mr-1" /> Added</>
+        ) : (
+          <><Plus className="w-4 h-4 mr-1" /> Add</>
+        )}
+      </Button>
+    );
+  };
+
   return (
     <section id="menu" className="py-24 bg-white">
       <div className="container mx-auto px-4">
@@ -108,96 +136,92 @@ export function Products() {
           <Badge className="bg-primary/10 text-primary border-none mb-2 px-4 py-1">
             <Leaf className="w-3 h-3 mr-2" /> 100% PURE VEG & JAIN
           </Badge>
-          <h2 className="text-3xl md:text-5xl font-extrabold font-headline tracking-tight">Browse Our Menu</h2>
+          <h2 className="text-3xl md:text-5xl font-extrabold font-headline tracking-tight">Our Delicious Menu</h2>
           <p className="text-muted-foreground text-lg">
-            Order your favorite snacks online and pick them up or get them delivered via WhatsApp!
+            Freshly prepared evening snacks. Select your items and order via WhatsApp.
           </p>
         </div>
 
-        <Tabs defaultValue="classic-veg" className="w-full">
-          <div className="flex justify-start md:justify-center mb-12 overflow-x-auto no-scrollbar pb-2">
-            <TabsList className="bg-secondary/50 p-1 h-auto flex flex-nowrap whitespace-nowrap">
-              {momoCategories.map(cat => (
-                <TabsTrigger key={cat.id} value={cat.id} className="px-6 py-3 text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-white">
-                  {cat.title}
-                </TabsTrigger>
-              ))}
-              <TabsTrigger value="fries" className="px-6 py-3 text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-white">Fries</TabsTrigger>
-              <TabsTrigger value="combos" className="px-6 py-3 text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-white">Meal Combos</TabsTrigger>
+        <Tabs defaultValue="momos" className="w-full">
+          <div className="flex justify-center mb-12">
+            <TabsList className="bg-secondary/50 p-1.5 h-auto rounded-full border border-primary/10">
+              <TabsTrigger value="momos" className="px-8 py-3 rounded-full text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-white transition-all">
+                Momos
+              </TabsTrigger>
+              <TabsTrigger value="fries" className="px-8 py-3 rounded-full text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-white transition-all">
+                Fries
+              </TabsTrigger>
+              <TabsTrigger value="meal" className="px-8 py-3 rounded-full text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-white transition-all">
+                Meal
+              </TabsTrigger>
             </TabsList>
           </div>
 
-          {/* Momo Categories Content */}
-          {momoCategories.map((cat) => (
-            <TabsContent key={cat.id} value={cat.id} className="mt-0">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                {cat.items.map((item) => (
-                  <Card key={item.id} className="overflow-hidden border-muted/60 hover:shadow-2xl transition-all group flex flex-col">
-                    <div className="relative h-56 w-full overflow-hidden">
-                      <Image 
-                        src={getImage(cat.image)} 
-                        alt={item.name} 
-                        fill 
-                        className="object-cover group-hover:scale-110 transition-transform duration-500"
-                        data-ai-hint="momo plate"
-                      />
-                      <div className="absolute top-3 left-3 flex gap-2">
-                        <Badge className="bg-white/90 text-primary border-none shadow-sm backdrop-blur-md">Pure Veg</Badge>
-                        {cat.id === 'jain-momos' && <Badge className="bg-accent/90 text-accent-foreground border-none shadow-sm backdrop-blur-md">Jain</Badge>}
-                      </div>
-                    </div>
-                    <CardHeader className="p-5 pb-2">
-                      <div className="flex justify-between items-start">
-                        <CardTitle className="text-xl font-bold">{item.name}</CardTitle>
-                        <div className="flex items-center text-accent">
-                          <Star className="w-4 h-4 fill-accent" />
-                          <span className="text-xs font-bold ml-1">4.9</span>
+          {/* Momos Main Tab */}
+          <TabsContent value="momos" className="mt-0 space-y-20">
+            {momoCategories.map((cat) => (
+              <div key={cat.id} className="space-y-8">
+                <div className="flex items-center gap-4">
+                  <h3 className="text-2xl font-black font-headline text-foreground/90">{cat.title}</h3>
+                  <div className="h-px bg-muted flex-grow" />
+                </div>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {cat.items.map((item) => (
+                    <Card key={item.id} className="overflow-hidden border-muted/60 hover:shadow-2xl transition-all group flex flex-col bg-card/50 backdrop-blur-sm">
+                      <div className="relative h-52 w-full overflow-hidden">
+                        <Image 
+                          src={getImage(cat.image)} 
+                          alt={item.name} 
+                          fill 
+                          className="object-cover group-hover:scale-105 transition-transform duration-500"
+                          data-ai-hint="momo plate"
+                        />
+                        <div className="absolute top-3 left-3 flex gap-2">
+                          <Badge className="bg-white/90 text-primary border-none shadow-sm backdrop-blur-md font-bold">Veg</Badge>
+                          {cat.id === 'jain-momos' && <Badge className="bg-accent/90 text-accent-foreground border-none shadow-sm backdrop-blur-md font-bold">Jain</Badge>}
                         </div>
                       </div>
-                      <p className="text-sm text-muted-foreground line-clamp-2 mt-2">{item.desc}</p>
-                    </CardHeader>
-                    <CardContent className="p-5 flex-grow">
-                      <div className="space-y-4">
-                        <div className="flex justify-between items-center bg-secondary/30 p-3 rounded-xl">
-                          <div className="flex flex-col">
-                            <span className="text-[10px] uppercase font-bold text-muted-foreground">5 Pieces</span>
-                            <span className="text-lg font-extrabold text-primary">Rs.{item.p5}</span>
+                      <CardHeader className="p-5 pb-2">
+                        <div className="flex justify-between items-start">
+                          <CardTitle className="text-xl font-bold">{item.name}</CardTitle>
+                          <div className="flex items-center text-accent">
+                            <Star className="w-4 h-4 fill-accent" />
+                            <span className="text-xs font-bold ml-1">4.9</span>
                           </div>
-                          <Button 
-                            size="sm" 
-                            className="bg-primary hover:bg-primary/90 rounded-full h-10 w-10 p-0 shadow-md"
-                            onClick={() => handleAddToCart(item.name, item.p5, "5-PCS")}
-                          >
-                            <Plus className="w-5 h-5" />
-                          </Button>
                         </div>
-                        <div className="flex justify-between items-center bg-secondary/30 p-3 rounded-xl">
-                          <div className="flex flex-col">
-                            <span className="text-[10px] uppercase font-bold text-muted-foreground">11 Pieces (Full)</span>
-                            <span className="text-lg font-extrabold text-primary">Rs.{item.p11}</span>
+                        <p className="text-sm text-muted-foreground line-clamp-2 mt-2 leading-relaxed">{item.desc}</p>
+                      </CardHeader>
+                      <CardContent className="p-5 mt-auto">
+                        <div className="grid grid-cols-2 gap-3">
+                          <div className="bg-white/60 p-3 rounded-2xl border border-primary/5 shadow-inner">
+                            <span className="block text-[10px] uppercase font-bold text-muted-foreground mb-1">5 PCS</span>
+                            <div className="flex justify-between items-center">
+                              <span className="text-base font-black text-primary">₹{item.p5}</span>
+                              <AddButton name={item.name} price={item.p5} variant="5-PCS" />
+                            </div>
                           </div>
-                          <Button 
-                            variant="secondary"
-                            size="sm" 
-                            className="bg-white border hover:bg-secondary rounded-full h-10 w-10 p-0 shadow-sm"
-                            onClick={() => handleAddToCart(item.name, item.p11, "11-PCS")}
-                          >
-                            <Plus className="w-5 h-5 text-primary" />
-                          </Button>
+                          <div className="bg-white/60 p-3 rounded-2xl border border-primary/5 shadow-inner">
+                            <span className="block text-[10px] uppercase font-bold text-muted-foreground mb-1">11 PCS</span>
+                            <div className="flex justify-between items-center">
+                              <span className="text-base font-black text-primary">₹{item.p11}</span>
+                              <AddButton name={item.name} price={item.p11} variant="11-PCS" />
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
               </div>
-            </TabsContent>
-          ))}
+            ))}
+          </TabsContent>
 
-          {/* Fries Content */}
+          {/* Fries Main Tab */}
           <TabsContent value="fries" className="mt-0">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
               {friesItems.map((item) => (
-                <Card key={item.id} className="overflow-hidden border-muted/60 hover:shadow-xl transition-all flex flex-col">
+                <Card key={item.id} className="overflow-hidden border-muted/60 hover:shadow-xl transition-all flex flex-col bg-card/50">
                   <div className="relative h-48 w-full">
                     <Image 
                       src={getImage("cat-fries")} 
@@ -209,26 +233,22 @@ export function Products() {
                   </div>
                   <CardHeader className="p-5 pb-2">
                     <CardTitle className="text-lg font-bold">{item.name}</CardTitle>
-                    <p className="text-xs text-muted-foreground mt-1">{item.desc}</p>
+                    <p className="text-xs text-muted-foreground mt-1 leading-relaxed">{item.desc}</p>
                   </CardHeader>
-                  <CardContent className="p-5 flex-grow space-y-3">
-                    <div className="flex justify-between items-center">
+                  <CardContent className="p-5 mt-auto space-y-3">
+                    <div className="flex justify-between items-center p-3 rounded-xl bg-white/60 border border-primary/5">
                       <div className="flex flex-col">
                         <span className="text-[10px] uppercase font-bold text-muted-foreground">Half</span>
-                        <span className="text-base font-bold text-primary">Rs.{item.half}</span>
+                        <span className="text-base font-black text-primary">₹{item.half}</span>
                       </div>
-                      <Button variant="outline" size="sm" className="rounded-full h-8 px-3" onClick={() => handleAddToCart(item.name, item.half, "Half")}>
-                        Add
-                      </Button>
+                      <AddButton name={item.name} price={item.half} variant="Half" />
                     </div>
-                    <div className="flex justify-between items-center border-t pt-3">
+                    <div className="flex justify-between items-center p-3 rounded-xl bg-white/60 border border-primary/5">
                       <div className="flex flex-col">
                         <span className="text-[10px] uppercase font-bold text-muted-foreground">Full</span>
-                        <span className="text-base font-bold text-primary">Rs.{item.full}</span>
+                        <span className="text-base font-black text-primary">₹{item.full}</span>
                       </div>
-                      <Button size="sm" className="bg-primary rounded-full h-8 px-3" onClick={() => handleAddToCart(item.name, item.full, "Full")}>
-                        Add
-                      </Button>
+                      <AddButton name={item.name} price={item.full} variant="Full" />
                     </div>
                   </CardContent>
                 </Card>
@@ -236,11 +256,14 @@ export function Products() {
             </div>
           </TabsContent>
 
-          {/* Combos Content */}
-          <TabsContent value="combos" className="mt-0">
+          {/* Meal Main Tab */}
+          <TabsContent value="meal" className="mt-0">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {mealCombos.map((combo) => (
-                <Card key={combo.id} className={`overflow-hidden transition-all flex flex-col ${combo.featured ? 'border-primary shadow-xl ring-2 ring-primary/10' : 'border-muted'}`}>
+                <Card key={combo.id} className={cn(
+                  "overflow-hidden transition-all flex flex-col relative bg-card/50",
+                  combo.featured ? 'border-primary shadow-2xl ring-4 ring-primary/5' : 'border-muted'
+                )}>
                   <div className="relative h-48 w-full">
                     <Image 
                       src={getImage("cat-combo")} 
@@ -251,74 +274,72 @@ export function Products() {
                     />
                     {combo.featured && (
                       <div className="absolute top-3 right-3">
-                        <Badge className="bg-accent text-accent-foreground">BEST VALUE</Badge>
+                        <Badge className="bg-accent text-accent-foreground font-black">BEST VALUE</Badge>
                       </div>
                     )}
                   </div>
                   <CardHeader className="p-5 pb-2">
                     <div className="flex justify-between items-center">
                       <CardTitle className="text-xl font-bold">{combo.title}</CardTitle>
-                      <span className="text-xl font-black text-primary">Rs.{combo.price}</span>
+                      <span className="text-xl font-black text-primary">₹{combo.price}</span>
                     </div>
                     <p className="text-sm text-muted-foreground mt-2">{combo.desc}</p>
                   </CardHeader>
                   <CardContent className="p-5 flex-grow">
-                    <ul className="space-y-2">
-                      {combo.items.map((item, idx) => (
-                        <li key={idx} className="flex items-center gap-2 text-xs text-muted-foreground">
-                          <div className="w-1.5 h-1.5 rounded-full bg-accent" /> {item}
-                        </li>
-                      ))}
-                    </ul>
+                    <div className="bg-white/40 p-4 rounded-2xl border border-primary/5">
+                      <h4 className="text-[10px] font-black uppercase text-muted-foreground mb-3 tracking-widest">Included Items</h4>
+                      <ul className="space-y-2">
+                        {combo.items.map((item, idx) => (
+                          <li key={idx} className="flex items-center gap-2 text-sm font-medium text-foreground/80">
+                            <div className="w-1.5 h-1.5 rounded-full bg-accent" /> {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </CardContent>
-                  <CardFooter className="p-5 pt-0">
+                  <div className="p-5 pt-0 mt-auto">
                     <Button 
-                      className="w-full h-12 text-base font-bold bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20"
+                      className={cn(
+                        "w-full h-12 text-base font-black shadow-lg transition-all rounded-xl",
+                        isItemInCart(combo.title) 
+                          ? "bg-green-500 hover:bg-green-600 text-white" 
+                          : "bg-primary hover:bg-primary/90 text-white shadow-primary/20"
+                      )}
                       onClick={() => handleAddToCart(combo.title, combo.price)}
                     >
-                      Add Meal to Cart <ShoppingBag className="ml-2 w-4 h-4" />
+                      {isItemInCart(combo.title) ? (
+                        <><Check className="mr-2 w-5 h-5" /> Added to Meal Plan</>
+                      ) : (
+                        <><ShoppingBag className="mr-2 w-5 h-5" /> Add Meal to Cart</>
+                      )}
                     </Button>
-                  </CardFooter>
+                  </div>
                 </Card>
               ))}
             </div>
           </TabsContent>
         </Tabs>
         
-        {/* Loyalty Program Card */}
-        <div className="mt-20 p-8 bg-foreground text-white rounded-[2.5rem] relative overflow-hidden group shadow-2xl">
-          <div className="absolute top-0 right-0 w-80 h-80 bg-primary/20 rounded-full -translate-y-1/2 translate-x-1/2 blur-[100px] group-hover:bg-primary/30 transition-all duration-700" />
-          <div className="relative z-10 flex flex-col md:flex-row items-center gap-10">
-            <div className="bg-white/10 backdrop-blur-md p-8 rounded-3xl border border-white/20 shadow-inner">
-              <Star className="w-16 h-16 text-accent" fill="currentColor" />
+        {/* Loyalty Program Section */}
+        <div className="mt-24 p-10 bg-foreground text-white rounded-[3rem] relative overflow-hidden group shadow-3xl">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-primary/20 rounded-full -translate-y-1/2 translate-x-1/2 blur-[100px] group-hover:bg-primary/30 transition-all duration-700" />
+          <div className="relative z-10 flex flex-col lg:grid lg:grid-cols-12 items-center gap-10">
+            <div className="lg:col-span-3 bg-white/10 backdrop-blur-xl p-10 rounded-[2.5rem] border border-white/20 shadow-2xl rotate-3 group-hover:rotate-0 transition-transform duration-500">
+              <Star className="w-20 h-20 text-accent" fill="currentColor" />
             </div>
-            <div className="flex-grow text-center md:text-left space-y-4">
-              <h3 className="text-3xl font-black font-headline tracking-tight">Meow Momo Rewards</h3>
-              <p className="text-primary-foreground/70 text-lg leading-relaxed max-w-2xl">
-                Every plate brings you closer to a free meal! Buy 10 plates and get 1 plate of <span className="text-accent font-bold">Classic Steam Momos</span> absolutely FREE.
+            <div className="lg:col-span-6 text-center lg:text-left space-y-6">
+              <div className="inline-block bg-accent/20 text-accent px-4 py-1.5 rounded-full text-xs font-black tracking-widest uppercase">Member Exclusive</div>
+              <h3 className="text-4xl font-black font-headline tracking-tighter leading-none">Virtual Loyalty Card</h3>
+              <p className="text-primary-foreground/70 text-xl leading-relaxed max-w-xl">
+                Every plate earns you a stamp! Buy 10 plates and your 11th plate of <span className="text-accent font-bold">Classic Steam Momos</span> is FREE.
               </p>
-              <div className="flex flex-wrap justify-center md:justify-start gap-4 pt-2">
-                <Badge variant="outline" className="border-white/20 text-white px-4 py-2">Digital Tracking</Badge>
-                <Badge variant="outline" className="border-white/20 text-white px-4 py-2">WhatsApp Redemption</Badge>
-              </div>
             </div>
-            <Button size="lg" className="bg-accent text-accent-foreground hover:bg-white hover:text-primary transition-all font-black h-16 px-10 text-lg rounded-2xl shadow-xl shadow-black/20" asChild>
-              <a href={`https://wa.me/918850859140?text=Hi, I want to join the Meow Momo Rewards Club!`}>Join the Club</a>
-            </Button>
+            <div className="lg:col-span-3 w-full">
+              <Button size="lg" className="w-full bg-accent text-accent-foreground hover:bg-white hover:text-primary transition-all font-black h-20 text-xl rounded-3xl shadow-2xl shadow-black/40" asChild>
+                <a href={`https://wa.me/918850859140?text=Hi, I want to join the Meow Momo Loyalty Club!`}>Join Now</a>
+              </Button>
+            </div>
           </div>
-        </div>
-
-        {/* Portion Guide */}
-        <div className="mt-12 p-6 bg-secondary/30 rounded-2xl flex flex-col md:flex-row items-center gap-6 text-sm border border-primary/5">
-          <div className="bg-white p-3 rounded-xl shadow-sm">
-            <Info className="w-6 h-6 text-primary" />
-          </div>
-          <p className="text-muted-foreground leading-relaxed text-center md:text-left">
-            <strong className="text-foreground">Order Guide:</strong> We offer flexible portions to satisfy any level of hunger. 
-            <span className="font-bold text-primary mx-1">5-PCS</span> is perfect for a light snack, while 
-            <span className="font-bold text-primary mx-1">11-PCS</span> is ideal for a full meal. 
-            All Jain items are prepared in a dedicated contamination-free area.
-          </p>
         </div>
       </div>
     </section>
