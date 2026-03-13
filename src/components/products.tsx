@@ -1,124 +1,84 @@
 "use client";
 
-import { Check, Info, Star, ShoppingCart, PlusCircle } from "lucide-react";
+import { Star, Plus, ShoppingBag, Info, Leaf } from "lucide-react";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useCart } from "@/context/cart-context";
 import { useToast } from "@/hooks/use-toast";
+import Image from "next/image";
+import { PlaceHolderImages } from "@/lib/placeholder-images";
 
 const momoCategories = [
   {
     id: "classic-veg",
     title: "Classic (Veg)",
-    description: "Our signature pure veg steam and fried momos.",
+    image: "cat-classic",
     items: [
-      { name: "Steam", p5: 50, p11: 100 },
-      { name: "Fried", p5: 60, p11: 120 },
-      { name: "Cheese Steam", p5: 65, p11: 140 },
-      { name: "Cheese Fried", p5: 75, p11: 160 },
-      { name: "Peri Peri Steam", p5: 70, p11: 140 },
-      { name: "Peri Peri Fried", p5: 80, p11: 160 },
-    ],
-    accent: "bg-primary"
+      { id: "c1", name: "Steam", p5: 50, p11: 100, desc: "Light and healthy steamed veg momos." },
+      { id: "c2", name: "Fried", p5: 60, p11: 120, desc: "Golden fried crispy vegetable momos." },
+      { id: "c3", name: "Cheese Steam", p5: 65, p11: 140, desc: "Steamed momos with melting cheese center." },
+      { id: "c4", name: "Cheese Fried", p5: 75, p11: 160, desc: "Crispy fried momos oozing with cheese." },
+      { id: "c5", name: "Peri Peri Steam", p5: 70, p11: 140, desc: "Spicy peri-peri seasoned steamed momos." },
+      { id: "c6", name: "Peri Peri Fried", p5: 80, p11: 160, desc: "Hot and spicy peri-peri fried delights." },
+    ]
   },
   {
     id: "paneer-special",
     title: "Paneer Specialty",
-    description: "Protein-rich paneer fillings for a satisfying bite.",
+    image: "cat-paneer",
     items: [
-      { name: "Paneer Steam", p5: 60, p11: 120 },
-      { name: "Paneer Fried", p5: 70, p11: 140 },
-      { name: "Paneer Cheese Steam", p5: 80, p11: 160 },
-      { name: "Paneer Cheese Fried", p5: 90, p11: 180 },
-      { name: "Paneer Peri Peri Steam", p5: 90, p11: 180 },
-      { name: "Paneer Peri Peri Fried", p5: 99, p11: 199 },
-    ],
-    accent: "bg-accent",
-    popular: true
+      { id: "p1", name: "Paneer Steam", p5: 60, p11: 120, desc: "Soft paneer filling in steamed dumplings." },
+      { id: "p2", name: "Paneer Fried", p5: 70, p11: 140, desc: "Crispy fried momos with rich paneer." },
+      { id: "p3", name: "Paneer Cheese Steam", p5: 80, p11: 160, desc: "Double delight of paneer and cheese." },
+      { id: "p4", name: "Paneer Cheese Fried", p5: 90, p11: 180, desc: "Crunchy paneer and cheese combination." },
+      { id: "p5", name: "Paneer Peri Peri Steam", p5: 90, p11: 180, desc: "Spiced paneer in steamed casing." },
+      { id: "p6", name: "Paneer Peri Peri Fried", p5: 99, p11: 199, desc: "Fiery paneer fried momos." },
+    ]
   },
   {
     id: "kurkure-crunch",
     title: "Kurkure Fried",
-    description: "Extra crunchy exterior for the ultimate texture.",
+    image: "cat-kurkure",
     items: [
-      { name: "Kurkure Veg Fried", p5: 70, p11: 140 },
-      { name: "Kurkure Cheese Fried", p5: 80, p11: 160 },
-      { name: "Kurkure Peri Peri Fried", p5: 80, p11: 160 },
-      { name: "Kurkure Paneer Fried", p5: 90, p11: 180 },
-      { name: "Kurkure Paneer Cheese Fried", p5: 99, p11: 199 },
-      { name: "Kurkure Paneer Peri Peri Fried", p5: 110, p11: 220 },
-    ],
-    accent: "bg-foreground"
+      { id: "k1", name: "Kurkure Veg Fried", p5: 70, p11: 140, desc: "Extra crunchy breaded veg momos." },
+      { id: "k2", name: "Kurkure Cheese Fried", p5: 80, p11: 160, desc: "The ultimate crunchy cheesy bite." },
+      { id: "k3", name: "Kurkure Peri Peri Fried", p5: 80, p11: 160, desc: "Spicy and crunchy texture bomb." },
+      { id: "k4", name: "Kurkure Paneer Fried", p5: 90, p11: 180, desc: "Paneer center with kurkure crunch." },
+      { id: "k5", name: "Kurkure Paneer Cheese Fried", p5: 99, p11: 199, desc: "Crunchy, cheesy, and paneer-rich." },
+      { id: "k6", name: "Kurkure Paneer Peri Peri Fried", p5: 110, p11: 220, desc: "The boldest spicy crunchy momo." },
+    ]
   },
   {
     id: "jain-momos",
     title: "Jain Specialized",
-    description: "Strictly prepared without onion, garlic, or root vegetables.",
+    image: "cat-jain",
     items: [
-      { name: "Jain Steam", p5: 80, p11: 150 },
-      { name: "Jain Fried", p5: 90, p11: 170 },
-      { name: "Jain Cheese Steam", p5: 90, p11: 180 },
-      { name: "Jain Cheese Fried", p5: 99, p11: 190 },
-      { name: "Jain Peri Peri Steam", p5: 90, p11: 180 },
-      { name: "Jain Peri Peri Fried", p5: 99, p11: 190 },
-    ],
-    accent: "bg-primary/60"
+      { id: "j1", name: "Jain Steam", p5: 80, p11: 150, desc: "Strictly Jain prepared steamed momos." },
+      { id: "j2", name: "Jain Fried", p5: 90, p11: 170, desc: "Golden fried Jain vegetable momos." },
+      { id: "j3", name: "Jain Cheese Steam", p5: 90, p11: 180, desc: "Cheesy delight without root veg." },
+      { id: "j4", name: "Jain Cheese Fried", p5: 99, p11: 190, desc: "Fried cheesy treats for Jain diet." },
+      { id: "j5", name: "Jain Peri Peri Steam", p5: 90, p11: 180, desc: "Spicy Jain friendly steamed momos." },
+      { id: "j6", name: "Jain Peri Peri Fried", p5: 99, p11: 190, desc: "Spicy fried momos for Jain lovers." },
+    ]
   }
 ];
 
 const friesItems = [
-  { id: "f-salted", name: "Salted Fries", half: 35, full: 70, icon: "Fries" },
-  { id: "f-cheese", name: "Cheese Fries", half: 50, full: 99, icon: "Cheese" },
-  { id: "f-peri", name: "Peri Peri Fries", half: 45, full: 90, icon: "Spicy" },
-  { id: "f-masala", name: "Masala Fries", half: 40, full: 80, icon: "Masala" },
+  { id: "f1", name: "Salted Fries", half: 35, full: 70, desc: "Classic salted potato fries." },
+  { id: "f2", name: "Cheese Fries", half: 50, full: 99, desc: "Fries topped with rich cheese sauce." },
+  { id: "f3", name: "Peri Peri Fries", half: 45, full: 90, desc: "Spicy peri-peri seasoned fries." },
+  { id: "f4", name: "Masala Fries", half: 40, full: 80, desc: "Zesty Indian masala seasoned fries." },
 ];
 
 const mealCombos = [
-  {
-    id: "c-classic-steam",
-    title: "Classic Steam Meal",
-    price: 90,
-    items: ["Classic Steam - 5pcs", "Masala Fries - Half", "Soft drink - 250 ml"],
-    accent: "border-primary/20"
-  },
-  {
-    id: "c-classic-fried",
-    title: "Classic Fried Meal",
-    price: 99,
-    items: ["Classic Fried - 5pcs", "Masala Fries - Half", "Soft drink - 250 ml"],
-    accent: "border-primary/20"
-  },
-  {
-    id: "c-paneer-steam",
-    title: "Paneer Steam Meal",
-    price: 110,
-    items: ["Paneer Steam - 5pcs", "Masala Fries - Half", "Soft drink - 250 ml"],
-    accent: "border-primary/20"
-  },
-  {
-    id: "c-paneer-fried",
-    title: "Paneer Fried Meal",
-    price: 120,
-    items: ["Paneer Fried - 5pcs", "Masala Fries - Half", "Soft drink - 250 ml"],
-    accent: "border-primary/20"
-  },
-  {
-    id: "c-cheese-meal",
-    title: "Cheese Meal",
-    price: 130,
-    items: ["Cheese Fried - 5pcs", "Cheese Fries - Half", "Soft drink - 250 ml"],
-    accent: "border-accent",
-    featured: true
-  },
-  {
-    id: "c-peri-meal",
-    title: "Peri Peri Meal",
-    price: 130,
-    items: ["Peri Peri Fried - 5pcs", "Peri Fries - Half", "Soft drink - 250 ml"],
-    accent: "border-primary/40"
-  }
+  { id: "m1", title: "Classic Steam Meal", price: 90, items: ["5pcs Steam", "Half Fries", "Drink"], desc: "The perfect light evening meal." },
+  { id: "m2", title: "Classic Fried Meal", price: 99, items: ["5pcs Fried", "Half Fries", "Drink"], desc: "Satisfying crispy meal combo." },
+  { id: "m3", title: "Paneer Steam Meal", price: 110, items: ["5pcs Paneer", "Half Fries", "Drink"], desc: "Protein packed paneer meal." },
+  { id: "m4", title: "Paneer Fried Meal", price: 120, items: ["5pcs Paneer", "Half Fries", "Drink"], desc: "Rich and crispy paneer meal." },
+  { id: "m5", title: "Cheese Meal", price: 130, items: ["5pcs Cheese", "Half Cheese Fries", "Drink"], desc: "For the ultimate cheese lover.", featured: true },
+  { id: "m6", title: "Peri Peri Meal", price: 130, items: ["5pcs Peri Peri", "Half Peri Fries", "Drink"], desc: "Spice up your evening!" },
 ];
 
 export function Products() {
@@ -139,118 +99,135 @@ export function Products() {
     });
   };
 
+  const getImage = (id: string) => PlaceHolderImages.find(img => img.id === id)?.imageUrl || "";
+
   return (
     <section id="menu" className="py-24 bg-white">
       <div className="container mx-auto px-4">
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-          <Badge className="bg-primary/10 text-primary border-none mb-2">100% PURE VEG & JAIN</Badge>
-          <h2 className="text-3xl md:text-5xl font-extrabold font-headline tracking-tight">Our Delicious Menu</h2>
+          <Badge className="bg-primary/10 text-primary border-none mb-2 px-4 py-1">
+            <Leaf className="w-3 h-3 mr-2" /> 100% PURE VEG & JAIN
+          </Badge>
+          <h2 className="text-3xl md:text-5xl font-extrabold font-headline tracking-tight">Browse Our Menu</h2>
           <p className="text-muted-foreground text-lg">
-            Freshly prepared, hygiene-focused snacks. Select your portion and add to cart!
+            Order your favorite snacks online and pick them up or get them delivered via WhatsApp!
           </p>
         </div>
 
-        <Tabs defaultValue="momos" className="w-full">
-          <div className="flex justify-center mb-12">
-            <TabsList className="bg-secondary/50 p-1 h-14">
-              <TabsTrigger value="momos" className="px-8 text-base font-bold data-[state=active]:bg-primary data-[state=active]:text-white">Momos</TabsTrigger>
-              <TabsTrigger value="fries" className="px-8 text-base font-bold data-[state=active]:bg-primary data-[state=active]:text-white">Fries</TabsTrigger>
-              <TabsTrigger value="combos" className="px-8 text-base font-bold data-[state=active]:bg-primary data-[state=active]:text-white">Meal Combos</TabsTrigger>
+        <Tabs defaultValue="classic-veg" className="w-full">
+          <div className="flex justify-start md:justify-center mb-12 overflow-x-auto no-scrollbar pb-2">
+            <TabsList className="bg-secondary/50 p-1 h-auto flex flex-nowrap whitespace-nowrap">
+              {momoCategories.map(cat => (
+                <TabsTrigger key={cat.id} value={cat.id} className="px-6 py-3 text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-white">
+                  {cat.title}
+                </TabsTrigger>
+              ))}
+              <TabsTrigger value="fries" className="px-6 py-3 text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-white">Fries</TabsTrigger>
+              <TabsTrigger value="combos" className="px-6 py-3 text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-white">Meal Combos</TabsTrigger>
             </TabsList>
           </div>
 
-          <TabsContent value="momos" className="mt-0">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {momoCategories.map((cat) => (
-                <Card key={cat.id} className={`relative border-2 transition-all hover:shadow-xl ${cat.popular ? 'border-primary' : 'border-muted/40 bg-muted/5'}`}>
-                  {cat.popular && (
-                    <div className="absolute -top-3 left-6 z-10">
-                      <Badge className="bg-primary text-white">POPULAR CHOICE</Badge>
+          {/* Momo Categories Content */}
+          {momoCategories.map((cat) => (
+            <TabsContent key={cat.id} value={cat.id} className="mt-0">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                {cat.items.map((item) => (
+                  <Card key={item.id} className="overflow-hidden border-muted/60 hover:shadow-2xl transition-all group flex flex-col">
+                    <div className="relative h-56 w-full overflow-hidden">
+                      <Image 
+                        src={getImage(cat.image)} 
+                        alt={item.name} 
+                        fill 
+                        className="object-cover group-hover:scale-110 transition-transform duration-500"
+                        data-ai-hint="momo plate"
+                      />
+                      <div className="absolute top-3 left-3 flex gap-2">
+                        <Badge className="bg-white/90 text-primary border-none shadow-sm backdrop-blur-md">Pure Veg</Badge>
+                        {cat.id === 'jain-momos' && <Badge className="bg-accent/90 text-accent-foreground border-none shadow-sm backdrop-blur-md">Jain</Badge>}
+                      </div>
                     </div>
-                  )}
-                  <CardHeader>
-                    <CardTitle className="text-2xl font-bold flex items-center gap-2">
-                      <div className={`w-2 h-6 rounded-full ${cat.accent}`} />
-                      {cat.title}
-                    </CardTitle>
-                    <p className="text-muted-foreground text-sm">{cat.description}</p>
-                  </CardHeader>
-                  <CardContent className="grid grid-cols-1 gap-3">
-                    <div className="grid grid-cols-12 mb-2 px-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                      <div className="col-span-6">Item Name</div>
-                      <div className="col-span-3 text-center">5-PCS</div>
-                      <div className="col-span-3 text-center">11-PCS</div>
-                    </div>
-                    {cat.items.map((item, idx) => (
-                      <div key={idx} className="grid grid-cols-12 items-center p-2 rounded-lg bg-white border border-black/5 hover:border-primary/20 transition-all group">
-                        <div className="col-span-6">
-                          <span className="text-sm font-bold group-hover:text-primary transition-colors">{item.name}</span>
+                    <CardHeader className="p-5 pb-2">
+                      <div className="flex justify-between items-start">
+                        <CardTitle className="text-xl font-bold">{item.name}</CardTitle>
+                        <div className="flex items-center text-accent">
+                          <Star className="w-4 h-4 fill-accent" />
+                          <span className="text-xs font-bold ml-1">4.9</span>
                         </div>
-                        <div className="col-span-3 flex justify-center">
+                      </div>
+                      <p className="text-sm text-muted-foreground line-clamp-2 mt-2">{item.desc}</p>
+                    </CardHeader>
+                    <CardContent className="p-5 flex-grow">
+                      <div className="space-y-4">
+                        <div className="flex justify-between items-center bg-secondary/30 p-3 rounded-xl">
+                          <div className="flex flex-col">
+                            <span className="text-[10px] uppercase font-bold text-muted-foreground">5 Pieces</span>
+                            <span className="text-lg font-extrabold text-primary">Rs.{item.p5}</span>
+                          </div>
                           <Button 
-                            variant="ghost" 
                             size="sm" 
-                            className="h-8 px-2 text-xs flex flex-col items-center hover:bg-primary/10 hover:text-primary"
+                            className="bg-primary hover:bg-primary/90 rounded-full h-10 w-10 p-0 shadow-md"
                             onClick={() => handleAddToCart(item.name, item.p5, "5-PCS")}
                           >
-                            <span className="font-bold">Rs.{item.p5}</span>
-                            <span className="text-[8px] uppercase">Add</span>
+                            <Plus className="w-5 h-5" />
                           </Button>
                         </div>
-                        <div className="col-span-3 flex justify-center">
+                        <div className="flex justify-between items-center bg-secondary/30 p-3 rounded-xl">
+                          <div className="flex flex-col">
+                            <span className="text-[10px] uppercase font-bold text-muted-foreground">11 Pieces (Full)</span>
+                            <span className="text-lg font-extrabold text-primary">Rs.{item.p11}</span>
+                          </div>
                           <Button 
-                            variant="secondary" 
+                            variant="secondary"
                             size="sm" 
-                            className="h-8 px-2 text-xs flex flex-col items-center bg-secondary/50"
+                            className="bg-white border hover:bg-secondary rounded-full h-10 w-10 p-0 shadow-sm"
                             onClick={() => handleAddToCart(item.name, item.p11, "11-PCS")}
                           >
-                            <span className="font-bold">Rs.{item.p11}</span>
-                            <span className="text-[8px] uppercase">Add</span>
+                            <Plus className="w-5 h-5 text-primary" />
                           </Button>
                         </div>
                       </div>
-                    ))}
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </TabsContent>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </TabsContent>
+          ))}
 
+          {/* Fries Content */}
           <TabsContent value="fries" className="mt-0">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
               {friesItems.map((item) => (
-                <Card key={item.id} className="border-none bg-secondary/30 hover:bg-secondary/50 transition-colors">
-                  <CardHeader className="text-center pb-2">
-                    <span className="text-lg font-bold mb-2 block text-primary uppercase tracking-tighter">{item.icon}</span>
-                    <CardTitle className="text-xl font-bold">{item.name}</CardTitle>
+                <Card key={item.id} className="overflow-hidden border-muted/60 hover:shadow-xl transition-all flex flex-col">
+                  <div className="relative h-48 w-full">
+                    <Image 
+                      src={getImage("cat-fries")} 
+                      alt={item.name} 
+                      fill 
+                      className="object-cover"
+                      data-ai-hint="french fries"
+                    />
+                  </div>
+                  <CardHeader className="p-5 pb-2">
+                    <CardTitle className="text-lg font-bold">{item.name}</CardTitle>
+                    <p className="text-xs text-muted-foreground mt-1">{item.desc}</p>
                   </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="flex justify-between items-center py-2 border-b border-primary/10">
+                  <CardContent className="p-5 flex-grow space-y-3">
+                    <div className="flex justify-between items-center">
                       <div className="flex flex-col">
-                        <span className="text-muted-foreground font-medium text-[10px] uppercase">Half Portion</span>
-                        <span className="text-lg font-bold text-primary">Rs.{item.half}</span>
+                        <span className="text-[10px] uppercase font-bold text-muted-foreground">Half</span>
+                        <span className="text-base font-bold text-primary">Rs.{item.half}</span>
                       </div>
-                      <Button 
-                        size="sm" 
-                        variant="outline" 
-                        className="rounded-full border-primary/20 text-primary h-8"
-                        onClick={() => handleAddToCart(item.name, item.half, "Half")}
-                      >
-                        <PlusCircle className="w-4 h-4" />
+                      <Button variant="outline" size="sm" className="rounded-full h-8 px-3" onClick={() => handleAddToCart(item.name, item.half, "Half")}>
+                        Add
                       </Button>
                     </div>
-                    <div className="flex justify-between items-center py-2">
+                    <div className="flex justify-between items-center border-t pt-3">
                       <div className="flex flex-col">
-                        <span className="text-muted-foreground font-medium text-[10px] uppercase">Full Portion</span>
-                        <span className="text-lg font-bold text-primary">Rs.{item.full}</span>
+                        <span className="text-[10px] uppercase font-bold text-muted-foreground">Full</span>
+                        <span className="text-base font-bold text-primary">Rs.{item.full}</span>
                       </div>
-                      <Button 
-                        size="sm" 
-                        variant="default" 
-                        className="rounded-full bg-primary h-8"
-                        onClick={() => handleAddToCart(item.name, item.full, "Full")}
-                      >
-                        <PlusCircle className="w-4 h-4" />
+                      <Button size="sm" className="bg-primary rounded-full h-8 px-3" onClick={() => handleAddToCart(item.name, item.full, "Full")}>
+                        Add
                       </Button>
                     </div>
                   </CardContent>
@@ -259,31 +236,47 @@ export function Products() {
             </div>
           </TabsContent>
 
+          {/* Combos Content */}
           <TabsContent value="combos" className="mt-0">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {mealCombos.map((combo) => (
-                <Card key={combo.id} className={`flex flex-col border-2 ${combo.featured ? 'border-accent shadow-lg bg-accent/5' : 'border-muted'} hover:border-primary/50 transition-all`}>
-                  <CardHeader>
-                    <div className="flex justify-between items-start">
-                      <CardTitle className="text-xl font-bold text-primary">{combo.title}</CardTitle>
-                      <Badge variant="secondary" className="text-lg font-bold">Rs.{combo.price}</Badge>
+                <Card key={combo.id} className={`overflow-hidden transition-all flex flex-col ${combo.featured ? 'border-primary shadow-xl ring-2 ring-primary/10' : 'border-muted'}`}>
+                  <div className="relative h-48 w-full">
+                    <Image 
+                      src={getImage("cat-combo")} 
+                      alt={combo.title} 
+                      fill 
+                      className="object-cover"
+                      data-ai-hint="meal combo"
+                    />
+                    {combo.featured && (
+                      <div className="absolute top-3 right-3">
+                        <Badge className="bg-accent text-accent-foreground">BEST VALUE</Badge>
+                      </div>
+                    )}
+                  </div>
+                  <CardHeader className="p-5 pb-2">
+                    <div className="flex justify-between items-center">
+                      <CardTitle className="text-xl font-bold">{combo.title}</CardTitle>
+                      <span className="text-xl font-black text-primary">Rs.{combo.price}</span>
                     </div>
+                    <p className="text-sm text-muted-foreground mt-2">{combo.desc}</p>
                   </CardHeader>
-                  <CardContent className="flex-grow">
+                  <CardContent className="p-5 flex-grow">
                     <ul className="space-y-2">
-                      {combo.items.map((item, iIdx) => (
-                        <li key={iIdx} className="flex items-center gap-2 text-xs text-muted-foreground">
-                          <div className="w-1 h-1 rounded-full bg-accent" /> {item}
+                      {combo.items.map((item, idx) => (
+                        <li key={idx} className="flex items-center gap-2 text-xs text-muted-foreground">
+                          <div className="w-1.5 h-1.5 rounded-full bg-accent" /> {item}
                         </li>
                       ))}
                     </ul>
                   </CardContent>
-                  <CardFooter>
+                  <CardFooter className="p-5 pt-0">
                     <Button 
-                      className={`w-full ${combo.featured ? 'bg-accent text-accent-foreground hover:bg-accent/90' : 'bg-primary'}`}
+                      className="w-full h-12 text-base font-bold bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20"
                       onClick={() => handleAddToCart(combo.title, combo.price)}
                     >
-                      Add Combo to Cart
+                      Add Meal to Cart <ShoppingBag className="ml-2 w-4 h-4" />
                     </Button>
                   </CardFooter>
                 </Card>
@@ -292,26 +285,39 @@ export function Products() {
           </TabsContent>
         </Tabs>
         
-        <div className="mt-16 p-8 bg-foreground text-white rounded-3xl relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl group-hover:bg-primary/30 transition-all" />
-          <div className="relative z-10 flex flex-col md:flex-row items-center gap-8">
-            <div className="bg-primary p-6 rounded-2xl shadow-xl shadow-primary/20">
-              <Star className="w-12 h-12 text-white" fill="white" />
+        {/* Loyalty Program Card */}
+        <div className="mt-20 p-8 bg-foreground text-white rounded-[2.5rem] relative overflow-hidden group shadow-2xl">
+          <div className="absolute top-0 right-0 w-80 h-80 bg-primary/20 rounded-full -translate-y-1/2 translate-x-1/2 blur-[100px] group-hover:bg-primary/30 transition-all duration-700" />
+          <div className="relative z-10 flex flex-col md:flex-row items-center gap-10">
+            <div className="bg-white/10 backdrop-blur-md p-8 rounded-3xl border border-white/20 shadow-inner">
+              <Star className="w-16 h-16 text-accent" fill="currentColor" />
             </div>
-            <div className="flex-grow text-center md:text-left space-y-2">
-              <h3 className="text-2xl font-bold font-headline">Meow Momo Loyalty Card</h3>
-              <p className="text-primary-foreground/80">Every bite counts! Buy 10 plates and get 1 plate of Classic Steam Momos ABSOLUTELY FREE! Join our digital loyalty club on WhatsApp today.</p>
+            <div className="flex-grow text-center md:text-left space-y-4">
+              <h3 className="text-3xl font-black font-headline tracking-tight">Meow Momo Rewards</h3>
+              <p className="text-primary-foreground/70 text-lg leading-relaxed max-w-2xl">
+                Every plate brings you closer to a free meal! Buy 10 plates and get 1 plate of <span className="text-accent font-bold">Classic Steam Momos</span> absolutely FREE.
+              </p>
+              <div className="flex flex-wrap justify-center md:justify-start gap-4 pt-2">
+                <Badge variant="outline" className="border-white/20 text-white px-4 py-2">Digital Tracking</Badge>
+                <Badge variant="outline" className="border-white/20 text-white px-4 py-2">WhatsApp Redemption</Badge>
+              </div>
             </div>
-            <Button size="lg" className="bg-accent text-accent-foreground hover:bg-white hover:text-primary transition-all font-bold h-14 px-8" asChild>
-              <a href={`https://wa.me/918850859140?text=I'd like to join the Meow Momo Loyalty Club!`}>Join Loyalty Club</a>
+            <Button size="lg" className="bg-accent text-accent-foreground hover:bg-white hover:text-primary transition-all font-black h-16 px-10 text-lg rounded-2xl shadow-xl shadow-black/20" asChild>
+              <a href={`https://wa.me/918850859140?text=Hi, I want to join the Meow Momo Rewards Club!`}>Join the Club</a>
             </Button>
           </div>
         </div>
 
-        <div className="mt-12 p-6 bg-secondary/50 rounded-2xl flex items-center gap-4 text-sm border border-primary/10">
-          <Info className="w-5 h-5 text-primary flex-shrink-0" />
-          <p className="text-muted-foreground">
-            <strong>Portion Guide:</strong> Momos are available in 5-PCS (Half) and 11-PCS (Full). All items are Pure Vegetarian. Jain options are prepared separately with strict adherence to guidelines.
+        {/* Portion Guide */}
+        <div className="mt-12 p-6 bg-secondary/30 rounded-2xl flex flex-col md:flex-row items-center gap-6 text-sm border border-primary/5">
+          <div className="bg-white p-3 rounded-xl shadow-sm">
+            <Info className="w-6 h-6 text-primary" />
+          </div>
+          <p className="text-muted-foreground leading-relaxed text-center md:text-left">
+            <strong className="text-foreground">Order Guide:</strong> We offer flexible portions to satisfy any level of hunger. 
+            <span className="font-bold text-primary mx-1">5-PCS</span> is perfect for a light snack, while 
+            <span className="font-bold text-primary mx-1">11-PCS</span> is ideal for a full meal. 
+            All Jain items are prepared in a dedicated contamination-free area.
           </p>
         </div>
       </div>

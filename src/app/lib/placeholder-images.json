@@ -7,16 +7,40 @@
       "imageHint": "steam momos"
     },
     {
-      "id": "momo-plate",
-      "description": "A plate of fried golden momos",
-      "imageUrl": "https://picsum.photos/seed/momo-plate/600/400",
-      "imageHint": "fried momos"
+      "id": "cat-classic",
+      "description": "Classic veg momos plate",
+      "imageUrl": "https://picsum.photos/seed/classic-momo/400/300",
+      "imageHint": "veg momos"
     },
     {
-      "id": "momo-cheese",
-      "description": "Cheese bursting momos with chutney",
-      "imageUrl": "https://picsum.photos/seed/cheese-momo/600/400",
-      "imageHint": "cheese momos"
+      "id": "cat-paneer",
+      "description": "Paneer momos with dip",
+      "imageUrl": "https://picsum.photos/seed/paneer-momo/400/300",
+      "imageHint": "paneer momos"
+    },
+    {
+      "id": "cat-kurkure",
+      "description": "Extra crunchy kurkure momos",
+      "imageUrl": "https://picsum.photos/seed/crunchy-momo/400/300",
+      "imageHint": "fried snacks"
+    },
+    {
+      "id": "cat-jain",
+      "description": "Healthy Jain momos",
+      "imageUrl": "https://picsum.photos/seed/jain-momo/400/300",
+      "imageHint": "healthy food"
+    },
+    {
+      "id": "cat-fries",
+      "description": "Crispy golden french fries",
+      "imageUrl": "https://picsum.photos/seed/momo-fries/400/300",
+      "imageHint": "french fries"
+    },
+    {
+      "id": "cat-combo",
+      "description": "Momo meal combo with drink",
+      "imageUrl": "https://picsum.photos/seed/momo-combo/400/300",
+      "imageHint": "food combo"
     },
     {
       "id": "user-1",
