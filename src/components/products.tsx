@@ -219,14 +219,14 @@ export function Products() {
                               <div className="flex items-center justify-between p-3 rounded-xl bg-muted/30 border border-border/50">
                                 <div className="flex flex-col">
                                   <span className="text-[10px] uppercase font-black text-muted-foreground">5 PCS</span>
-                                  <span className="text-lg font-black text-primary">₹{item.p5}</span>
+                                  <span className="text-lg font-black text-primary">Rs.{item.p5}</span>
                                 </div>
                                 <AddButton name={item.name} price={item.p5} variant="5-PCS" />
                               </div>
                               <div className="flex items-center justify-between p-3 rounded-xl bg-muted/30 border border-border/50">
                                 <div className="flex flex-col">
                                   <span className="text-[10px] uppercase font-black text-muted-foreground">11 PCS</span>
-                                  <span className="text-lg font-black text-primary">₹{item.p11}</span>
+                                  <span className="text-lg font-black text-primary">Rs.{item.p11}</span>
                                 </div>
                                 <AddButton name={item.name} price={item.p11} variant="11-PCS" />
                               </div>
@@ -262,14 +262,14 @@ export function Products() {
                     <div className="flex justify-between items-center p-3 rounded-xl bg-muted/30 border border-border/50">
                       <div className="flex flex-col">
                         <span className="text-[10px] uppercase font-black text-muted-foreground">Half</span>
-                        <span className="text-lg font-black text-primary">₹{item.half}</span>
+                        <span className="text-lg font-black text-primary">Rs.{item.half}</span>
                       </div>
                       <AddButton name={item.name} price={item.half} variant="Half" />
                     </div>
                     <div className="flex justify-between items-center p-3 rounded-xl bg-muted/30 border border-border/50">
                       <div className="flex flex-col">
                         <span className="text-[10px] uppercase font-black text-muted-foreground">Full</span>
-                        <span className="text-lg font-black text-primary">₹{item.full}</span>
+                        <span className="text-lg font-black text-primary">Rs.{item.full}</span>
                       </div>
                       <AddButton name={item.name} price={item.full} variant="Full" />
                     </div>
@@ -303,7 +303,7 @@ export function Products() {
                   <CardHeader className="p-6 pb-2">
                     <div className="flex justify-between items-center">
                       <CardTitle className="text-xl font-bold tracking-tight">{combo.title}</CardTitle>
-                      <span className="text-xl font-black text-primary">₹{combo.price}</span>
+                      <span className="text-xl font-black text-primary">Rs.{combo.price}</span>
                     </div>
                     <p className="text-sm text-muted-foreground mt-2">{combo.desc}</p>
                   </CardHeader>

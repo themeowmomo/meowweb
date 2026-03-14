@@ -10,9 +10,12 @@ export type CartItem = {
   variant?: string;
 };
 
+export type PaymentMethod = 'cod' | 'upi';
+
 export type CustomerInfo = {
   name: string;
   address: string;
+  paymentMethod: PaymentMethod;
 };
 
 type CartContextType = {
@@ -31,7 +34,11 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
-  const [customerInfo, setCustomerInfo] = useState<CustomerInfo>({ name: '', address: '' });
+  const [customerInfo, setCustomerInfo] = useState<CustomerInfo>({ 
+    name: '', 
+    address: '',
+    paymentMethod: 'cod'
+  });
 
   // Load data from local storage on mount
   useEffect(() => {
@@ -47,7 +54,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
     const savedInfo = localStorage.getItem('meow_momo_customer');
     if (savedInfo) {
       try {
-        setCustomerInfo(JSON.parse(savedInfo));
+        const parsed = JSON.parse(savedInfo);
+        setCustomerInfo({
+          name: parsed.name || '',
+          address: parsed.address || '',
+          paymentMethod: parsed.paymentMethod || 'cod'
+        });
       } catch (e) {
         console.error("Failed to load customer info", e);
       }

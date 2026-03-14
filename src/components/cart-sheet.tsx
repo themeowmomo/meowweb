@@ -3,16 +3,19 @@
 import { useCart } from "@/context/cart-context";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, Plus, Minus, Trash2, Send, User, MapPin } from "lucide-react";
+import { ShoppingCart, Plus, Minus, Trash2, Send, User, MapPin, CreditCard, Wallet } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/hooks/use-toast";
 
 export function CartSheet() {
   const { cart, removeFromCart, updateQuantity, totalPrice, totalItems, customerInfo, updateCustomerInfo, clearCart } = useCart();
   const { toast } = useToast();
+
+  const upiBaseUrl = "upi://pay?pa=amitjaisawal0123-2@okhdfcbank&pn=Amit%20Jaisawal&aid=uGICAgIDrvPOJZw";
 
   const handleWhatsAppOrder = () => {
     if (cart.length === 0) return;
@@ -28,7 +31,7 @@ export function CartSheet() {
 
     const shopNumber = "918850859140";
     
-    // Professional Message Formatting - Using plain text for better compatibility
+    // Professional Message Formatting
     const header = "*NEW ORDER - MEOW MOMO*%0A";
     const separator = "--------------------------%0A";
     const customerSection = `*Customer Details*%0AName: ${customerInfo.name}%0AAddress: ${customerInfo.address}%0A%0A`;
@@ -40,21 +43,33 @@ export function CartSheet() {
       })
       .join("%0A") + "%0A%0A";
     
-    const summarySection = `*Order Summary*%0ATotal Items: ${totalItems}%0A*Grand Total: Rs.${totalPrice}*%0A`;
+    const paymentText = customerInfo.paymentMethod === 'upi' ? "UPI (Amount Pre-filled)" : "Cash on Delivery";
+    const summarySection = `*Order Summary*%0APayment Method: ${paymentText}%0ATotal Items: ${totalItems}%0A*Grand Total: Rs.${totalPrice}*%0A`;
     const footer = "--------------------------%0A_Sent via Meow Momo Web App_";
 
     const fullMessage = header + separator + customerSection + itemsSection + summarySection + footer;
 
-    window.open(`https://wa.me/${shopNumber}?text=${fullMessage}`, "_blank");
+    // If UPI, open payment app first
+    if (customerInfo.paymentMethod === 'upi') {
+      const upiUrl = `${upiBaseUrl}&am=${totalPrice}&cu=INR&tn=Order%20MeowMomo`;
+      window.location.href = upiUrl;
+      
+      // Give a small delay for UPI app to open before switching to WhatsApp
+      setTimeout(() => {
+        window.open(`https://wa.me/${shopNumber}?text=${fullMessage}`, "_blank");
+      }, 2000);
+    } else {
+      window.open(`https://wa.me/${shopNumber}?text=${fullMessage}`, "_blank");
+    }
 
     // Clear cart after a short delay
     setTimeout(() => {
       clearCart();
       toast({
-        title: "Order Sent",
-        description: "WhatsApp opened! Your cart has been cleared.",
+        title: "Order Processed",
+        description: "Your order details have been shared. Cart cleared!",
       });
-    }, 1500);
+    }, 3000);
   };
 
   return (
@@ -105,13 +120,47 @@ export function CartSheet() {
                       <Label htmlFor="address" className="text-xs">Full Address</Label>
                       <Input 
                         id="address" 
-                        placeholder="e.g. Bldg 4, Apt 201, Kurar Village..." 
+                        placeholder="e.g. Kurar Village, Malad East" 
                         value={customerInfo.address}
                         onChange={(e) => updateCustomerInfo({ address: e.target.value })}
                         className="h-10"
                       />
                     </div>
                   </div>
+                </div>
+
+                <Separator />
+
+                <div className="space-y-4 py-4">
+                  <h3 className="text-sm font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+                    <CreditCard className="w-4 h-4" /> Payment Method
+                  </h3>
+                  <RadioGroup 
+                    value={customerInfo.paymentMethod} 
+                    onValueChange={(val) => updateCustomerInfo({ paymentMethod: val as any })}
+                    className="grid grid-cols-2 gap-4"
+                  >
+                    <div>
+                      <RadioGroupItem value="cod" id="cod" className="peer sr-only" />
+                      <Label
+                        htmlFor="cod"
+                        className="flex flex-col items-center justify-between rounded-xl border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                      >
+                        <Wallet className="mb-2 h-6 w-6" />
+                        <span className="text-xs font-bold">Cash/COD</span>
+                      </Label>
+                    </div>
+                    <div>
+                      <RadioGroupItem value="upi" id="upi" className="peer sr-only" />
+                      <Label
+                        htmlFor="upi"
+                        className="flex flex-col items-center justify-between rounded-xl border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                      >
+                        <Send className="mb-2 h-6 w-6" />
+                        <span className="text-xs font-bold">UPI Pay</span>
+                      </Label>
+                    </div>
+                  </RadioGroup>
                 </div>
 
                 <Separator />
@@ -176,7 +225,8 @@ export function CartSheet() {
                 </div>
               </div>
               <Button onClick={handleWhatsAppOrder} className="w-full h-14 bg-primary text-lg font-bold shadow-lg shadow-primary/20">
-                Order via WhatsApp <Send className="ml-2 w-4 h-4" />
+                {customerInfo.paymentMethod === 'upi' ? 'Pay & Order via WhatsApp' : 'Order via WhatsApp'} 
+                <Send className="ml-2 w-4 h-4" />
               </Button>
             </div>
           </>
