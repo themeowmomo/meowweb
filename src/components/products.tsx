@@ -1,10 +1,16 @@
 "use client";
 
-import { Star, Plus, ShoppingBag, Leaf, Check } from "lucide-react";
+import { Star, Plus, ShoppingBag, Leaf, Check, ChevronDown } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { 
+  Accordion, 
+  AccordionContent, 
+  AccordionItem, 
+  AccordionTrigger 
+} from "@/components/ui/accordion";
 import { useCart } from "@/context/cart-context";
 import { useToast } from "@/hooks/use-toast";
 import Image from "next/image";
@@ -119,7 +125,10 @@ export function Products() {
             : "border-primary text-primary hover:bg-primary hover:text-white",
           className
         )}
-        onClick={() => handleAddToCart(name, price, variant)}
+        onClick={(e) => {
+          e.stopPropagation();
+          handleAddToCart(name, price, variant);
+        }}
       >
         {inCart ? (
           <><Check className="w-3.5 h-3.5 mr-1" /> Added</>
@@ -158,63 +167,78 @@ export function Products() {
             </TabsList>
           </div>
 
-          <TabsContent value="momos" className="mt-0 space-y-20">
-            {momoCategories.map((cat) => (
-              <div key={cat.id} className="space-y-8">
-                <div className="flex items-center gap-4">
-                  <h3 className="text-2xl font-black font-headline text-foreground">{cat.title}</h3>
-                  <div className="h-0.5 bg-muted flex-grow rounded-full" />
-                </div>
-                
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-                  {cat.items.map((item) => (
-                    <Card key={item.id} className="overflow-hidden border-border/50 hover:shadow-xl transition-all group flex flex-col bg-card shadow-sm rounded-2xl">
-                      <div className="relative h-56 w-full overflow-hidden">
+          <TabsContent value="momos" className="mt-0">
+            <Accordion type="multiple" className="space-y-4">
+              {momoCategories.map((cat) => (
+                <AccordionItem key={cat.id} value={cat.id} className="border-none">
+                  <AccordionTrigger className="hover:no-underline py-6 px-6 bg-muted/30 rounded-2xl group data-[state=open]:bg-primary data-[state=open]:text-white transition-all">
+                    <div className="flex items-center gap-4 text-left">
+                      <div className="relative w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 border-2 border-white/20 group-data-[state=open]:border-white/40">
                         <Image 
                           src={getImage(cat.image)} 
-                          alt={item.name} 
+                          alt={cat.title} 
                           fill 
-                          className="object-cover group-hover:scale-105 transition-transform duration-700"
-                          data-ai-hint="momo plate"
+                          className="object-cover"
                         />
-                        <div className="absolute top-4 left-4 flex gap-2">
-                          <Badge className="bg-white/95 text-primary border-none shadow-md font-bold px-2 py-0.5">Veg</Badge>
-                          {cat.id === 'jain-momos' && <Badge className="bg-accent/95 text-accent-foreground border-none shadow-md font-bold px-2 py-0.5">Jain</Badge>}
-                        </div>
                       </div>
-                      <CardHeader className="p-6 pb-2">
-                        <div className="flex justify-between items-start">
-                          <CardTitle className="text-xl font-bold tracking-tight">{item.name}</CardTitle>
-                          <div className="flex items-center text-accent bg-accent/10 px-2 py-0.5 rounded-md">
-                            <Star className="w-3.5 h-3.5 fill-accent" />
-                            <span className="text-xs font-bold ml-1">4.9</span>
-                          </div>
-                        </div>
-                        <p className="text-sm text-muted-foreground mt-2 line-clamp-2 leading-relaxed">{item.desc}</p>
-                      </CardHeader>
-                      <CardContent className="p-6 mt-auto">
-                        <div className="flex flex-col gap-3">
-                          <div className="flex items-center justify-between p-3 rounded-xl bg-muted/30 border border-border/50">
-                            <div className="flex flex-col">
-                              <span className="text-[10px] uppercase font-black text-muted-foreground">5 PCS</span>
-                              <span className="text-lg font-black text-primary">₹{item.p5}</span>
+                      <div className="flex flex-col">
+                        <span className="text-xl font-black font-headline tracking-tight">{cat.title}</span>
+                        <span className="text-xs opacity-70 group-data-[state=open]:text-white/80">{cat.items.length} Varieties available</span>
+                      </div>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="pt-8 pb-4 px-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                      {cat.items.map((item) => (
+                        <Card key={item.id} className="overflow-hidden border-border/50 hover:shadow-xl transition-all group flex flex-col bg-card shadow-sm rounded-2xl">
+                          <div className="relative h-56 w-full overflow-hidden">
+                            <Image 
+                              src={getImage(cat.image)} 
+                              alt={item.name} 
+                              fill 
+                              className="object-cover group-hover:scale-105 transition-transform duration-700"
+                              data-ai-hint="momo plate"
+                            />
+                            <div className="absolute top-4 left-4 flex gap-2">
+                              <Badge className="bg-white/95 text-primary border-none shadow-md font-bold px-2 py-0.5">Veg</Badge>
+                              {cat.id === 'jain-momos' && <Badge className="bg-accent/95 text-accent-foreground border-none shadow-md font-bold px-2 py-0.5">Jain</Badge>}
                             </div>
-                            <AddButton name={item.name} price={item.p5} variant="5-PCS" />
                           </div>
-                          <div className="flex items-center justify-between p-3 rounded-xl bg-muted/30 border border-border/50">
-                            <div className="flex flex-col">
-                              <span className="text-[10px] uppercase font-black text-muted-foreground">11 PCS</span>
-                              <span className="text-lg font-black text-primary">₹{item.p11}</span>
+                          <CardHeader className="p-6 pb-2">
+                            <div className="flex justify-between items-start">
+                              <CardTitle className="text-xl font-bold tracking-tight">{item.name}</CardTitle>
+                              <div className="flex items-center text-accent bg-accent/10 px-2 py-0.5 rounded-md">
+                                <Star className="w-3.5 h-3.5 fill-accent" />
+                                <span className="text-xs font-bold ml-1">4.9</span>
+                              </div>
                             </div>
-                            <AddButton name={item.name} price={item.p11} variant="11-PCS" />
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </div>
-            ))}
+                            <p className="text-sm text-muted-foreground mt-2 line-clamp-2 leading-relaxed">{item.desc}</p>
+                          </CardHeader>
+                          <CardContent className="p-6 mt-auto">
+                            <div className="flex flex-col gap-3">
+                              <div className="flex items-center justify-between p-3 rounded-xl bg-muted/30 border border-border/50">
+                                <div className="flex flex-col">
+                                  <span className="text-[10px] uppercase font-black text-muted-foreground">5 PCS</span>
+                                  <span className="text-lg font-black text-primary">₹{item.p5}</span>
+                                </div>
+                                <AddButton name={item.name} price={item.p5} variant="5-PCS" />
+                              </div>
+                              <div className="flex items-center justify-between p-3 rounded-xl bg-muted/30 border border-border/50">
+                                <div className="flex flex-col">
+                                  <span className="text-[10px] uppercase font-black text-muted-foreground">11 PCS</span>
+                                  <span className="text-lg font-black text-primary">₹{item.p11}</span>
+                                </div>
+                                <AddButton name={item.name} price={item.p11} variant="11-PCS" />
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
           </TabsContent>
 
           <TabsContent value="fries" className="mt-0">
