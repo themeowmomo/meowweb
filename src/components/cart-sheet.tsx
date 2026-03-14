@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { useCart } from "@/context/cart-context";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
@@ -14,6 +15,11 @@ import { useToast } from "@/hooks/use-toast";
 export function CartSheet() {
   const { cart, removeFromCart, updateQuantity, totalPrice, totalItems, customerInfo, updateCustomerInfo, clearCart } = useCart();
   const { toast } = useToast();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const upiBaseUrl = "upi://pay?pa=amitjaisawal0123-2@okhdfcbank&pn=Amit%20Jaisawal&aid=uGICAgIDrvPOJZw";
 
@@ -31,7 +37,6 @@ export function CartSheet() {
 
     const shopNumber = "918850859140";
     
-    // Professional Message Formatting
     const header = "*NEW ORDER - MEOW MOMO*%0A";
     const separator = "--------------------------%0A";
     const customerSection = `*Customer Details*%0AName: ${customerInfo.name}%0AAddress: ${customerInfo.address}%0A%0A`;
@@ -49,12 +54,10 @@ export function CartSheet() {
 
     const fullMessage = header + separator + customerSection + itemsSection + summarySection + footer;
 
-    // If UPI, open payment app first
     if (customerInfo.paymentMethod === 'upi') {
       const upiUrl = `${upiBaseUrl}&am=${totalPrice}&cu=INR&tn=Order%20MeowMomo`;
       window.location.href = upiUrl;
       
-      // Give a small delay for UPI app to open before switching to WhatsApp
       setTimeout(() => {
         window.open(`https://wa.me/${shopNumber}?text=${fullMessage}`, "_blank");
       }, 2000);
@@ -62,7 +65,6 @@ export function CartSheet() {
       window.open(`https://wa.me/${shopNumber}?text=${fullMessage}`, "_blank");
     }
 
-    // Clear cart after a short delay
     setTimeout(() => {
       clearCart();
       toast({
@@ -71,6 +73,14 @@ export function CartSheet() {
       });
     }, 3000);
   };
+
+  if (!mounted) {
+    return (
+      <Button variant="outline" size="icon" className="relative border-primary/20 hover:bg-secondary">
+        <ShoppingCart className="w-5 h-5 text-primary" />
+      </Button>
+    );
+  }
 
   return (
     <Sheet>

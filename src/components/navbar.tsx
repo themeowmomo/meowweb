@@ -4,11 +4,16 @@ import Link from "next/link";
 import { UtensilsCrossed, Menu as MenuIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CartSheet } from "./cart-sheet";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const navLinks = [
     { name: "Menu", href: "#menu" },
@@ -51,30 +56,32 @@ export function Navbar() {
         {/* Mobile Menu */}
         <div className="md:hidden flex items-center gap-4">
           <CartSheet />
-          <Sheet open={isOpen} onOpenChange={setIsOpen}>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <MenuIcon className="w-6 h-6" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="w-[300px] flex flex-col pt-20">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  href={link.href}
-                  onClick={() => setIsOpen(false)}
-                  className="text-lg font-medium py-4 border-b hover:text-primary transition-colors"
-                >
-                  {link.name}
-                </Link>
-              ))}
-              <div className="mt-8">
-                <Button className="w-full h-12 bg-primary" asChild>
-                  <a href={`https://wa.me/${shopNumber}`} target="_blank" rel="noopener noreferrer">Order Now</a>
+          {mounted && (
+            <Sheet open={isOpen} onOpenChange={setIsOpen}>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <MenuIcon className="w-6 h-6" />
                 </Button>
-              </div>
-            </SheetContent>
-          </Sheet>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-[300px] flex flex-col pt-20">
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.name}
+                    href={link.href}
+                    onClick={() => setIsOpen(false)}
+                    className="text-lg font-medium py-4 border-b hover:text-primary transition-colors"
+                  >
+                    {link.name}
+                  </Link>
+                ))}
+                <div className="mt-8">
+                  <Button className="w-full h-12 bg-primary" asChild>
+                    <a href={`https://wa.me/${shopNumber}`} target="_blank" rel="noopener noreferrer">Order Now</a>
+                  </Button>
+                </div>
+              </SheetContent>
+            </Sheet>
+          )}
         </div>
       </div>
     </nav>
