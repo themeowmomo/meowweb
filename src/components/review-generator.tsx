@@ -9,7 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
 export function ReviewGenerator() {
-  const [rating, setRating] = useState(5);
+  const [rating, setRating] = useState(0);
   const [hoveredRating, setHoveredRating] = useState(0);
   const [loading, setLoading] = useState(false);
   const [generatedReview, setGeneratedReview] = useState("");
@@ -19,6 +19,14 @@ export function ReviewGenerator() {
   const reviewUrl = "https://g.page/r/CUiIdrmfjbsKEBM/review";
 
   const handleGenerate = async () => {
+    if (rating === 0) {
+      toast({
+        title: "Select a Rating",
+        description: "Please select a star rating first!",
+        variant: "destructive",
+      });
+      return;
+    }
     setLoading(true);
     setCopied(false);
     try {
@@ -98,8 +106,8 @@ export function ReviewGenerator() {
                 <p className="text-xs font-black uppercase tracking-[0.2em] text-primary">Step 2: Generate & Share</p>
                 <Button
                   onClick={handleGenerate}
-                  disabled={loading}
-                  className="w-full h-16 text-xl font-black bg-primary hover:bg-primary/90 shadow-xl rounded-2xl transition-all"
+                  disabled={loading || rating === 0}
+                  className="w-full h-16 text-xl font-black bg-primary hover:bg-primary/90 shadow-xl rounded-2xl transition-all disabled:bg-muted disabled:text-muted-foreground disabled:shadow-none"
                 >
                   {loading ? (
                     <><Loader2 className="mr-2 h-6 w-6 animate-spin" /> Cooking your review...</>
