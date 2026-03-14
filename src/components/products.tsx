@@ -168,7 +168,7 @@ export function Products() {
           </div>
 
           <TabsContent value="momos" className="mt-0">
-            <Accordion type="multiple" className="space-y-4">
+            <Accordion type="multiple" className="space-y-4" defaultValue={momoCategories.map(cat => cat.id)}>
               {momoCategories.map((cat) => (
                 <AccordionItem key={cat.id} value={cat.id} className="border-none">
                   <AccordionTrigger className="hover:no-underline py-6 px-6 bg-muted/30 rounded-2xl group data-[state=open]:bg-primary data-[state=open]:text-white transition-all">
