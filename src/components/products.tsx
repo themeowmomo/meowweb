@@ -111,19 +111,20 @@ export function Products() {
     return (
       <Button 
         size="sm" 
+        variant={inCart ? "default" : "outline"}
         className={cn(
-          "rounded-full h-9 px-4 font-bold transition-all shadow-md",
+          "h-8 px-3 text-xs font-bold transition-all rounded-lg border-2",
           inCart 
-            ? "bg-green-500 hover:bg-green-600 text-white" 
-            : "bg-primary hover:bg-primary/90 text-white",
+            ? "bg-green-600 border-green-600 hover:bg-green-700 text-white" 
+            : "border-primary text-primary hover:bg-primary hover:text-white",
           className
         )}
         onClick={() => handleAddToCart(name, price, variant)}
       >
         {inCart ? (
-          <><Check className="w-4 h-4 mr-1" /> Added</>
+          <><Check className="w-3.5 h-3.5 mr-1" /> Added</>
         ) : (
-          <><Plus className="w-4 h-4 mr-1" /> Add</>
+          <><Plus className="w-3.5 h-3.5 mr-1" /> Add</>
         )}
       </Button>
     );
@@ -133,80 +134,79 @@ export function Products() {
     <section id="menu" className="py-24 bg-white">
       <div className="container mx-auto px-4">
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-          <Badge className="bg-primary/10 text-primary border-none mb-2 px-4 py-1">
-            <Leaf className="w-3 h-3 mr-2" /> 100% PURE VEG & JAIN
+          <Badge className="bg-primary/10 text-primary border-none mb-2 px-4 py-1.5">
+            <Leaf className="w-3.5 h-3.5 mr-2" /> 100% PURE VEG & JAIN
           </Badge>
-          <h2 className="text-3xl md:text-5xl font-extrabold font-headline tracking-tight">Our Delicious Menu</h2>
+          <h2 className="text-3xl md:text-5xl font-black font-headline tracking-tight">Explore Our Menu</h2>
           <p className="text-muted-foreground text-lg">
-            Freshly prepared evening snacks. Select your items and order via WhatsApp.
+            Delicious freshly prepared evening snacks for every craving.
           </p>
         </div>
 
         <Tabs defaultValue="momos" className="w-full">
           <div className="flex justify-center mb-12">
-            <TabsList className="bg-secondary/50 p-1.5 h-auto rounded-full border border-primary/10">
-              <TabsTrigger value="momos" className="px-8 py-3 rounded-full text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-white transition-all">
+            <TabsList className="bg-muted p-1 h-14 rounded-full border border-border shadow-sm">
+              <TabsTrigger value="momos" className="px-10 rounded-full text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-white transition-all">
                 Momos
               </TabsTrigger>
-              <TabsTrigger value="fries" className="px-8 py-3 rounded-full text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-white transition-all">
+              <TabsTrigger value="fries" className="px-10 rounded-full text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-white transition-all">
                 Fries
               </TabsTrigger>
-              <TabsTrigger value="meal" className="px-8 py-3 rounded-full text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-white transition-all">
-                Meal
+              <TabsTrigger value="meal" className="px-10 rounded-full text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-white transition-all">
+                Combos
               </TabsTrigger>
             </TabsList>
           </div>
 
-          {/* Momos Main Tab */}
           <TabsContent value="momos" className="mt-0 space-y-20">
             {momoCategories.map((cat) => (
               <div key={cat.id} className="space-y-8">
                 <div className="flex items-center gap-4">
-                  <h3 className="text-2xl font-black font-headline text-foreground/90">{cat.title}</h3>
-                  <div className="h-px bg-muted flex-grow" />
+                  <h3 className="text-2xl font-black font-headline text-foreground">{cat.title}</h3>
+                  <div className="h-0.5 bg-muted flex-grow rounded-full" />
                 </div>
                 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                   {cat.items.map((item) => (
-                    <Card key={item.id} className="overflow-hidden border-muted/60 hover:shadow-2xl transition-all group flex flex-col bg-card/50 backdrop-blur-sm">
-                      <div className="relative h-52 w-full overflow-hidden">
+                    <Card key={item.id} className="overflow-hidden border-border/50 hover:shadow-xl transition-all group flex flex-col bg-card shadow-sm rounded-2xl">
+                      <div className="relative h-56 w-full overflow-hidden">
                         <Image 
                           src={getImage(cat.image)} 
                           alt={item.name} 
                           fill 
-                          className="object-cover group-hover:scale-105 transition-transform duration-500"
+                          className="object-cover group-hover:scale-105 transition-transform duration-700"
                           data-ai-hint="momo plate"
                         />
-                        <div className="absolute top-3 left-3 flex gap-2">
-                          <Badge className="bg-white/90 text-primary border-none shadow-sm backdrop-blur-md font-bold">Veg</Badge>
-                          {cat.id === 'jain-momos' && <Badge className="bg-accent/90 text-accent-foreground border-none shadow-sm backdrop-blur-md font-bold">Jain</Badge>}
+                        <div className="absolute top-4 left-4 flex gap-2">
+                          <Badge className="bg-white/95 text-primary border-none shadow-md font-bold px-2 py-0.5">Veg</Badge>
+                          {cat.id === 'jain-momos' && <Badge className="bg-accent/95 text-accent-foreground border-none shadow-md font-bold px-2 py-0.5">Jain</Badge>}
                         </div>
                       </div>
-                      <CardHeader className="p-5 pb-2">
+                      <CardHeader className="p-6 pb-2">
                         <div className="flex justify-between items-start">
-                          <CardTitle className="text-xl font-bold">{item.name}</CardTitle>
-                          <div className="flex items-center text-accent">
-                            <Star className="w-4 h-4 fill-accent" />
+                          <CardTitle className="text-xl font-bold tracking-tight">{item.name}</CardTitle>
+                          <div className="flex items-center text-accent bg-accent/10 px-2 py-0.5 rounded-md">
+                            <Star className="w-3.5 h-3.5 fill-accent" />
                             <span className="text-xs font-bold ml-1">4.9</span>
                           </div>
                         </div>
-                        <p className="text-sm text-muted-foreground line-clamp-2 mt-2 leading-relaxed">{item.desc}</p>
+                        <p className="text-sm text-muted-foreground mt-2 line-clamp-2 leading-relaxed">{item.desc}</p>
                       </CardHeader>
-                      <CardContent className="p-5 mt-auto">
-                        <div className="grid grid-cols-2 gap-3">
-                          <div className="bg-white/60 p-3 rounded-2xl border border-primary/5 shadow-inner">
-                            <span className="block text-[10px] uppercase font-bold text-muted-foreground mb-1">5 PCS</span>
-                            <div className="flex justify-between items-center">
-                              <span className="text-base font-black text-primary">₹{item.p5}</span>
-                              <AddButton name={item.name} price={item.p5} variant="5-PCS" />
+                      <CardContent className="p-6 mt-auto">
+                        <div className="flex flex-col gap-3">
+                          <div className="flex items-center justify-between p-3 rounded-xl bg-muted/30 border border-border/50">
+                            <div className="flex flex-col">
+                              <span className="text-[10px] uppercase font-black text-muted-foreground">5 PCS</span>
+                              <span className="text-lg font-black text-primary">₹{item.p5}</span>
                             </div>
+                            <AddButton name={item.name} price={item.p5} variant="5-PCS" />
                           </div>
-                          <div className="bg-white/60 p-3 rounded-2xl border border-primary/5 shadow-inner">
-                            <span className="block text-[10px] uppercase font-bold text-muted-foreground mb-1">11 PCS</span>
-                            <div className="flex justify-between items-center">
-                              <span className="text-base font-black text-primary">₹{item.p11}</span>
-                              <AddButton name={item.name} price={item.p11} variant="11-PCS" />
+                          <div className="flex items-center justify-between p-3 rounded-xl bg-muted/30 border border-border/50">
+                            <div className="flex flex-col">
+                              <span className="text-[10px] uppercase font-black text-muted-foreground">11 PCS</span>
+                              <span className="text-lg font-black text-primary">₹{item.p11}</span>
                             </div>
+                            <AddButton name={item.name} price={item.p11} variant="11-PCS" />
                           </div>
                         </div>
                       </CardContent>
@@ -217,11 +217,10 @@ export function Products() {
             ))}
           </TabsContent>
 
-          {/* Fries Main Tab */}
           <TabsContent value="fries" className="mt-0">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
               {friesItems.map((item) => (
-                <Card key={item.id} className="overflow-hidden border-muted/60 hover:shadow-xl transition-all flex flex-col bg-card/50">
+                <Card key={item.id} className="overflow-hidden border-border/50 hover:shadow-xl transition-all flex flex-col bg-card shadow-sm rounded-2xl">
                   <div className="relative h-48 w-full">
                     <Image 
                       src={getImage("cat-fries")} 
@@ -231,22 +230,22 @@ export function Products() {
                       data-ai-hint="french fries"
                     />
                   </div>
-                  <CardHeader className="p-5 pb-2">
-                    <CardTitle className="text-lg font-bold">{item.name}</CardTitle>
+                  <CardHeader className="p-6 pb-2">
+                    <CardTitle className="text-lg font-bold tracking-tight">{item.name}</CardTitle>
                     <p className="text-xs text-muted-foreground mt-1 leading-relaxed">{item.desc}</p>
                   </CardHeader>
-                  <CardContent className="p-5 mt-auto space-y-3">
-                    <div className="flex justify-between items-center p-3 rounded-xl bg-white/60 border border-primary/5">
+                  <CardContent className="p-6 mt-auto space-y-3">
+                    <div className="flex justify-between items-center p-3 rounded-xl bg-muted/30 border border-border/50">
                       <div className="flex flex-col">
-                        <span className="text-[10px] uppercase font-bold text-muted-foreground">Half</span>
-                        <span className="text-base font-black text-primary">₹{item.half}</span>
+                        <span className="text-[10px] uppercase font-black text-muted-foreground">Half</span>
+                        <span className="text-lg font-black text-primary">₹{item.half}</span>
                       </div>
                       <AddButton name={item.name} price={item.half} variant="Half" />
                     </div>
-                    <div className="flex justify-between items-center p-3 rounded-xl bg-white/60 border border-primary/5">
+                    <div className="flex justify-between items-center p-3 rounded-xl bg-muted/30 border border-border/50">
                       <div className="flex flex-col">
-                        <span className="text-[10px] uppercase font-bold text-muted-foreground">Full</span>
-                        <span className="text-base font-black text-primary">₹{item.full}</span>
+                        <span className="text-[10px] uppercase font-black text-muted-foreground">Full</span>
+                        <span className="text-lg font-black text-primary">₹{item.full}</span>
                       </div>
                       <AddButton name={item.name} price={item.full} variant="Full" />
                     </div>
@@ -256,15 +255,14 @@ export function Products() {
             </div>
           </TabsContent>
 
-          {/* Meal Main Tab */}
           <TabsContent value="meal" className="mt-0">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
               {mealCombos.map((combo) => (
                 <Card key={combo.id} className={cn(
-                  "overflow-hidden transition-all flex flex-col relative bg-card/50",
-                  combo.featured ? 'border-primary shadow-2xl ring-4 ring-primary/5' : 'border-muted'
+                  "overflow-hidden transition-all flex flex-col relative bg-card shadow-sm rounded-2xl",
+                  combo.featured ? 'border-primary border-2 shadow-primary/10' : 'border-border/50'
                 )}>
-                  <div className="relative h-48 w-full">
+                  <div className="relative h-52 w-full">
                     <Image 
                       src={getImage("cat-combo")} 
                       alt={combo.title} 
@@ -273,21 +271,21 @@ export function Products() {
                       data-ai-hint="meal combo"
                     />
                     {combo.featured && (
-                      <div className="absolute top-3 right-3">
-                        <Badge className="bg-accent text-accent-foreground font-black">BEST VALUE</Badge>
+                      <div className="absolute top-4 right-4">
+                        <Badge className="bg-accent text-accent-foreground font-black shadow-lg">BEST VALUE</Badge>
                       </div>
                     )}
                   </div>
-                  <CardHeader className="p-5 pb-2">
+                  <CardHeader className="p-6 pb-2">
                     <div className="flex justify-between items-center">
-                      <CardTitle className="text-xl font-bold">{combo.title}</CardTitle>
+                      <CardTitle className="text-xl font-bold tracking-tight">{combo.title}</CardTitle>
                       <span className="text-xl font-black text-primary">₹{combo.price}</span>
                     </div>
                     <p className="text-sm text-muted-foreground mt-2">{combo.desc}</p>
                   </CardHeader>
-                  <CardContent className="p-5 flex-grow">
-                    <div className="bg-white/40 p-4 rounded-2xl border border-primary/5">
-                      <h4 className="text-[10px] font-black uppercase text-muted-foreground mb-3 tracking-widest">Included Items</h4>
+                  <CardContent className="p-6 flex-grow">
+                    <div className="bg-muted/30 p-4 rounded-xl border border-border/50">
+                      <h4 className="text-[10px] font-black uppercase text-muted-foreground mb-3 tracking-widest">What's Inside</h4>
                       <ul className="space-y-2">
                         {combo.items.map((item, idx) => (
                           <li key={idx} className="flex items-center gap-2 text-sm font-medium text-foreground/80">
@@ -297,20 +295,20 @@ export function Products() {
                       </ul>
                     </div>
                   </CardContent>
-                  <div className="p-5 pt-0 mt-auto">
+                  <div className="p-6 pt-0 mt-auto">
                     <Button 
                       className={cn(
-                        "w-full h-12 text-base font-black shadow-lg transition-all rounded-xl",
+                        "w-full h-12 text-base font-black shadow-md transition-all rounded-xl",
                         isItemInCart(combo.title) 
-                          ? "bg-green-500 hover:bg-green-600 text-white" 
-                          : "bg-primary hover:bg-primary/90 text-white shadow-primary/20"
+                          ? "bg-green-600 hover:bg-green-700 text-white" 
+                          : "bg-primary hover:bg-primary/90 text-white"
                       )}
                       onClick={() => handleAddToCart(combo.title, combo.price)}
                     >
                       {isItemInCart(combo.title) ? (
-                        <><Check className="mr-2 w-5 h-5" /> Added to Meal Plan</>
+                        <><Check className="mr-2 w-5 h-5" /> Added to Order</>
                       ) : (
-                        <><ShoppingBag className="mr-2 w-5 h-5" /> Add Meal to Cart</>
+                        <><ShoppingBag className="mr-2 w-5 h-5" /> Add Meal</>
                       )}
                     </Button>
                   </div>
@@ -320,22 +318,21 @@ export function Products() {
           </TabsContent>
         </Tabs>
         
-        {/* Loyalty Program Section */}
-        <div className="mt-24 p-10 bg-foreground text-white rounded-[3rem] relative overflow-hidden group shadow-3xl">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-primary/20 rounded-full -translate-y-1/2 translate-x-1/2 blur-[100px] group-hover:bg-primary/30 transition-all duration-700" />
+        <div className="mt-24 p-10 bg-foreground text-white rounded-[2rem] relative overflow-hidden group shadow-2xl">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-primary/20 rounded-full -translate-y-1/2 translate-x-1/2 blur-[100px]" />
           <div className="relative z-10 flex flex-col lg:grid lg:grid-cols-12 items-center gap-10">
-            <div className="lg:col-span-3 bg-white/10 backdrop-blur-xl p-10 rounded-[2.5rem] border border-white/20 shadow-2xl rotate-3 group-hover:rotate-0 transition-transform duration-500">
-              <Star className="w-20 h-20 text-accent" fill="currentColor" />
+            <div className="lg:col-span-3 bg-white/10 backdrop-blur-xl p-8 rounded-[1.5rem] border border-white/20 shadow-2xl rotate-3 group-hover:rotate-0 transition-transform duration-500">
+              <Star className="w-16 h-16 text-accent" fill="currentColor" />
             </div>
-            <div className="lg:col-span-6 text-center lg:text-left space-y-6">
-              <div className="inline-block bg-accent/20 text-accent px-4 py-1.5 rounded-full text-xs font-black tracking-widest uppercase">Member Exclusive</div>
-              <h3 className="text-4xl font-black font-headline tracking-tighter leading-none">Virtual Loyalty Card</h3>
-              <p className="text-primary-foreground/70 text-xl leading-relaxed max-w-xl">
+            <div className="lg:col-span-6 text-center lg:text-left space-y-4">
+              <div className="inline-block bg-accent/20 text-accent px-4 py-1 rounded-full text-[10px] font-black tracking-widest uppercase">Loyalty Reward</div>
+              <h3 className="text-3xl md:text-4xl font-black font-headline tracking-tighter leading-none">Meow Momo Rewards</h3>
+              <p className="text-primary-foreground/70 text-lg leading-relaxed max-w-xl">
                 Every plate earns you a stamp! Buy 10 plates and your 11th plate of <span className="text-accent font-bold">Classic Steam Momos</span> is FREE.
               </p>
             </div>
             <div className="lg:col-span-3 w-full">
-              <Button size="lg" className="w-full bg-accent text-accent-foreground hover:bg-white hover:text-primary transition-all font-black h-20 text-xl rounded-3xl shadow-2xl shadow-black/40" asChild>
+              <Button size="lg" className="w-full bg-accent text-accent-foreground hover:bg-white hover:text-primary transition-all font-black h-16 text-lg rounded-2xl shadow-xl shadow-black/40" asChild>
                 <a href={`https://wa.me/918850859140?text=Hi, I want to join the Meow Momo Loyalty Club!`}>Join Now</a>
               </Button>
             </div>
