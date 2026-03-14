@@ -22,9 +22,10 @@ export default function Home() {
       
       <Testimonials />
       
-      <AiRecommender />
-
+      {/* Review Helper placed right after testimonials */}
       <ReviewGenerator />
+      
+      <AiRecommender />
 
       {/* Final CTA Section */}
       <section className="py-24 relative overflow-hidden">
