@@ -1,6 +1,6 @@
 "use client";
 
-import { Star, Plus, ShoppingBag, Leaf, Check, ChevronDown } from "lucide-react";
+import { Star, Plus, ShoppingBag, Leaf, Check } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -341,27 +341,6 @@ export function Products() {
             </div>
           </TabsContent>
         </Tabs>
-        
-        <div className="mt-24 p-10 bg-foreground text-white rounded-[2rem] relative overflow-hidden group shadow-2xl">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-primary/20 rounded-full -translate-y-1/2 translate-x-1/2 blur-[100px]" />
-          <div className="relative z-10 flex flex-col lg:grid lg:grid-cols-12 items-center gap-10">
-            <div className="lg:col-span-3 bg-white/10 backdrop-blur-xl p-8 rounded-[1.5rem] border border-white/20 shadow-2xl rotate-3 group-hover:rotate-0 transition-transform duration-500">
-              <Star className="w-16 h-16 text-accent" fill="currentColor" />
-            </div>
-            <div className="lg:col-span-6 text-center lg:text-left space-y-4">
-              <div className="inline-block bg-accent/20 text-accent px-4 py-1 rounded-full text-[10px] font-black tracking-widest uppercase">Loyalty Reward</div>
-              <h3 className="text-3xl md:text-4xl font-black font-headline tracking-tighter leading-none">Meow Momo Rewards</h3>
-              <p className="text-primary-foreground/70 text-lg leading-relaxed max-w-xl">
-                Every plate earns you a stamp! Buy 10 plates and your 11th plate of <span className="text-accent font-bold">Classic Steam Momos</span> is FREE.
-              </p>
-            </div>
-            <div className="lg:col-span-3 w-full">
-              <Button size="lg" className="w-full bg-accent text-accent-foreground hover:bg-white hover:text-primary transition-all font-black h-16 text-lg rounded-2xl shadow-xl shadow-black/40" asChild>
-                <a href={`https://wa.me/918850859140?text=Hi, I want to join the Meow Momo Loyalty Club!`}>Join Now</a>
-              </Button>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   );
