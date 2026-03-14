@@ -43,7 +43,7 @@ export default function Home() {
                 Order Now <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </a>
             </Button>
-            <Button size="lg" variant="outline" className="h-16 px-10 text-lg border-white text-white hover:bg-white/10 shadow-xl font-bold rounded-2xl" asChild>
+            <Button size="lg" className="h-16 px-10 text-lg bg-white text-primary hover:bg-secondary hover:text-primary shadow-xl font-bold rounded-2xl" asChild>
               <a href="#menu">
                 View Menu <ShoppingBag className="ml-2 w-5 h-5" />
               </a>

@@ -77,8 +77,9 @@ export function ReviewGenerator() {
                 <p className="text-xs font-black uppercase tracking-[0.2em] text-primary">Step 1: Rate Your Experience</p>
                 <div className="flex justify-center gap-2 md:gap-4">
                   {[1, 2, 3, 4, 5].map((star) => {
-                    // Hover state should take priority over the current rating for visual feedback
-                    const isActive = hoveredRating !== 0 ? hoveredRating >= star : rating >= star;
+                    // Check if the star should be filled (selected) or just highlighted (hovered)
+                    const isSelected = rating >= star;
+                    const isHovered = hoveredRating >= star;
                     
                     return (
                       <button
@@ -91,9 +92,11 @@ export function ReviewGenerator() {
                         <Star
                           className={cn(
                             "w-12 h-12 md:w-16 md:h-16 transition-all duration-300",
-                            isActive
+                            isSelected
                               ? "fill-accent text-accent drop-shadow-[0_0_8px_rgba(255,191,0,0.4)]"
-                              : "text-muted-foreground/20 fill-none"
+                              : isHovered
+                                ? "text-accent fill-none"
+                                : "text-muted-foreground/20 fill-none"
                           )}
                         />
                       </button>
