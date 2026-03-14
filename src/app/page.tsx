@@ -3,6 +3,7 @@ import { Hero } from "@/components/hero";
 import { Products } from "@/components/products";
 import { Testimonials } from "@/components/testimonials";
 import { AiRecommender } from "@/components/ai-recommender";
+import { ReviewGenerator } from "@/components/review-generator";
 import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ShoppingBag } from "lucide-react";
@@ -22,6 +23,8 @@ export default function Home() {
       <Testimonials />
       
       <AiRecommender />
+
+      <ReviewGenerator />
 
       {/* Final CTA Section */}
       <section className="py-24 relative overflow-hidden">
