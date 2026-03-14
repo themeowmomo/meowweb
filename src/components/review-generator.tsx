@@ -37,16 +37,18 @@ export function ReviewGenerator() {
   };
 
   const handleCopyAndGo = () => {
-    navigator.clipboard.writeText(generatedReview);
-    setCopied(true);
-    toast({
-      title: "Review Copied!",
-      description: "Opening Google Reviews... Just paste the text there!",
-    });
-    
-    setTimeout(() => {
-      window.open(reviewUrl, "_blank");
-    }, 1500);
+    if (typeof window !== "undefined" && navigator.clipboard) {
+      navigator.clipboard.writeText(generatedReview);
+      setCopied(true);
+      toast({
+        title: "Review Copied!",
+        description: "Opening Google Reviews... Just paste the text there!",
+      });
+      
+      setTimeout(() => {
+        window.open(reviewUrl, "_blank");
+      }, 1500);
+    }
   };
 
   return (
@@ -55,7 +57,7 @@ export function ReviewGenerator() {
       <div className="container mx-auto px-4">
         <div className="max-w-3xl mx-auto text-center space-y-8">
           <div className="space-y-4">
-            <h2 className="text-3xl md:text-5xl font-black font-headline tracking-tighter">Share Your Love on Google!</h2>
+            <h2 className="text-3xl md:text-5xl font-black font-headline tracking-tighter text-foreground">Share Your Love on Google!</h2>
             <p className="text-muted-foreground text-lg max-w-xl mx-auto">
               How was your Meow Momo experience? Select a star rating and our AI will help you write a professional Google review in seconds.
             </p>
@@ -65,25 +67,30 @@ export function ReviewGenerator() {
             <CardContent className="p-8 md:p-12 space-y-10">
               <div className="space-y-6">
                 <p className="text-xs font-black uppercase tracking-[0.2em] text-primary">Step 1: Rate Your Experience</p>
-                <div className="flex justify-center gap-3">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <button
-                      key={star}
-                      onMouseEnter={() => setHoveredRating(star)}
-                      onMouseLeave={() => setHoveredRating(0)}
-                      onClick={() => setRating(star)}
-                      className="transition-all transform hover:scale-110 active:scale-95"
-                    >
-                      <Star
-                        className={cn(
-                          "w-12 h-12 md:w-16 md:h-16 transition-all duration-300",
-                          (hoveredRating || rating) >= star
-                            ? "fill-accent text-accent drop-shadow-md"
-                            : "text-muted-foreground/20 fill-none"
-                        )}
-                      />
-                    </button>
-                  ))}
+                <div className="flex justify-center gap-2 md:gap-4">
+                  {[1, 2, 3, 4, 5].map((star) => {
+                    // Hover state should take priority over the current rating for visual feedback
+                    const isActive = hoveredRating !== 0 ? hoveredRating >= star : rating >= star;
+                    
+                    return (
+                      <button
+                        key={star}
+                        onMouseEnter={() => setHoveredRating(star)}
+                        onMouseLeave={() => setHoveredRating(0)}
+                        onClick={() => setRating(star)}
+                        className="transition-all transform hover:scale-110 active:scale-95 outline-none"
+                      >
+                        <Star
+                          className={cn(
+                            "w-12 h-12 md:w-16 md:h-16 transition-all duration-300",
+                            isActive
+                              ? "fill-accent text-accent drop-shadow-[0_0_8px_rgba(255,191,0,0.4)]"
+                              : "text-muted-foreground/20 fill-none"
+                          )}
+                        />
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
