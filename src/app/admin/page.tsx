@@ -1,8 +1,7 @@
-
 'use client';
 
 import { useState } from 'react';
-import { useUser, useFirestore, useCollection, useMemoFirebase, updateDocumentNonBlocking, useAuth, useDoc, setDocumentNonBlocking } from '@/firebase';
+import { useUser, useFirestore, useCollection, useMemoFirebase, useAuth, useDoc, setDocumentNonBlocking } from '@/firebase';
 import { collection, query, orderBy, doc } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,7 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Loader2, ShoppingCart, Image as ImageIcon, LogIn, ShieldAlert, Copy, Check, Lock, Mail, UserPlus, LogOut, Info, ExternalLink, Database, Users, TrendingUp, MapPin } from 'lucide-react';
+import { Loader2, ShoppingCart, Image as ImageIcon, ShieldAlert, Copy, Check, Lock, Mail, LogOut, MapPin, Users, TrendingUp } from 'lucide-react';
 import { Navbar } from '@/components/navbar';
 import { useToast } from '@/hooks/use-toast';
 import { initiateEmailSignIn, initiateEmailSignUp } from '@/firebase/non-blocking-login';
@@ -25,7 +24,6 @@ export default function AdminPage() {
   const db = useFirestore();
   const auth = useAuth();
   const { toast } = useToast();
-  const [activeTab, setActiveTab] = useState('orders');
   const [copied, setCopied] = useState(false);
   const [isRegisterMode, setIsRegisterMode] = useState(false);
   
@@ -56,12 +54,12 @@ export default function AdminPage() {
   
   const { data: orders, isLoading: isOrdersLoading } = useCollection(ordersQuery);
 
-  // 3. Fetch all admins for the Team tab
+  // 3. Fetch all admins for the Team tab - Only if admin status confirmed
   const adminsQuery = useMemoFirebase(() => {
     if (!db || !user || !adminDoc) return null;
     return collection(db, 'app_admins');
   }, [db, user, adminDoc]);
-  const { data: allAdmins } = useCollection(adminsQuery);
+  const { data: allAdmins, isLoading: isAdminsLoading } = useCollection(adminsQuery);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -86,14 +84,11 @@ export default function AdminPage() {
     setTimeout(() => setIsSubmitting(false), 2000); 
   };
 
-  const handleUpdatePhoto = (itemId: string, categoryId: string, newUrl: string) => {
+  const handleUpdatePhoto = (itemId: string, newUrl: string) => {
     if (!db) return;
-    // Note: This logic assumes a flattened structure for easy MVP updates
-    // In a full system, you would update the specific MenuItem document
     toast({ 
       title: "Feature Update", 
       description: "Photo update initiated for item: " + itemId,
-      variant: "default"
     });
   };
 
@@ -138,13 +133,10 @@ export default function AdminPage() {
       <div className="min-h-screen bg-[#FDFBF7] flex flex-col">
         <Navbar />
         <div className="flex-grow flex items-center justify-center p-4">
-          <Card className="max-w-md w-full shadow-[0_32px_64px_-16px_rgba(0,0,0,0.12)] rounded-[3rem] overflow-hidden border-none bg-white">
-            <div className="bg-foreground p-12 text-white text-center relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-primary/20 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl" />
-              <div className="bg-primary/20 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <ShieldAlert className="w-8 h-8 text-primary" />
-              </div>
-              <h1 className="text-3xl font-black tracking-tight leading-none mb-2">
+          <Card className="max-w-md w-full shadow-2xl rounded-[3rem] overflow-hidden border-none bg-white">
+            <div className="bg-foreground p-12 text-white text-center">
+              <ShieldAlert className="w-12 h-12 text-primary mx-auto mb-6" />
+              <h1 className="text-3xl font-black tracking-tight mb-2">
                 {isRegisterMode ? "Create Admin" : "Shop Login"}
               </h1>
               <p className="text-white/40 font-bold text-[10px] uppercase tracking-widest">Meow Momo Management</p>
@@ -152,13 +144,13 @@ export default function AdminPage() {
             <CardContent className="p-10">
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-2">
-                  <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Email Address</Label>
+                  <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Email</Label>
                   <div className="relative">
                     <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                     <Input 
                       type="email" 
                       placeholder="admin@meowmomo.com" 
-                      className="pl-11 h-14 rounded-2xl bg-muted/30 border-none focus-visible:ring-2 focus-visible:ring-primary"
+                      className="pl-11 h-14 rounded-2xl bg-muted/30 border-none"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
@@ -172,7 +164,7 @@ export default function AdminPage() {
                     <Input 
                       type="password" 
                       placeholder="••••••••" 
-                      className="pl-11 h-14 rounded-2xl bg-muted/30 border-none focus-visible:ring-2 focus-visible:ring-primary"
+                      className="pl-11 h-14 rounded-2xl bg-muted/30 border-none"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
@@ -182,17 +174,17 @@ export default function AdminPage() {
                 <Button 
                   type="submit" 
                   disabled={isSubmitting}
-                  className="w-full h-16 text-lg font-black rounded-[1.5rem] bg-primary shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                  className="w-full h-16 text-lg font-black rounded-2xl bg-primary shadow-xl shadow-primary/20"
                 >
                   {isSubmitting ? <Loader2 className="w-6 h-6 animate-spin" /> : isRegisterMode ? "Register Account" : "Sign In"}
                 </Button>
               </form>
               <Button 
                 variant="ghost" 
-                className="w-full mt-6 text-xs font-black uppercase tracking-widest text-muted-foreground hover:bg-muted/30"
+                className="w-full mt-6 text-xs font-black uppercase tracking-widest text-muted-foreground"
                 onClick={() => setIsRegisterMode(!isRegisterMode)}
               >
-                {isRegisterMode ? "Already have access? Login" : "First time? Register here"}
+                {isRegisterMode ? "Already have an account? Login" : "First time? Click here to Register"}
               </Button>
             </CardContent>
           </Card>
@@ -214,15 +206,23 @@ export default function AdminPage() {
               <p className="text-white/60 font-medium">Your account is active, but you aren't authorized to manage this shop.</p>
             </div>
             <CardContent className="p-12 space-y-10">
-              <div className="space-y-4 p-8 bg-muted/30 rounded-[2rem] border-2 border-dashed border-muted">
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground text-center">Your Management UID</p>
-                <div className="flex items-center gap-3">
-                  <code className="flex-grow text-sm font-mono break-all bg-white p-5 rounded-2xl border shadow-inner">{user.uid}</code>
-                  <Button variant="outline" size="icon" onClick={copyUid} className="h-16 w-16 shrink-0 rounded-2xl border-2 border-primary/20 hover:bg-secondary">
+              <div className="space-y-4 p-8 bg-muted/30 rounded-[2rem] border-2 border-dashed border-muted text-center">
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Your User UID</p>
+                <div className="flex items-center gap-3 justify-center">
+                  <code className="text-sm font-mono bg-white p-5 rounded-2xl border shadow-inner">{user.uid}</code>
+                  <Button variant="outline" size="icon" onClick={copyUid} className="h-16 w-16 shrink-0 rounded-2xl">
                     {copied ? <Check className="w-6 h-6 text-green-500" /> : <Copy className="w-6 h-6 text-primary" />}
                   </Button>
                 </div>
-                <p className="text-center text-xs text-muted-foreground font-medium italic">Share this code with the Lead Admin to unlock your dashboard.</p>
+                <div className="mt-8 text-left space-y-4 max-w-sm mx-auto">
+                  <p className="text-sm font-bold text-foreground">Next Steps for Authorization:</p>
+                  <ol className="text-xs text-muted-foreground space-y-2 list-decimal pl-4">
+                    <li>Go to the <strong>Firebase Console</strong></li>
+                    <li>Open <strong>Firestore Database</strong></li>
+                    <li>Find the <code>app_admins</code> collection</li>
+                    <li>Add a document with the ID: <code>{user.uid}</code></li>
+                  </ol>
+                </div>
               </div>
               <Button variant="ghost" className="w-full font-black uppercase tracking-widest text-muted-foreground" onClick={() => auth.signOut()}>
                 <LogOut className="mr-2 w-4 h-4" /> Sign Out
@@ -262,9 +262,9 @@ export default function AdminPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          <Card className="rounded-[2rem] border-none shadow-sm bg-white p-8 group hover:shadow-xl transition-all">
+          <Card className="rounded-[2rem] border-none shadow-sm bg-white p-8">
             <div className="flex justify-between items-start mb-4">
-              <div className="bg-primary/10 p-4 rounded-2xl text-primary group-hover:bg-primary group-hover:text-white transition-all">
+              <div className="bg-primary/10 p-4 rounded-2xl text-primary">
                 <ShoppingCart className="w-6 h-6" />
               </div>
               <Badge variant="secondary" className="font-black text-[10px] tracking-widest">LIVE</Badge>
@@ -272,9 +272,9 @@ export default function AdminPage() {
             <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-1">Today's Orders</p>
             <p className="text-5xl font-black tracking-tighter">{orders?.length || 0}</p>
           </Card>
-          <Card className="rounded-[2rem] border-none shadow-sm bg-white p-8 group hover:shadow-xl transition-all">
+          <Card className="rounded-[2rem] border-none shadow-sm bg-white p-8">
             <div className="flex justify-between items-start mb-4">
-              <div className="bg-accent/10 p-4 rounded-2xl text-accent group-hover:bg-accent group-hover:text-white transition-all">
+              <div className="bg-accent/10 p-4 rounded-2xl text-accent">
                 <TrendingUp className="w-6 h-6" />
               </div>
               <Badge variant="secondary" className="font-black text-[10px] tracking-widest">+12%</Badge>
@@ -282,9 +282,9 @@ export default function AdminPage() {
             <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-1">Peak Time Activity</p>
             <p className="text-3xl font-black tracking-tighter">7PM - 9PM</p>
           </Card>
-          <Card className="rounded-[2rem] border-none shadow-sm bg-white p-8 group hover:shadow-xl transition-all">
+          <Card className="rounded-[2rem] border-none shadow-sm bg-white p-8">
             <div className="flex justify-between items-start mb-4">
-              <div className="bg-foreground/5 p-4 rounded-2xl text-foreground group-hover:bg-foreground group-hover:text-white transition-all">
+              <div className="bg-foreground/5 p-4 rounded-2xl text-foreground">
                 <Users className="w-6 h-6" />
               </div>
               <Badge variant="secondary" className="font-black text-[10px] tracking-widest">{allAdmins?.length || 0} ACTIVE</Badge>
@@ -329,12 +329,12 @@ export default function AdminPage() {
                             <TableCell className="pl-12">
                               <div className="flex flex-col">
                                 <span className="font-black text-base">{order.customerName}</span>
-                                <span className="text-[10px] text-muted-foreground font-bold uppercase">{new Date(order.orderDate?.seconds * 1000).toLocaleString()}</span>
+                                <span className="text-[10px] text-muted-foreground font-bold uppercase">{order.orderDate?.seconds ? new Date(order.orderDate.seconds * 1000).toLocaleString() : 'Recent'}</span>
                               </div>
                             </TableCell>
                             <TableCell>
                               <p className="text-xs font-medium text-muted-foreground max-w-xs truncate">{order.deliveryAddress}</p>
-                              <Badge variant="outline" className="text-[9px] mt-1 font-bold border-muted text-muted-foreground">{order.paymentMethod}</Badge>
+                              <Badge variant="outline" className="text-[9px] mt-1 font-bold">{order.paymentMethod}</Badge>
                             </TableCell>
                             <TableCell className="text-right font-black text-primary text-lg pr-12">Rs.{order.totalAmount}</TableCell>
                             <TableCell className="text-center pr-12">
@@ -369,8 +369,8 @@ export default function AdminPage() {
                       <Input placeholder="Unsplash/Picsum Link..." className="h-12 rounded-xl bg-muted/30 border-none shadow-inner" />
                     </div>
                     <Button 
-                      className="w-full h-12 bg-primary font-black rounded-xl shadow-lg shadow-primary/10"
-                      onClick={() => handleUpdatePhoto(item, 'cat', 'url')}
+                      className="w-full h-12 bg-primary font-black rounded-xl"
+                      onClick={() => handleUpdatePhoto(item, 'new-url')}
                     >
                       Apply Update
                     </Button>
@@ -383,7 +383,6 @@ export default function AdminPage() {
           <TabsContent value="team">
             <Card className="rounded-[3rem] border-none shadow-2xl bg-white overflow-hidden">
               <CardHeader className="p-12 bg-foreground text-white relative">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
                 <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                   <div>
                     <CardTitle className="text-3xl font-black tracking-tight leading-none mb-2">Team Access Control</CardTitle>
@@ -392,11 +391,11 @@ export default function AdminPage() {
                   <div className="flex gap-4 w-full md:w-auto">
                     <Input 
                       placeholder="Enter Staff UID..." 
-                      className="h-14 md:w-80 rounded-2xl bg-white/10 border-white/20 text-white placeholder:text-white/20 focus-visible:ring-primary"
+                      className="h-14 md:w-80 rounded-2xl bg-white/10 border-white/20 text-white placeholder:text-white/20"
                       value={newAdminUid}
                       onChange={(e) => setNewAdminUid(e.target.value)}
                     />
-                    <Button className="h-14 px-8 bg-primary font-black rounded-2xl shadow-xl shadow-primary/20" onClick={handleAddTeamMember}>
+                    <Button className="h-14 px-8 bg-primary font-black rounded-2xl" onClick={handleAddTeamMember}>
                       Add Admin
                     </Button>
                   </div>
@@ -406,22 +405,26 @@ export default function AdminPage() {
                 <div className="space-y-6">
                   <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Currently Authorized Staff</p>
                   <div className="grid gap-4">
-                    {allAdmins?.map((admin: any) => (
-                      <div key={admin.id} className="flex items-center justify-between p-6 bg-muted/20 rounded-[1.5rem] group hover:bg-white hover:shadow-sm transition-all border border-transparent hover:border-muted">
-                        <div className="flex items-center gap-4">
-                          <div className="bg-white p-3 rounded-xl shadow-sm group-hover:bg-primary/10">
-                            <Users className="w-5 h-5 text-muted-foreground group-hover:text-primary" />
+                    {isAdminsLoading ? (
+                      <Loader2 className="w-8 h-8 animate-spin mx-auto text-primary/20" />
+                    ) : (
+                      allAdmins?.map((admin: any) => (
+                        <div key={admin.id} className="flex items-center justify-between p-6 bg-muted/20 rounded-[1.5rem] group hover:bg-white hover:shadow-sm transition-all border border-transparent">
+                          <div className="flex items-center gap-4">
+                            <div className="bg-white p-3 rounded-xl shadow-sm group-hover:bg-primary/10">
+                              <Users className="w-5 h-5 text-muted-foreground group-hover:text-primary" />
+                            </div>
+                            <div>
+                              <p className="font-mono text-sm font-bold text-foreground">{admin.id}</p>
+                              <p className="text-[10px] text-muted-foreground font-medium italic">Added on {admin.addedAt ? new Date(admin.addedAt).toLocaleDateString() : 'System Origin'}</p>
+                            </div>
                           </div>
-                          <div>
-                            <p className="font-mono text-sm font-bold text-foreground">{admin.id}</p>
-                            <p className="text-[10px] text-muted-foreground font-medium italic">Added on {admin.addedAt ? new Date(admin.addedAt).toLocaleDateString() : 'System Origin'}</p>
-                          </div>
+                          {admin.id === user.uid && (
+                            <Badge className="bg-primary/20 text-primary border-none font-black text-[9px] uppercase tracking-widest px-3 py-1">YOU</Badge>
+                          )}
                         </div>
-                        {admin.id === user.uid && (
-                          <Badge className="bg-primary/20 text-primary border-none font-black text-[9px] uppercase tracking-widest px-3 py-1">YOU</Badge>
-                        )}
-                      </div>
-                    ))}
+                      ))
+                    )}
                   </div>
                 </div>
               </CardContent>

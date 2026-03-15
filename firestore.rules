@@ -15,13 +15,6 @@ service cloud.firestore {
      * Data Structure:
      * All data is organized hierarchically under /restaurants/{restaurantId} to support
      * clean URL routing and efficient public querying.
-     * 
-     * Key Security Decisions:
-     * - Public Read Access: Restaurant profiles, menus, and reviews are publicly readable for customers.
-     * - Authorization Denormalization: The 'ownerId' and 'restaurantId' are stored on every sub-document
-     *   to allow rules to perform single-document authorization checks without parent lookups.
-     * - Order Security: Orders are created by customers (authenticated or anonymous) and managed 
-     *   by the specific restaurant owner or global app admins.
      */
 
     // --- Global Helper Functions ---
@@ -54,65 +47,34 @@ service cloud.firestore {
     /**
      * @description Collection for global application administrators.
      * @path /app_admins/{userId}
-     * @allow get: if isOwner(userId);
-     * @deny list, write: if false; (Managed via console)
-     * @principle Restricts admin role verification to the user themselves.
+     * @allow get: if isOwner(userId) || isGlobalAdmin();
+     * @allow list, create, update: if isGlobalAdmin();
+     * @deny delete: if false; (Restricted for safety)
      */
     match /app_admins/{userId} {
-      allow get: if isOwner(userId);
-      allow list, create, update, delete: if false;
+      allow get: if isOwner(userId) || isGlobalAdmin();
+      allow list, create, update: if isGlobalAdmin();
+      allow delete: if false;
     }
 
     // --- Restaurant Collections ---
 
-    /**
-     * @description Main profile for a restaurant.
-     * @path /restaurants/{restaurantId}
-     * @allow get, list: if true;
-     * @allow create: if isSignedIn() && (request.resource.data.ownerId == request.auth.uid || isGlobalAdmin());
-     * @allow update, delete: if isExistingOwner(resource.data.ownerId) || isGlobalAdmin();
-     * @principle Public profile with owner-only modifications.
-     */
     match /restaurants/{restaurantId} {
       allow get, list: if true;
       allow create: if isSignedIn() && (request.resource.data.ownerId == request.auth.uid || isGlobalAdmin());
       allow update, delete: if isExistingOwner(resource.data.ownerId) || isGlobalAdmin();
 
-      /**
-       * @description Opening hours for a restaurant.
-       * @path /restaurants/{restaurantId}/openingHours/{openingHourId}
-       * @allow get, list: if true;
-       * @allow create: if isSignedIn() && (request.resource.data.ownerId == request.auth.uid || isGlobalAdmin());
-       * @allow update, delete: if isExistingOwner(resource.data.ownerId) || isGlobalAdmin();
-       * @principle Uses denormalized ownerId for standalone authorization.
-       */
       match /openingHours/{openingHourId} {
         allow get, list: if true;
         allow create: if isSignedIn() && (request.resource.data.ownerId == request.auth.uid || isGlobalAdmin());
         allow update, delete: if isExistingOwner(resource.data.ownerId) || isGlobalAdmin();
       }
 
-      /**
-       * @description Menu categories (e.g., Momos, Drinks).
-       * @path /restaurants/{restaurantId}/menuCategories/{menuCategoryId}
-       * @allow get, list: if true;
-       * @allow create: if isSignedIn() && (request.resource.data.ownerId == request.auth.uid || isGlobalAdmin());
-       * @allow update, delete: if isExistingOwner(resource.data.ownerId) || isGlobalAdmin();
-       * @principle Structural segregation of menu data with owner-only write access.
-       */
       match /menuCategories/{menuCategoryId} {
         allow get, list: if true;
         allow create: if isSignedIn() && (request.resource.data.ownerId == request.auth.uid || isGlobalAdmin());
         allow update, delete: if isExistingOwner(resource.data.ownerId) || isGlobalAdmin();
 
-        /**
-         * @description Individual items on the menu.
-         * @path /restaurants/{restaurantId}/menuCategories/{menuCategoryId}/menuItems/{menuItemId}
-         * @allow get, list: if true;
-         * @allow create: if isSignedIn() && (request.resource.data.ownerId == request.auth.uid || isGlobalAdmin());
-         * @allow update, delete: if isExistingOwner(resource.data.ownerId) || isGlobalAdmin();
-         * @principle Enables owners to change menu item photos/prices directly.
-         */
         match /menuItems/{menuItemId} {
           allow get, list: if true;
           allow create: if isSignedIn() && (request.resource.data.ownerId == request.auth.uid || isGlobalAdmin());
@@ -120,43 +82,18 @@ service cloud.firestore {
         }
       }
 
-      /**
-       * @description Reviews from customers.
-       * @path /restaurants/{restaurantId}/customerReviews/{customerReviewId}
-       * @allow get, list: if true;
-       * @allow create: if isSignedIn();
-       * @allow update, delete: if isGlobalAdmin();
-       * @principle Allows public feedback while restricting moderation to admins.
-       */
       match /customerReviews/{customerReviewId} {
         allow get, list: if true;
         allow create: if isSignedIn();
         allow update, delete: if isGlobalAdmin();
       }
 
-      /**
-       * @description Orders placed at the restaurant.
-       * @path /restaurants/{restaurantId}/orders/{orderId}
-       * @allow get, list: if isExistingOwner(resource.data.ownerId) || isGlobalAdmin();
-       * @allow create: if isSignedIn();
-       * @allow update: if isExistingOwner(resource.data.ownerId) || isGlobalAdmin();
-       * @deny delete: if !isGlobalAdmin();
-       * @principle Secures private order data so only the restaurant owner or global admins can see and manage status.
-       */
       match /orders/{orderId} {
         allow get, list: if isExistingOwner(resource.data.ownerId) || isGlobalAdmin();
         allow create: if isSignedIn();
         allow update: if isExistingOwner(resource.data.ownerId) || isGlobalAdmin();
         allow delete: if isGlobalAdmin();
 
-        /**
-         * @description Specific items within an order.
-         * @path /restaurants/{restaurantId}/orders/{orderId}/orderItems/{orderItemId}
-         * @allow get, list: if isExistingOwner(resource.data.ownerId) || isGlobalAdmin();
-         * @allow create: if isSignedIn();
-         * @deny update, delete: if !isGlobalAdmin();
-         * @principle Ensures line items are immutable once placed, except for global admins.
-         */
         match /orderItems/{orderItemId} {
           allow get, list: if isExistingOwner(resource.data.ownerId) || isGlobalAdmin();
           allow create: if isSignedIn();
