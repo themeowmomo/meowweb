@@ -1,6 +1,6 @@
 "use client";
 
-import { Star, Plus, ShoppingBag, Leaf, Check, Utensils, Zap, Package } from "lucide-react";
+import { Star, Plus, Minus, ShoppingBag, Leaf, Check, Utensils, Zap, Package } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -89,12 +89,8 @@ const mealCombos = [
 ];
 
 export function Products() {
-  const { addToCart, cart } = useCart();
+  const { addToCart, cart, updateQuantity } = useCart();
   const { toast } = useToast();
-
-  const isItemInCart = (name: string, variant?: string) => {
-    return cart.some(item => item.name === name && item.variant === variant);
-  };
 
   const handleAddToCart = (name: string, price: number, variant?: string) => {
     addToCart({
@@ -113,16 +109,46 @@ export function Products() {
   const getImage = (id: string) => PlaceHolderImages.find(img => img.id === id)?.imageUrl || "";
 
   const AddButton = ({ name, price, variant, className }: { name: string, price: number, variant: string, className?: string }) => {
-    const inCart = isItemInCart(name, variant);
+    const cartItem = cart.find(item => item.name === name && item.variant === variant);
+    const quantity = cartItem ? cartItem.quantity : 0;
+    const itemId = `${name}-${variant || 'default'}`;
+
+    if (quantity > 0) {
+      return (
+        <div className={cn("flex items-center gap-2", className)}>
+          <Button 
+            size="icon" 
+            variant="outline"
+            className="h-8 w-8 rounded-full border-primary text-primary hover:bg-primary hover:text-white"
+            onClick={(e) => {
+              e.stopPropagation();
+              updateQuantity(itemId, quantity - 1, variant);
+            }}
+          >
+            <Minus className="h-3 w-3" />
+          </Button>
+          <span className="text-sm font-bold w-4 text-center">{quantity}</span>
+          <Button 
+            size="icon" 
+            variant="outline"
+            className="h-8 w-8 rounded-full border-primary text-primary hover:bg-primary hover:text-white"
+            onClick={(e) => {
+              e.stopPropagation();
+              updateQuantity(itemId, quantity + 1, variant);
+            }}
+          >
+            <Plus className="h-3 w-3" />
+          </Button>
+        </div>
+      );
+    }
+
     return (
       <Button 
         size="sm" 
-        variant={inCart ? "default" : "outline"}
+        variant="outline"
         className={cn(
-          "h-8 px-3 text-xs font-bold transition-all rounded-lg border-2",
-          inCart 
-            ? "bg-green-600 border-green-600 hover:bg-green-700 text-white" 
-            : "border-primary text-primary hover:bg-primary hover:text-white",
+          "h-8 px-3 text-xs font-bold transition-all rounded-lg border-2 border-primary text-primary hover:bg-primary hover:text-white",
           className
         )}
         onClick={(e) => {
@@ -130,11 +156,7 @@ export function Products() {
           handleAddToCart(name, price, variant);
         }}
       >
-        {inCart ? (
-          <><Check className="w-3.5 h-3.5 mr-1" /> Added</>
-        ) : (
-          <><Plus className="w-3.5 h-3.5 mr-1" /> Add</>
-        )}
+        <Plus className="w-3.5 h-3.5 mr-1" /> Add
       </Button>
     );
   };
@@ -154,22 +176,22 @@ export function Products() {
 
         <Tabs defaultValue="momos" className="w-full">
           <div className="flex justify-center mb-12">
-            <TabsList className="bg-muted/50 p-1.5 h-auto rounded-2xl border border-border/50 shadow-inner grid grid-cols-3 w-full max-w-md">
+            <TabsList className="bg-muted/50 p-1.5 h-auto rounded-full border border-border shadow-inner grid grid-cols-3 w-full max-w-md">
               <TabsTrigger 
                 value="momos" 
-                className="flex items-center gap-2 py-3 rounded-xl text-sm font-black transition-all data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-lg data-[state=active]:scale-[1.02]"
+                className="flex items-center gap-2 py-3 rounded-full text-sm font-black transition-all data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-lg data-[state=active]:scale-[1.02]"
               >
                 <Utensils className="w-4 h-4" /> Momos
               </TabsTrigger>
               <TabsTrigger 
                 value="fries" 
-                className="flex items-center gap-2 py-3 rounded-xl text-sm font-black transition-all data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-lg data-[state=active]:scale-[1.02]"
+                className="flex items-center gap-2 py-3 rounded-full text-sm font-black transition-all data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-lg data-[state=active]:scale-[1.02]"
               >
                 <Zap className="w-4 h-4" /> Fries
               </TabsTrigger>
               <TabsTrigger 
                 value="meal" 
-                className="flex items-center gap-2 py-3 rounded-xl text-sm font-black transition-all data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-lg data-[state=active]:scale-[1.02]"
+                className="flex items-center gap-2 py-3 rounded-full text-sm font-black transition-all data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-lg data-[state=active]:scale-[1.02]"
               >
                 <Package className="w-4 h-4" /> Combos
               </TabsTrigger>
@@ -326,21 +348,7 @@ export function Products() {
                     </div>
                   </CardContent>
                   <div className="p-6 pt-0 mt-auto">
-                    <Button 
-                      className={cn(
-                        "w-full h-12 text-base font-black shadow-md transition-all rounded-xl",
-                        isItemInCart(combo.title) 
-                          ? "bg-green-600 hover:bg-green-700 text-white" 
-                          : "bg-primary hover:bg-primary/90 text-white"
-                      )}
-                      onClick={() => handleAddToCart(combo.title, combo.price)}
-                    >
-                      {isItemInCart(combo.title) ? (
-                        <><Check className="mr-2 w-5 h-5" /> Added to Order</>
-                      ) : (
-                        <><ShoppingBag className="mr-2 w-5 h-5" /> Add Meal</>
-                      )}
-                    </Button>
+                    <AddButton name={combo.title} price={combo.price} variant="Combo" className="w-full h-12" />
                   </div>
                 </Card>
               ))}

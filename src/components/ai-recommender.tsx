@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import { aiProductRecommendation, type AiProductRecommendationOutput } from "@/ai/flows/ai-product-recommendation-flow";
-import { Sparkles, Loader2, CheckCircle2, Flame, Utensils, Heart, Plus, Check } from "lucide-react";
+import { Sparkles, Loader2, CheckCircle2, Flame, Utensils, Heart, Plus, Minus, Check } from "lucide-react";
 import { useCart } from "@/context/cart-context";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
@@ -37,7 +37,7 @@ export function AiRecommender() {
   const [businessNeeds, setBusinessNeeds] = useState("");
   const [loading, setLoading] = useState(false);
   const [recommendations, setRecommendations] = useState<AiProductRecommendationOutput | null>(null);
-  const { addToCart, cart } = useCart();
+  const { addToCart, cart, updateQuantity } = useCart();
   const { toast } = useToast();
 
   const shopNumber = "918850859140";
@@ -55,10 +55,6 @@ export function AiRecommender() {
     }
   };
 
-  const isItemInCart = (name: string, variant?: string) => {
-    return cart.some(item => item.name === name && item.variant === variant);
-  };
-
   const handleAddToCart = (name: string) => {
     // Try to find the exact match or a partial match in our map
     const matchKey = Object.keys(PRODUCT_MAP).find(key => 
@@ -68,7 +64,7 @@ export function AiRecommender() {
     const productData = PRODUCT_MAP[matchKey] || { price: 70, variant: "Standard" }; // Default price if not found
 
     addToCart({
-      id: `ai-${name}`,
+      id: `${name}-${productData.variant}`,
       name: name,
       price: productData.price,
       variant: productData.variant
@@ -78,6 +74,57 @@ export function AiRecommender() {
       title: "Added to cart",
       description: `${name} (${productData.variant}) added to your order!`,
     });
+  };
+
+  const AddButton = ({ name }: { name: string }) => {
+    const matchKey = Object.keys(PRODUCT_MAP).find(key => 
+      name.toLowerCase().includes(key.toLowerCase())
+    ) || "";
+    const productData = PRODUCT_MAP[matchKey] || { price: 70, variant: "Standard" };
+    
+    const cartItem = cart.find(item => item.name === name && item.variant === productData.variant);
+    const quantity = cartItem ? cartItem.quantity : 0;
+    const itemId = `${name}-${productData.variant}`;
+
+    if (quantity > 0) {
+      return (
+        <div className="flex items-center gap-2">
+          <Button 
+            size="icon" 
+            variant="outline"
+            className="h-10 w-10 rounded-full border-primary text-primary hover:bg-primary hover:text-white"
+            onClick={(e) => {
+              e.stopPropagation();
+              updateQuantity(itemId, quantity - 1, productData.variant);
+            }}
+          >
+            <Minus className="h-4 w-4" />
+          </Button>
+          <span className="text-lg font-black w-6 text-center">{quantity}</span>
+          <Button 
+            size="icon" 
+            variant="outline"
+            className="h-10 w-10 rounded-full border-primary text-primary hover:bg-primary hover:text-white"
+            onClick={(e) => {
+              e.stopPropagation();
+              updateQuantity(itemId, quantity + 1, productData.variant);
+            }}
+          >
+            <Plus className="h-4 w-4" />
+          </Button>
+        </div>
+      );
+    }
+
+    return (
+      <Button 
+        onClick={() => handleAddToCart(name)}
+        variant="outline"
+        className="h-12 px-6 rounded-xl font-black border-primary text-primary hover:bg-primary hover:text-white transition-all"
+      >
+        <Plus className="mr-2 w-5 h-5" /> Add to Order
+      </Button>
+    );
   };
 
   return (
@@ -132,13 +179,6 @@ export function AiRecommender() {
                   </h3>
                   <div className="grid gap-6">
                     {recommendations.recommendations.map((rec, idx) => {
-                      // Attempt to match for the variant text in the UI
-                      const matchKey = Object.keys(PRODUCT_MAP).find(key => 
-                        rec.serviceName.toLowerCase().includes(key.toLowerCase())
-                      ) || "";
-                      const variant = PRODUCT_MAP[matchKey]?.variant || "";
-                      const inCart = isItemInCart(rec.serviceName, variant);
-
                       return (
                         <div key={idx} className="group p-8 rounded-[1.5rem] bg-muted/30 border-2 border-transparent hover:border-primary/10 hover:bg-white hover:shadow-xl transition-all">
                           <div className="flex flex-col md:flex-row md:items-start gap-8">
@@ -154,22 +194,7 @@ export function AiRecommender() {
                             <div className="flex-grow space-y-4">
                               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                                 <h4 className="text-2xl font-black text-foreground tracking-tight">{rec.serviceName}</h4>
-                                <Button 
-                                  onClick={() => handleAddToCart(rec.serviceName)}
-                                  variant={inCart ? "default" : "outline"}
-                                  className={cn(
-                                    "h-12 px-6 rounded-xl font-black transition-all",
-                                    inCart 
-                                      ? "bg-green-600 border-green-600 hover:bg-green-700 text-white" 
-                                      : "border-primary text-primary hover:bg-primary hover:text-white"
-                                  )}
-                                >
-                                  {inCart ? (
-                                    <><Check className="mr-2 w-5 h-5" /> Added</>
-                                  ) : (
-                                    <><Plus className="mr-2 w-5 h-5" /> Add to Order</>
-                                  )}
-                                </Button>
+                                <AddButton name={rec.serviceName} />
                               </div>
                               <p className="text-muted-foreground text-lg leading-relaxed">{rec.explanation}</p>
                               <div className="flex flex-wrap gap-2 pt-2">
