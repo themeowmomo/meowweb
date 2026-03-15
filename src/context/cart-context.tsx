@@ -1,6 +1,8 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { useFirestore } from '@/firebase';
+import { collection, doc, setDoc, serverTimestamp } from 'firebase/firestore';
 
 export type CartItem = {
   id: string;
@@ -28,9 +30,12 @@ type CartContextType = {
   totalPrice: number;
   customerInfo: CustomerInfo;
   updateCustomerInfo: (info: Partial<CustomerInfo>) => void;
+  saveOrderToFirestore: () => Promise<string | null>;
 };
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
+
+const RESTAURANT_ID = 'meow-momo';
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
@@ -39,6 +44,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     address: '',
     paymentMethod: 'cod'
   });
+  const db = useFirestore();
 
   // Load data from local storage on mount
   useEffect(() => {
@@ -112,6 +118,48 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setCustomerInfo(prev => ({ ...prev, ...info }));
   };
 
+  const saveOrderToFirestore = async () => {
+    if (cart.length === 0) return null;
+    
+    try {
+      const orderId = `ORDER-${Date.now()}`;
+      const orderRef = doc(db, 'restaurants', RESTAURANT_ID, 'orders', orderId);
+      
+      const orderData = {
+        id: orderId,
+        restaurantId: RESTAURANT_ID,
+        orderDate: serverTimestamp(),
+        customerName: customerInfo.name,
+        customerContact: 'User', // Simplified for privacy/MVP
+        deliveryAddress: customerInfo.address,
+        totalAmount: totalPrice,
+        paymentMethod: customerInfo.paymentMethod === 'upi' ? 'UPI' : 'Cash on Delivery',
+        status: 'Pending',
+        notes: ''
+      };
+
+      await setDoc(orderRef, orderData);
+      
+      // Save items
+      for (const item of cart) {
+        const itemRef = doc(db, 'restaurants', RESTAURANT_ID, 'orders', orderId, 'orderItems', `${item.id}-${item.variant}`);
+        await setDoc(itemRef, {
+          id: `${item.id}-${item.variant}`,
+          orderId: orderId,
+          menuItemId: item.id,
+          quantity: item.quantity,
+          priceAtOrder: item.price,
+          name: item.name
+        });
+      }
+      
+      return orderId;
+    } catch (error) {
+      console.error("Error saving order:", error);
+      return null;
+    }
+  };
+
   const clearCart = () => setCart([]);
 
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
@@ -127,7 +175,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
       totalItems, 
       totalPrice,
       customerInfo,
-      updateCustomerInfo
+      updateCustomerInfo,
+      saveOrderToFirestore
     }}>
       {children}
     </CartContext.Provider>

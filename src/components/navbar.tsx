@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { UtensilsCrossed, Menu as MenuIcon } from "lucide-react";
+import { UtensilsCrossed, Menu as MenuIcon, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState, useEffect } from "react";
@@ -46,6 +46,9 @@ export function Navbar() {
             </Link>
           ))}
           <div className="flex items-center gap-3 ml-2 border-l pl-6">
+            <Button variant="ghost" size="icon" asChild className="text-muted-foreground hover:text-primary">
+              <Link href="/admin"><Settings className="w-5 h-5" /></Link>
+            </Button>
             <CartSheet />
             <Button className="bg-primary hover:bg-primary/90" asChild>
               <a href={`https://wa.me/${shopNumber}`} target="_blank" rel="noopener noreferrer">WhatsApp</a>
@@ -74,6 +77,13 @@ export function Navbar() {
                     {link.name}
                   </Link>
                 ))}
+                <Link 
+                  href="/admin" 
+                  onClick={() => setIsOpen(false)}
+                  className="text-lg font-medium py-4 border-b hover:text-primary transition-colors flex items-center gap-2"
+                >
+                  <Settings className="w-5 h-5" /> Admin Dashboard
+                </Link>
                 <div className="mt-8">
                   <Button className="w-full h-12 bg-primary" asChild>
                     <a href={`https://wa.me/${shopNumber}`} target="_blank" rel="noopener noreferrer">Order Now</a>

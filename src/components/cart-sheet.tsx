@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useCart } from "@/context/cart-context";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, Plus, Minus, Trash2, Send, User, MapPin, CreditCard, Wallet } from "lucide-react";
+import { ShoppingCart, Plus, Minus, Trash2, Send, User, MapPin, CreditCard, Wallet, Loader2 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
@@ -13,9 +13,10 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/hooks/use-toast";
 
 export function CartSheet() {
-  const { cart, removeFromCart, updateQuantity, totalPrice, totalItems, customerInfo, updateCustomerInfo, clearCart } = useCart();
+  const { cart, removeFromCart, updateQuantity, totalPrice, totalItems, customerInfo, updateCustomerInfo, clearCart, saveOrderToFirestore } = useCart();
   const { toast } = useToast();
   const [mounted, setMounted] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -23,7 +24,7 @@ export function CartSheet() {
 
   const upiBaseUrl = "upi://pay?pa=amitjaisawal0123-2@okhdfcbank&pn=Amit%20Jaisawal&aid=uGICAgIDrvPOJZw";
 
-  const handleWhatsAppOrder = () => {
+  const handleWhatsAppOrder = async () => {
     if (cart.length === 0) return;
     
     if (!customerInfo.name.trim() || !customerInfo.address.trim()) {
@@ -35,11 +36,17 @@ export function CartSheet() {
       return;
     }
 
+    setIsProcessing(true);
+    
+    // Save to Firestore first
+    const orderId = await saveOrderToFirestore();
+    
     const shopNumber = "918850859140";
     
     const header = "*NEW ORDER - MEOW MOMO*%0A";
     const separator = "--------------------------%0A";
-    const customerSection = `*Customer Details*%0AName: ${customerInfo.name}%0AAddress: ${customerInfo.address}%0A%0A`;
+    const orderRefText = orderId ? `Order ID: ${orderId}%0A` : "";
+    const customerSection = `*Customer Details*%0AName: ${customerInfo.name}%0AAddress: ${customerInfo.address}%0A${orderRefText}%0A`;
     
     const itemsSection = "*Order Items*%0A" + cart
       .map(item => {
@@ -55,7 +62,7 @@ export function CartSheet() {
     const fullMessage = header + separator + customerSection + itemsSection + summarySection + footer;
 
     if (customerInfo.paymentMethod === 'upi') {
-      const upiUrl = `${upiBaseUrl}&am=${totalPrice}&cu=INR&tn=Order%20MeowMomo`;
+      const upiUrl = `${upiBaseUrl}&am=${totalPrice}&cu=INR&tn=Order%20${orderId || 'MeowMomo'}`;
       window.location.href = upiUrl;
       
       setTimeout(() => {
@@ -67,9 +74,10 @@ export function CartSheet() {
 
     setTimeout(() => {
       clearCart();
+      setIsProcessing(false);
       toast({
         title: "Order Processed",
-        description: "Your order details have been shared. Cart cleared!",
+        description: "Your order details have been shared and saved. Cart cleared!",
       });
     }, 3000);
   };
@@ -234,9 +242,19 @@ export function CartSheet() {
                   <span className="text-primary">Rs.{totalPrice}</span>
                 </div>
               </div>
-              <Button onClick={handleWhatsAppOrder} className="w-full h-14 bg-primary text-lg font-bold shadow-lg shadow-primary/20">
-                {customerInfo.paymentMethod === 'upi' ? 'Pay & Order via WhatsApp' : 'Order via WhatsApp'} 
-                <Send className="ml-2 w-4 h-4" />
+              <Button 
+                onClick={handleWhatsAppOrder} 
+                disabled={isProcessing}
+                className="w-full h-14 bg-primary text-lg font-bold shadow-lg shadow-primary/20"
+              >
+                {isProcessing ? (
+                  <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Saving...</>
+                ) : customerInfo.paymentMethod === 'upi' ? (
+                  'Pay & Order via WhatsApp'
+                ) : (
+                  'Order via WhatsApp'
+                )} 
+                {!isProcessing && <Send className="ml-2 w-4 h-4" />}
               </Button>
             </div>
           </>
