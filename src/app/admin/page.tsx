@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -11,7 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Loader2, ShoppingCart, Image as ImageIcon, LogIn, ShieldAlert, Copy, Check, Lock, Mail, UserPlus, LogOut, Info } from 'lucide-react';
+import { Loader2, ShoppingCart, Image as ImageIcon, LogIn, ShieldAlert, Copy, Check, Lock, Mail, UserPlus, LogOut, Info, ExternalLink, Database } from 'lucide-react';
 import { Navbar } from '@/components/navbar';
 import { useToast } from '@/hooks/use-toast';
 import { initiateEmailSignIn, initiateEmailSignUp } from '@/firebase/non-blocking-login';
@@ -200,36 +201,67 @@ export default function AdminPage() {
     return (
       <div className="min-h-screen bg-muted/30 flex flex-col">
         <Navbar />
-        <div className="flex-grow flex items-center justify-center p-4">
-          <Card className="max-w-lg w-full shadow-2xl rounded-[2.5rem] overflow-hidden border-none bg-white">
+        <div className="flex-grow flex items-center justify-center p-4 py-20">
+          <Card className="max-w-2xl w-full shadow-2xl rounded-[2.5rem] overflow-hidden border-none bg-white">
             <div className="bg-destructive p-10 text-white text-center">
               <ShieldAlert className="w-14 h-14 mx-auto mb-4" />
-              <h1 className="text-2xl font-black tracking-tight">Access Denied</h1>
-              <p className="text-destructive-foreground/90 mt-2 font-medium">Your account needs admin authorization.</p>
+              <h1 className="text-3xl font-black tracking-tight">Authorization Required</h1>
+              <p className="text-destructive-foreground/90 mt-2 font-medium">You are logged in, but you aren't an authorized Admin yet.</p>
             </div>
-            <CardContent className="p-10 space-y-8 text-center">
-              <div className="space-y-4 text-left">
-                <div className="flex items-center gap-2 text-primary">
-                  <Info className="w-5 h-5" />
-                  <p className="text-sm font-black uppercase tracking-widest">Next Step:</p>
+            <CardContent className="p-10 space-y-10">
+              <div className="space-y-6">
+                <div className="flex items-center gap-3 text-primary">
+                  <Database className="w-6 h-6" />
+                  <h2 className="text-lg font-black uppercase tracking-widest">How to Authorize (Firebase Console)</h2>
                 </div>
-                <p className="text-sm text-muted-foreground leading-relaxed bg-muted/30 p-4 rounded-xl border border-dashed border-muted">
-                  To complete your setup, copy your **UID** below and paste it as a document ID into the <code className="bg-foreground text-white px-2 py-0.5 rounded text-[10px] font-bold">app_admins</code> collection in the Firebase Console.
-                </p>
-                <div className="space-y-2">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Your Unique Admin ID</p>
-                  <div className="flex items-center gap-2">
-                    <code className="flex-grow text-xs font-mono break-all bg-white p-4 rounded-xl border-2 border-primary/10 shadow-inner">{user.uid}</code>
-                    <Button variant="outline" size="icon" onClick={copyUid} className="h-14 w-14 shrink-0 rounded-xl border-2 border-primary/20 hover:bg-secondary">
-                      {copied ? <Check className="w-6 h-6 text-green-500" /> : <Copy className="w-6 h-6 text-primary" />}
-                    </Button>
+                
+                <div className="grid gap-4 text-sm">
+                  <div className="flex gap-4 items-start">
+                    <div className="bg-primary/10 text-primary w-6 h-6 rounded-full flex items-center justify-center font-black shrink-0">1</div>
+                    <p className="pt-0.5 leading-relaxed">
+                      Go to your <strong>Firebase Console</strong> and select this project.
+                    </p>
+                  </div>
+                  <div className="flex gap-4 items-start">
+                    <div className="bg-primary/10 text-primary w-6 h-6 rounded-full flex items-center justify-center font-black shrink-0">2</div>
+                    <p className="pt-0.5 leading-relaxed">
+                      Navigate to <strong>Firestore Database</strong> on the left sidebar.
+                    </p>
+                  </div>
+                  <div className="flex gap-4 items-start">
+                    <div className="bg-primary/10 text-primary w-6 h-6 rounded-full flex items-center justify-center font-black shrink-0">3</div>
+                    <p className="pt-0.5 leading-relaxed">
+                      Click <strong>+ Start collection</strong> and name it <code className="bg-muted px-2 py-0.5 rounded font-black text-primary">app_admins</code>.
+                    </p>
+                  </div>
+                  <div className="flex gap-4 items-start">
+                    <div className="bg-primary/10 text-primary w-6 h-6 rounded-full flex items-center justify-center font-black shrink-0">4</div>
+                    <p className="pt-0.5 leading-relaxed">
+                      Paste your <strong>UID</strong> (below) as the <strong>Document ID</strong>.
+                    </p>
                   </div>
                 </div>
-                <div className="flex flex-col gap-3 pt-6">
-                  <Button variant="ghost" className="w-full text-sm font-bold text-muted-foreground flex items-center justify-center gap-2 h-12" onClick={() => auth.signOut()}>
-                    <LogOut className="w-4 h-4" /> Sign Out & Switch Account
+              </div>
+
+              <div className="space-y-3 p-6 bg-muted/30 rounded-3xl border-2 border-dashed border-muted">
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Your Admin UID (Click to Copy)</p>
+                <div className="flex items-center gap-3">
+                  <code className="flex-grow text-sm font-mono break-all bg-white p-4 rounded-xl border shadow-inner">{user.uid}</code>
+                  <Button variant="outline" size="icon" onClick={copyUid} className="h-14 w-14 shrink-0 rounded-xl border-2 border-primary/20 hover:bg-secondary">
+                    {copied ? <Check className="w-6 h-6 text-green-500" /> : <Copy className="w-6 h-6 text-primary" />}
                   </Button>
                 </div>
+              </div>
+
+              <div className="flex flex-col gap-4 pt-4">
+                <Button size="lg" className="w-full bg-primary font-black h-14 rounded-2xl" asChild>
+                  <a href="https://console.firebase.google.com/" target="_blank" rel="noopener noreferrer">
+                    Open Firebase Console <ExternalLink className="ml-2 w-4 h-4" />
+                  </a>
+                </Button>
+                <Button variant="ghost" className="w-full text-xs font-black uppercase tracking-widest text-muted-foreground h-12" onClick={() => auth.signOut()}>
+                  <LogOut className="mr-2 w-4 h-4" /> Sign Out & Try Different Account
+                </Button>
               </div>
             </CardContent>
           </Card>
