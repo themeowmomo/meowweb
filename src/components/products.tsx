@@ -1,6 +1,6 @@
 "use client";
 
-import { Star, Plus, ShoppingBag, Leaf, Check } from "lucide-react";
+import { Star, Plus, ShoppingBag, Leaf, Check, Utensils, Zap, Package } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -154,20 +154,29 @@ export function Products() {
 
         <Tabs defaultValue="momos" className="w-full">
           <div className="flex justify-center mb-12">
-            <TabsList className="bg-muted p-1 h-14 rounded-full border border-border shadow-sm">
-              <TabsTrigger value="momos" className="px-10 rounded-full text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-white transition-all">
-                Momos
+            <TabsList className="bg-muted/50 p-1.5 h-auto rounded-2xl border border-border/50 shadow-inner grid grid-cols-3 w-full max-w-md">
+              <TabsTrigger 
+                value="momos" 
+                className="flex items-center gap-2 py-3 rounded-xl text-sm font-black transition-all data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-lg data-[state=active]:scale-[1.02]"
+              >
+                <Utensils className="w-4 h-4" /> Momos
               </TabsTrigger>
-              <TabsTrigger value="fries" className="px-10 rounded-full text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-white transition-all">
-                Fries
+              <TabsTrigger 
+                value="fries" 
+                className="flex items-center gap-2 py-3 rounded-xl text-sm font-black transition-all data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-lg data-[state=active]:scale-[1.02]"
+              >
+                <Zap className="w-4 h-4" /> Fries
               </TabsTrigger>
-              <TabsTrigger value="meal" className="px-10 rounded-full text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-white transition-all">
-                Combos
+              <TabsTrigger 
+                value="meal" 
+                className="flex items-center gap-2 py-3 rounded-xl text-sm font-black transition-all data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-lg data-[state=active]:scale-[1.02]"
+              >
+                <Package className="w-4 h-4" /> Combos
               </TabsTrigger>
             </TabsList>
           </div>
 
-          <TabsContent value="momos" className="mt-0">
+          <TabsContent value="momos" className="mt-0 outline-none">
             <Accordion type="single" collapsible className="space-y-4" defaultValue={momoCategories[0].id}>
               {momoCategories.map((cat) => (
                 <AccordionItem key={cat.id} value={cat.id} className="border-none">
@@ -197,7 +206,6 @@ export function Products() {
                               alt={item.name} 
                               fill 
                               className="object-cover group-hover:scale-105 transition-transform duration-700"
-                              data-ai-hint="momo plate"
                             />
                             <div className="absolute top-4 left-4 flex gap-2">
                               <Badge className="bg-white/95 text-primary border-none shadow-md font-bold px-2 py-0.5">Veg</Badge>
@@ -241,7 +249,7 @@ export function Products() {
             </Accordion>
           </TabsContent>
 
-          <TabsContent value="fries" className="mt-0">
+          <TabsContent value="fries" className="mt-0 outline-none">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
               {friesItems.map((item) => (
                 <Card key={item.id} className="overflow-hidden border-border/50 hover:shadow-xl transition-all flex flex-col bg-card shadow-sm rounded-2xl">
@@ -251,7 +259,6 @@ export function Products() {
                       alt={item.name} 
                       fill 
                       className="object-cover"
-                      data-ai-hint="french fries"
                     />
                   </div>
                   <CardHeader className="p-6 pb-2">
@@ -279,7 +286,7 @@ export function Products() {
             </div>
           </TabsContent>
 
-          <TabsContent value="meal" className="mt-0">
+          <TabsContent value="meal" className="mt-0 outline-none">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
               {mealCombos.map((combo) => (
                 <Card key={combo.id} className={cn(
@@ -292,7 +299,6 @@ export function Products() {
                       alt={combo.title} 
                       fill 
                       className="object-cover"
-                      data-ai-hint="meal combo"
                     />
                     {combo.featured && (
                       <div className="absolute top-4 right-4">
