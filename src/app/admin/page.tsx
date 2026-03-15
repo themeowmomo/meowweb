@@ -6,12 +6,12 @@ import { collection, query, orderBy, doc } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Loader2, ShoppingCart, Image as ImageIcon, LogIn, ShieldAlert, Copy, Check, Lock, Mail, UserPlus, LogOut } from 'lucide-react';
+import { Loader2, ShoppingCart, Image as ImageIcon, LogIn, ShieldAlert, Copy, Check, Lock, Mail, UserPlus, LogOut, Info } from 'lucide-react';
 import { Navbar } from '@/components/navbar';
 import { useToast } from '@/hooks/use-toast';
 import { initiateEmailSignIn, initiateEmailSignUp } from '@/firebase/non-blocking-login';
@@ -66,10 +66,10 @@ export default function AdminPage() {
     setIsSubmitting(true);
     if (isRegisterMode) {
       initiateEmailSignUp(auth, email, password);
-      toast({ title: "Account Created", description: "Your account is being created. Please check your UID next." });
+      toast({ title: "Account Registration", description: "Creating your admin account... Please wait." });
     } else {
       initiateEmailSignIn(auth, email, password);
-      toast({ title: "Logging In", description: "Authenticating with Meow Momo Secure Servers..." });
+      toast({ title: "Logging In", description: "Verifying your credentials..." });
     }
     
     // Reset loading state after a delay (auth state change will handle the UI transition)
@@ -117,11 +117,20 @@ export default function AdminPage() {
               <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl" />
               <ShieldAlert className="w-14 h-14 mx-auto mb-4" />
               <h1 className="text-3xl font-black tracking-tight leading-none">
-                {isRegisterMode ? "Create Admin" : "Admin Portal"}
+                {isRegisterMode ? "Register Admin" : "Admin Login"}
               </h1>
-              <p className="text-primary-foreground/80 mt-3 font-medium text-sm">Meow Momo Secure Management</p>
+              <p className="text-primary-foreground/80 mt-3 font-medium text-sm">Meow Momo Secure Portal</p>
             </div>
             <CardContent className="p-10">
+              <div className="mb-6 p-4 bg-secondary/30 rounded-xl border border-secondary text-secondary-foreground text-xs flex gap-3 items-start">
+                <Info className="w-4 h-4 shrink-0 mt-0.5" />
+                <p className="font-medium leading-relaxed">
+                  {isRegisterMode 
+                    ? "Enter your email and set your password to create a new admin account." 
+                    : "Login with your admin credentials. If it's your first time, click 'Register' below."}
+                </p>
+              </div>
+
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-2">
                   <Label htmlFor="email" className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Admin Email</Label>
@@ -139,7 +148,9 @@ export default function AdminPage() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="password" className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Password</Label>
+                  <Label htmlFor="password" className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">
+                    {isRegisterMode ? "Set Password" : "Password"}
+                  </Label>
                   <div className="relative">
                     <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                     <Input 
@@ -163,7 +174,7 @@ export default function AdminPage() {
                   ) : (
                     <>
                       {isRegisterMode ? <UserPlus className="mr-2 w-5 h-5" /> : <LogIn className="mr-2 w-5 h-5" />}
-                      {isRegisterMode ? "Register Now" : "Sign In"}
+                      {isRegisterMode ? "Create My Account" : "Sign In"}
                     </>
                   )}
                 </Button>
@@ -174,7 +185,7 @@ export default function AdminPage() {
                   className="w-full text-xs font-black uppercase tracking-widest text-muted-foreground hover:bg-muted/30"
                   onClick={() => setIsRegisterMode(!isRegisterMode)}
                 >
-                  {isRegisterMode ? "Already have an account? Login" : "Need a new admin account? Register"}
+                  {isRegisterMode ? "Already have an account? Sign In" : "First time? Click here to Register"}
                 </Button>
               </div>
             </CardContent>
@@ -194,25 +205,27 @@ export default function AdminPage() {
             <div className="bg-destructive p-10 text-white text-center">
               <ShieldAlert className="w-14 h-14 mx-auto mb-4" />
               <h1 className="text-2xl font-black tracking-tight">Access Denied</h1>
-              <p className="text-destructive-foreground/90 mt-2 font-medium">Authentication successful, but you are not a verified Admin.</p>
+              <p className="text-destructive-foreground/90 mt-2 font-medium">Your account needs admin authorization.</p>
             </div>
             <CardContent className="p-10 space-y-8 text-center">
-              <div className="space-y-4">
-                <div className="p-6 bg-muted/30 rounded-2xl border-2 border-dashed border-muted text-left space-y-4">
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    To activate your management rights, copy your **User UID** below and add it as a document ID to the <code className="bg-foreground text-white px-1.5 py-0.5 rounded text-[10px] font-bold">app_admins</code> collection in the Firebase Console.
-                  </p>
-                  <div className="space-y-2">
-                    <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Your Unique ID</p>
-                    <div className="flex items-center gap-2">
-                      <code className="flex-grow text-xs font-mono break-all bg-white p-4 rounded-xl border-2 border-primary/10 shadow-inner">{user.uid}</code>
-                      <Button variant="outline" size="icon" onClick={copyUid} className="h-14 w-14 shrink-0 rounded-xl border-2 border-primary/20 hover:bg-secondary">
-                        {copied ? <Check className="w-6 h-6 text-green-500" /> : <Copy className="w-6 h-6 text-primary" />}
-                      </Button>
-                    </div>
+              <div className="space-y-4 text-left">
+                <div className="flex items-center gap-2 text-primary">
+                  <Info className="w-5 h-5" />
+                  <p className="text-sm font-black uppercase tracking-widest">Next Step:</p>
+                </div>
+                <p className="text-sm text-muted-foreground leading-relaxed bg-muted/30 p-4 rounded-xl border border-dashed border-muted">
+                  To complete your setup, copy your **UID** below and paste it as a document ID into the <code className="bg-foreground text-white px-2 py-0.5 rounded text-[10px] font-bold">app_admins</code> collection in the Firebase Console.
+                </p>
+                <div className="space-y-2">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Your Unique Admin ID</p>
+                  <div className="flex items-center gap-2">
+                    <code className="flex-grow text-xs font-mono break-all bg-white p-4 rounded-xl border-2 border-primary/10 shadow-inner">{user.uid}</code>
+                    <Button variant="outline" size="icon" onClick={copyUid} className="h-14 w-14 shrink-0 rounded-xl border-2 border-primary/20 hover:bg-secondary">
+                      {copied ? <Check className="w-6 h-6 text-green-500" /> : <Copy className="w-6 h-6 text-primary" />}
+                    </Button>
                   </div>
                 </div>
-                <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-3 pt-6">
                   <Button variant="ghost" className="w-full text-sm font-bold text-muted-foreground flex items-center justify-center gap-2 h-12" onClick={() => auth.signOut()}>
                     <LogOut className="w-4 h-4" /> Sign Out & Switch Account
                   </Button>
