@@ -22,8 +22,6 @@ export function Navbar() {
     { name: "Location", href: "#footer" },
   ];
 
-  const shopNumber = "918850859140";
-
   return (
     <nav className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
@@ -50,9 +48,6 @@ export function Navbar() {
               <Link href="/admin"><Settings className="w-5 h-5" /></Link>
             </Button>
             <CartSheet />
-            <Button className="bg-primary hover:bg-primary/90" asChild>
-              <a href={`https://wa.me/${shopNumber}`} target="_blank" rel="noopener noreferrer">WhatsApp</a>
-            </Button>
           </div>
         </div>
 
@@ -86,7 +81,7 @@ export function Navbar() {
                 </Link>
                 <div className="mt-8">
                   <Button className="w-full h-12 bg-primary" asChild>
-                    <a href={`https://wa.me/${shopNumber}`} target="_blank" rel="noopener noreferrer">Order Now</a>
+                    <a href="#menu" onClick={() => setIsOpen(false)}>Browse Menu</a>
                   </Button>
                 </div>
               </SheetContent>

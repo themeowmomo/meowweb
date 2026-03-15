@@ -4,7 +4,6 @@ import { UtensilsCrossed, Phone, MapPin, Clock, ExternalLink } from "lucide-reac
 import Link from "next/link";
 
 export function Footer() {
-  const shopNumber = "918850859140";
   const mapUrl = "https://maps.app.goo.gl/f2t4bVi6X3GNizrc8";
   
   return (
@@ -55,7 +54,6 @@ export function Footer() {
           <div>
             <h4 className="font-bold text-lg mb-6 text-white">Quick Links</h4>
             <ul className="space-y-4 text-sm text-muted-foreground">
-              <li><a href={`https://wa.me/${shopNumber}`} className="hover:text-primary transition-colors flex items-center gap-2">Order via WhatsApp <ExternalLink className="w-3 h-3" /></a></li>
               <li><a href={mapUrl} target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors flex items-center gap-2">Get Directions <ExternalLink className="w-3 h-3" /></a></li>
               <li><Link href="#menu" className="hover:text-primary transition-colors">View Digital Menu</Link></li>
               <li><Link href="#ai-tool" className="hover:text-primary transition-colors">Momo Recommendation Tool</Link></li>

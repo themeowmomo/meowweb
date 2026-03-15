@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import { aiProductRecommendation, type AiProductRecommendationOutput } from "@/ai/flows/ai-product-recommendation-flow";
-import { Sparkles, Loader2, CheckCircle2, Flame, Utensils, Heart, Plus, Minus, Check } from "lucide-react";
+import { Sparkles, Loader2, CheckCircle2, Flame, Utensils, Heart, Plus, Minus, ShoppingCart } from "lucide-react";
 import { useCart } from "@/context/cart-context";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
@@ -40,8 +40,6 @@ export function AiRecommender() {
   const { addToCart, cart, updateQuantity } = useCart();
   const { toast } = useToast();
 
-  const shopNumber = "918850859140";
-
   const handleRecommend = async () => {
     if (!businessNeeds.trim()) return;
     setLoading(true);
@@ -56,12 +54,11 @@ export function AiRecommender() {
   };
 
   const handleAddToCart = (name: string) => {
-    // Try to find the exact match or a partial match in our map
     const matchKey = Object.keys(PRODUCT_MAP).find(key => 
       name.toLowerCase().includes(key.toLowerCase())
     ) || "";
     
-    const productData = PRODUCT_MAP[matchKey] || { price: 70, variant: "Standard" }; // Default price if not found
+    const productData = PRODUCT_MAP[matchKey] || { price: 70, variant: "Standard" };
 
     addToCart({
       id: `${name}-${productData.variant}`,
@@ -213,7 +210,7 @@ export function AiRecommender() {
                   <div className="mt-12 text-center p-8 bg-secondary/30 rounded-[1.5rem] border border-secondary/50">
                     <p className="font-bold text-secondary-foreground mb-4 italic">Satisfied with these picks?</p>
                     <Button size="lg" className="bg-primary hover:bg-primary/90 font-black h-14 px-10 rounded-xl shadow-lg" asChild>
-                      <a href={`https://wa.me/${shopNumber}`}>Checkout Now via WhatsApp</a>
+                      <a href="#menu">Continue to Checkout</a>
                     </Button>
                   </div>
                 </div>

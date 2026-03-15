@@ -39,20 +39,15 @@ export default function Home() {
           </p>
           <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button size="lg" className="h-16 px-10 text-lg bg-white text-primary hover:bg-secondary hover:text-primary shadow-2xl font-black rounded-2xl group" asChild>
-              <a href={`https://wa.me/${shopNumber}`} target="_blank" rel="noopener noreferrer">
-                Order Now <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </a>
-            </Button>
-            <Button size="lg" className="h-16 px-10 text-lg bg-white text-primary hover:bg-secondary hover:text-primary shadow-xl font-black rounded-2xl" asChild>
               <a href="#menu">
-                View Menu <ShoppingBag className="ml-2 w-5 h-5" />
+                Browse Full Menu <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </a>
             </Button>
           </div>
         </div>
       </section>
 
-      {/* Loyalty Reward Section - Moved to Last */}
+      {/* Loyalty Reward Section - WhatsApp stays here per user request */}
       <section className="py-24 bg-white">
         <div className="container mx-auto px-4">
           <div className="p-10 bg-foreground text-white rounded-[2rem] relative overflow-hidden group shadow-2xl">
