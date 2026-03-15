@@ -24,14 +24,14 @@ export default function AdminPage() {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('orders');
 
-  // Fetch orders with proper memoization to avoid infinite render loops
+  // Fetch orders only if the user is authenticated to prevent permission errors on load
   const ordersQuery = useMemoFirebase(() => {
-    if (!db) return null;
+    if (!db || !user) return null;
     return query(
       collection(db, 'restaurants', RESTAURANT_ID, 'orders'),
       orderBy('orderDate', 'desc')
     );
-  }, [db]);
+  }, [db, user]);
   
   const { data: orders, isLoading: isOrdersLoading } = useCollection(ordersQuery);
 
