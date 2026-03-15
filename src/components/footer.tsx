@@ -16,7 +16,7 @@ export function Footer() {
               <div className="bg-primary p-1.5 rounded-lg">
                 <UtensilsCrossed className="w-6 h-6 text-white" />
               </div>
-              <span className="font-headline font-bold text-2xl tracking-tight">Meow Momo</span>
+              <p className="font-headline font-bold text-2xl tracking-tight">Meow Momo</p>
             </Link>
             <p className="text-muted-foreground text-sm leading-relaxed">
               Serving the freshest Pure Veg and Jain Momos in Malad East. Affordable prices, hygienic preparation, and great taste since day one.
@@ -39,7 +39,7 @@ export function Footer() {
 
           {/* Categories Column */}
           <div>
-            <h4 className="font-bold text-lg mb-6 text-white">Menu Categories</h4>
+            <h3 className="font-bold text-lg mb-6 text-white">Menu Categories</h3>
             <ul className="space-y-4 text-sm text-muted-foreground">
               <li><Link href="#menu" className="hover:text-primary transition-colors">Classic Steam & Fried</Link></li>
               <li><Link href="#menu" className="hover:text-primary transition-colors">Cheese & Paneer Momos</Link></li>
@@ -52,7 +52,7 @@ export function Footer() {
 
           {/* Quick Links Column */}
           <div>
-            <h4 className="font-bold text-lg mb-6 text-white">Quick Links</h4>
+            <h3 className="font-bold text-lg mb-6 text-white">Quick Links</h3>
             <ul className="space-y-4 text-sm text-muted-foreground">
               <li><a href={mapUrl} target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors flex items-center gap-2">Get Directions <ExternalLink className="w-3 h-3" /></a></li>
               <li><Link href="#menu" className="hover:text-primary transition-colors">View Digital Menu</Link></li>
@@ -67,7 +67,7 @@ export function Footer() {
 
           {/* Map Column */}
           <div className="space-y-4">
-            <h4 className="font-bold text-lg text-white">Find Us</h4>
+            <h3 className="font-bold text-lg text-white">Find Us</h3>
             <div className="rounded-xl overflow-hidden border border-white/10 shadow-lg grayscale-[20%] hover:grayscale-0 transition-all duration-500">
               <iframe 
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2254.920425690767!2d72.86143584026658!3d19.18859827663609!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7b732d1a79a63%3A0xabb8d9fb9768848!2sMeow%20Momo!5e0!3m2!1sen!2sin!4v1773482484300!5m2!1sen!2sin" 
@@ -77,6 +77,7 @@ export function Footer() {
                 allowFullScreen={true} 
                 loading="lazy" 
                 referrerPolicy="no-referrer-when-downgrade"
+                title="Meow Momo Google Maps Location"
               />
             </div>
             <a 

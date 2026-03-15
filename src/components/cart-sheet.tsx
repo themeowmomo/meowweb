@@ -84,7 +84,7 @@ export function CartSheet() {
 
   if (!mounted) {
     return (
-      <Button variant="outline" size="icon" className="relative border-primary/20 hover:bg-secondary">
+      <Button variant="outline" size="icon" className="relative border-primary/20 hover:bg-secondary" aria-label="Cart">
         <ShoppingCart className="w-5 h-5 text-primary" />
       </Button>
     );
@@ -93,7 +93,7 @@ export function CartSheet() {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="outline" size="icon" className="relative border-primary/20 hover:bg-secondary">
+        <Button variant="outline" size="icon" className="relative border-primary/20 hover:bg-secondary" aria-label={`Cart with ${totalItems} items`}>
           <ShoppingCart className="w-5 h-5 text-primary" />
           {totalItems > 0 && (
             <span className="absolute -top-2 -right-2 bg-primary text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white">
@@ -200,6 +200,7 @@ export function CartSheet() {
                             size="icon" 
                             className="h-7 w-7 rounded-full"
                             onClick={() => updateQuantity(item.id, item.quantity - 1, item.variant)}
+                            aria-label={`Decrease quantity of ${item.name}`}
                           >
                             <Minus className="h-3 w-3" />
                           </Button>
@@ -209,6 +210,7 @@ export function CartSheet() {
                             size="icon" 
                             className="h-7 w-7 rounded-full"
                             onClick={() => updateQuantity(item.id, item.quantity + 1, item.variant)}
+                            aria-label={`Increase quantity of ${item.name}`}
                           >
                             <Plus className="h-3 w-3" />
                           </Button>
@@ -221,6 +223,7 @@ export function CartSheet() {
                           size="icon" 
                           className="h-7 w-7 text-muted-foreground hover:text-destructive"
                           onClick={() => removeFromCart(item.id, item.variant)}
+                          aria-label={`Remove ${item.name} from cart`}
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>

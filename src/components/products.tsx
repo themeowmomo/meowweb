@@ -1,7 +1,6 @@
-
 "use client";
 
-import { Star, Plus, Minus, ShoppingBag, Leaf, Check, Utensils, Zap, Package } from "lucide-react";
+import { Star, Plus, Minus, Leaf, Utensils, Zap, Package } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -122,6 +121,7 @@ export function Products() {
               e.stopPropagation();
               updateQuantity(itemId, quantity - 1, variant);
             }}
+            aria-label={`Decrease quantity of ${name} ${variant}`}
           >
             <Minus className="h-4 w-4" />
           </Button>
@@ -134,6 +134,7 @@ export function Products() {
               e.stopPropagation();
               updateQuantity(itemId, quantity + 1, variant);
             }}
+            aria-label={`Increase quantity of ${name} ${variant}`}
           >
             <Plus className="h-4 w-4" />
           </Button>
