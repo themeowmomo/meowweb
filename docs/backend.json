@@ -1,0 +1,507 @@
+{
+  "entities": {
+    "RestaurantProfile": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "RestaurantProfile",
+      "type": "object",
+      "description": "Represents the profile and general information of a restaurant, including its identity, location, contact, and business specifics.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the RestaurantProfile entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "The official name of the restaurant, e.g., 'Meow Momo'."
+        },
+        "category": {
+          "type": "string",
+          "description": "The category of the restaurant, e.g., 'Fast Food Restaurant'."
+        },
+        "googleRating": {
+          "type": "number",
+          "description": "The average Google rating of the restaurant on a scale, e.g., 4.9."
+        },
+        "priceRangeMin": {
+          "type": "number",
+          "description": "The minimum estimated price per person in local currency, e.g., 1."
+        },
+        "priceRangeMax": {
+          "type": "number",
+          "description": "The maximum estimated price per person in local currency, e.g., 200."
+        },
+        "address": {
+          "type": "string",
+          "description": "The complete physical address of the restaurant."
+        },
+        "latitude": {
+          "type": "number",
+          "description": "Geographic latitude coordinate of the restaurant's location."
+        },
+        "longitude": {
+          "type": "number",
+          "description": "Geographic longitude coordinate of the restaurant's location."
+        },
+        "ownerPhone": {
+          "type": "string",
+          "description": "The owner's contact phone number, often used for WhatsApp orders."
+        },
+        "businessPhone": {
+          "type": "string",
+          "description": "The general business contact phone number for the restaurant."
+        },
+        "googleMapsUrl": {
+          "type": "string",
+          "description": "URL to the restaurant's location on Google Maps.",
+          "format": "uri"
+        },
+        "whatsAppOrderUrl": {
+          "type": "string",
+          "description": "URL for placing orders directly via WhatsApp.",
+          "format": "uri"
+        },
+        "description": {
+          "type": "string",
+          "description": "A detailed textual description of the restaurant and its culinary offerings."
+        },
+        "businessHighlights": {
+          "type": "array",
+          "description": "A list of key selling points or unique features of the business.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "paymentMethods": {
+          "type": "array",
+          "description": "A list of accepted payment methods at the restaurant.",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "category",
+        "address",
+        "latitude",
+        "longitude",
+        "description",
+        "ownerPhone",
+        "businessPhone"
+      ]
+    },
+    "OpeningHour": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "OpeningHour",
+      "type": "object",
+      "description": "Defines the opening and closing hours for a specific day of the week for a restaurant.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the OpeningHour entity."
+        },
+        "restaurantId": {
+          "type": "string",
+          "description": "Reference to the RestaurantProfile. (Relationship: RestaurantProfile 1:N OpeningHour)"
+        },
+        "dayOfWeek": {
+          "type": "string",
+          "description": "The day of the week for which these hours apply, e.g., 'Monday', 'Sunday'."
+        },
+        "openingTime": {
+          "type": "string",
+          "description": "The time the restaurant opens on this day (e.g., '04:00 PM')."
+        },
+        "closingTime": {
+          "type": "string",
+          "description": "The time the restaurant closes on this day (e.g., '10:30 PM')."
+        }
+      },
+      "required": [
+        "id",
+        "restaurantId",
+        "dayOfWeek",
+        "openingTime",
+        "closingTime"
+      ]
+    },
+    "MenuCategory": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "MenuCategory",
+      "type": "object",
+      "description": "Represents a broad category of menu items, such as 'Momos' or 'Fries'.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the MenuCategory entity."
+        },
+        "restaurantId": {
+          "type": "string",
+          "description": "Reference to the RestaurantProfile. (Relationship: RestaurantProfile 1:N MenuCategory)"
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the menu category, e.g., 'Momos', 'Fries'."
+        },
+        "description": {
+          "type": "string",
+          "description": "An optional, brief description for the menu category."
+        }
+      },
+      "required": [
+        "id",
+        "restaurantId",
+        "name"
+      ]
+    },
+    "MenuItem": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "MenuItem",
+      "type": "object",
+      "description": "Represents a single item available on the restaurant's menu, with details like price and dietary information.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the MenuItem entity."
+        },
+        "categoryId": {
+          "type": "string",
+          "description": "Reference to the MenuCategory this item belongs to. (Relationship: MenuCategory 1:N MenuItem)"
+        },
+        "name": {
+          "type": "string",
+          "description": "The specific name of the menu item, e.g., 'Classic Steam Momos'."
+        },
+        "description": {
+          "type": "string",
+          "description": "A short description highlighting key aspects or ingredients of the menu item."
+        },
+        "price": {
+          "type": "number",
+          "description": "The current selling price of the menu item in local currency."
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "URL to the image or photo of the menu item.",
+          "format": "uri"
+        },
+        "isPureVeg": {
+          "type": "boolean",
+          "description": "Indicates whether the menu item is suitable for a pure vegetarian diet."
+        },
+        "isJain": {
+          "type": "boolean",
+          "description": "Indicates whether the menu item adheres to Jain dietary restrictions."
+        }
+      },
+      "required": [
+        "id",
+        "categoryId",
+        "name",
+        "price",
+        "imageUrl",
+        "isPureVeg",
+        "isJain"
+      ]
+    },
+    "CustomerReview": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "CustomerReview",
+      "type": "object",
+      "description": "Stores individual customer reviews and ratings provided for the restaurant.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the CustomerReview entity."
+        },
+        "restaurantId": {
+          "type": "string",
+          "description": "Reference to the RestaurantProfile. (Relationship: RestaurantProfile 1:N CustomerReview)"
+        },
+        "reviewerName": {
+          "type": "string",
+          "description": "The name or alias of the customer who submitted the review."
+        },
+        "rating": {
+          "type": "number",
+          "description": "The numeric rating given by the customer, typically on a scale (e.g., 1-5 or 1-10)."
+        },
+        "comment": {
+          "type": "string",
+          "description": "The textual feedback or comment provided by the customer."
+        }
+      },
+      "required": [
+        "id",
+        "restaurantId",
+        "reviewerName",
+        "rating",
+        "comment"
+      ]
+    },
+    "Order": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Order",
+      "type": "object",
+      "description": "Represents a customer's complete order placed at the restaurant, including customer details, payment, and status.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Order entity."
+        },
+        "restaurantId": {
+          "type": "string",
+          "description": "Reference to the RestaurantProfile. (Relationship: RestaurantProfile 1:N Order)"
+        },
+        "orderDate": {
+          "type": "string",
+          "description": "The date and time when the order was initially placed.",
+          "format": "date-time"
+        },
+        "customerName": {
+          "type": "string",
+          "description": "The name of the customer who placed this order."
+        },
+        "customerContact": {
+          "type": "string",
+          "description": "The primary contact information (e.g., phone number or email) for the customer."
+        },
+        "deliveryAddress": {
+          "type": "string",
+          "description": "The full address for delivery, if the order is for delivery."
+        },
+        "totalAmount": {
+          "type": "number",
+          "description": "The total monetary value of the order, including all items and any applicable taxes/fees."
+        },
+        "paymentMethod": {
+          "type": "string",
+          "description": "The chosen method of payment for the order (e.g., 'UPI', 'Cash on Delivery')."
+        },
+        "status": {
+          "type": "string",
+          "description": "The current processing status of the order (e.g., 'Pending', 'Preparing', 'Ready for Pickup', 'Completed', 'Cancelled')."
+        },
+        "notes": {
+          "type": "string",
+          "description": "Any special instructions or general notes provided by the customer for the entire order."
+        }
+      },
+      "required": [
+        "id",
+        "restaurantId",
+        "orderDate",
+        "customerName",
+        "customerContact",
+        "totalAmount",
+        "paymentMethod",
+        "status"
+      ]
+    },
+    "OrderItem": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "OrderItem",
+      "type": "object",
+      "description": "Represents a specific menu item included as part of a larger customer order, with its quantity and price at the time of order.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the OrderItem entity."
+        },
+        "orderId": {
+          "type": "string",
+          "description": "Reference to the parent Order. (Relationship: Order 1:N OrderItem)"
+        },
+        "menuItemId": {
+          "type": "string",
+          "description": "Reference to the MenuItem that was included in this order item. (Relationship: MenuItem 1:N OrderItem)"
+        },
+        "quantity": {
+          "type": "number",
+          "description": "The number of units of this specific menu item ordered."
+        },
+        "priceAtOrder": {
+          "type": "number",
+          "description": "The price of the menu item at the exact moment the order was placed (for historical accuracy)."
+        },
+        "notes": {
+          "type": "string",
+          "description": "Any specific customization or special instructions for this particular order item."
+        }
+      },
+      "required": [
+        "id",
+        "orderId",
+        "menuItemId",
+        "quantity",
+        "priceAtOrder"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/restaurants/{restaurantId}",
+        "definition": {
+          "entityName": "RestaurantProfile",
+          "schema": {
+            "$ref": "#/backend/entities/RestaurantProfile"
+          },
+          "description": "Represents the main profile and general information of a restaurant. Includes denormalized 'ownerId' for ownership-based authorization by a specific user."
+        }
+      },
+      {
+        "path": "/restaurants/{restaurantId}/openingHours/{openingHourId}",
+        "definition": {
+          "entityName": "OpeningHour",
+          "schema": {
+            "$ref": "#/backend/entities/OpeningHour"
+          },
+          "description": "Defines the opening and closing hours for a specific day for a restaurant. Includes denormalized 'restaurantId' and 'ownerId' for authorization independence.",
+          "params": [
+            {
+              "name": "restaurantId",
+              "description": "The unique identifier of the parent RestaurantProfile."
+            },
+            {
+              "name": "openingHourId",
+              "description": "The unique identifier for the OpeningHour document."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/restaurants/{restaurantId}/menuCategories/{menuCategoryId}",
+        "definition": {
+          "entityName": "MenuCategory",
+          "schema": {
+            "$ref": "#/backend/entities/MenuCategory"
+          },
+          "description": "Represents a broad category of menu items for a restaurant. Includes denormalized 'restaurantId' and 'ownerId' for authorization independence.",
+          "params": [
+            {
+              "name": "restaurantId",
+              "description": "The unique identifier of the parent RestaurantProfile."
+            },
+            {
+              "name": "menuCategoryId",
+              "description": "The unique identifier for the MenuCategory document."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/restaurants/{restaurantId}/menuCategories/{menuCategoryId}/menuItems/{menuItemId}",
+        "definition": {
+          "entityName": "MenuItem",
+          "schema": {
+            "$ref": "#/backend/entities/MenuItem"
+          },
+          "description": "Represents a single item available on the restaurant's menu. Denormalizes 'restaurantId' and 'ownerId' for authorization independence, allowing direct, atomic security checks for a restaurant owner managing their menu.",
+          "params": [
+            {
+              "name": "restaurantId",
+              "description": "The unique identifier of the parent RestaurantProfile."
+            },
+            {
+              "name": "menuCategoryId",
+              "description": "The unique identifier of the parent MenuCategory."
+            },
+            {
+              "name": "menuItemId",
+              "description": "The unique identifier for the MenuItem document."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/restaurants/{restaurantId}/customerReviews/{customerReviewId}",
+        "definition": {
+          "entityName": "CustomerReview",
+          "schema": {
+            "$ref": "#/backend/entities/CustomerReview"
+          },
+          "description": "Stores individual customer reviews and ratings provided for the restaurant. Includes denormalized 'restaurantId' for public read and owner visibility, and 'ownerId' for authorization independence for the owner.",
+          "params": [
+            {
+              "name": "restaurantId",
+              "description": "The unique identifier of the parent RestaurantProfile."
+            },
+            {
+              "name": "customerReviewId",
+              "description": "The unique identifier for the CustomerReview document."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/restaurants/{restaurantId}/orders/{orderId}",
+        "definition": {
+          "entityName": "Order",
+          "schema": {
+            "$ref": "#/backend/entities/Order"
+          },
+          "description": "Represents a customer's complete order placed at the restaurant. Denormalizes 'restaurantId' and 'ownerId' for authorization independence, allowing restaurant owners to manage their orders without get() calls.",
+          "params": [
+            {
+              "name": "restaurantId",
+              "description": "The unique identifier of the parent RestaurantProfile."
+            },
+            {
+              "name": "orderId",
+              "description": "The unique identifier for the Order document."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/restaurants/{restaurantId}/orders/{orderId}/orderItems/{orderItemId}",
+        "definition": {
+          "entityName": "OrderItem",
+          "schema": {
+            "$ref": "#/backend/entities/OrderItem"
+          },
+          "description": "Represents a specific menu item included as part of a larger customer order. Denormalizes 'restaurantId' and 'ownerId' (from the parent Order and RestaurantProfile) for authorization independence.",
+          "params": [
+            {
+              "name": "restaurantId",
+              "description": "The unique identifier of the parent RestaurantProfile."
+            },
+            {
+              "name": "orderId",
+              "description": "The unique identifier of the parent Order."
+            },
+            {
+              "name": "orderItemId",
+              "description": "The unique identifier for the OrderItem document."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/app_admins/{userId}",
+        "definition": {
+          "entityName": "Admin",
+          "schema": {
+            "$ref": "#/backend/entities/user"
+          },
+          "description": "Dedicated collection for global application administrators. The mere existence of a document with a user's UID in this collection grants platform-wide read/write access to all restaurant data. This implements DBAC (Database-Backed Access Control) for global roles.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier of the user who is an application administrator."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The recommended Firestore structure prioritizes Authorization Independence and Structural Segregation to ensure robust, debuggable security rules and efficient Query Access Patterns (QAPs). \n\n**Authorization Independence:** To eliminate costly and insecure `get()` calls in Firestore Security Rules, the `ownerId` (the UID of the restaurant's owner) and `restaurantId` are denormalized into all subcollection documents that require owner-specific authorization. Specifically:\n- Every document in `/restaurants/{restaurantId}/openingHours`, `/restaurants/{restaurantId}/menuCategories`, `/restaurants/{restaurantId}/customerReviews`, `/restaurants/{restaurantId}/orders` will contain its `restaurantId` (which is already part of their respective schemas) and will be augmented with the `ownerId` of the parent `RestaurantProfile`.\n- Every document in `/restaurants/{restaurantId}/menuCategories/{menuCategoryId}/menuItems` will be augmented with `restaurantId` and `ownerId`.\n- Every document in `/restaurants/{restaurantId}/orders/{orderId}/orderItems` will be augmented with `restaurantId` and `ownerId`.\nThis denormalization allows rules to directly check `resource.data.ownerId == request.auth.uid` and `resource.data.restaurantId == {restaurantId}` for any read/write operation on a document or list of documents, completely avoiding `get()` calls to parent documents.\n\n**QAPs (Query Access Patterns):**\n1.  **Public Display:** All restaurant-related information (profile, opening hours, menu categories, menu items, customer reviews) is structured under `/restaurants/{restaurantId}` and its subcollections, allowing for public read access. Clients can efficiently fetch all necessary data for a specific restaurant's landing page without complex authorization logic.\n2.  **Customer Orders:** Authenticated users (not necessarily owners) can create orders in `/restaurants/{restaurantId}/orders` and add order items in `/restaurants/{restaurantId}/orders/{orderId}/orderItems`. The `restaurantId` and `ownerId` are denormalized for future owner management.\n3.  **Restaurant Owner Admin Page:** The restaurant owner can manage their specific restaurant's data. For instance, to \"change the photo of menu cart\" (update `MenuItem.imageUrl`), the owner's `request.auth.uid` can be matched against the denormalized `ownerId` on the `MenuItem` document. To \"see the order\" (list orders), the owner can query `/restaurants/{restaurantId}/orders` where `{restaurantId}` is their specific restaurant, and the security rules will filter based on the denormalized `ownerId`. This enables secure and efficient `list` operations.\n4.  **Global Admin Page:** A dedicated collection `/app_admins/{userId}` is introduced. The existence of a user's UID in this collection grants global administrative privileges. Security rules can check `exists(/databases/$(database)/documents/app_admins/$(request.auth.uid))` to grant full read/write access to all restaurant data, enabling global admins to view all orders and modify any menu item photo across the entire platform, fulfilling the user's specific request. This provides a clear, DBAC-compliant mechanism for global roles."
+  }
+}
