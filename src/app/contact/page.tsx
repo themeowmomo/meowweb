@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Navbar } from "@/components/navbar";
@@ -6,10 +7,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
-import { Phone, MapPin, Clock, Send, MessageCircle } from "lucide-react";
+import { Phone, MapPin, Clock, Send, MessageCircle, User } from "lucide-react";
 
 export default function ContactPage() {
   const shopNumber = "918850859140";
+  const amitNumber = "919867977942";
+  const karanNumber = "919324810532";
 
   return (
     <main className="min-h-screen">
@@ -20,7 +23,7 @@ export default function ContactPage() {
           <div className="text-center mb-16 space-y-4">
             <h1 className="text-4xl md:text-6xl font-black font-headline tracking-tighter">Get in Touch</h1>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              Have questions about our Jain menu or want to place a bulk order? We're here to help!
+              Whether you're a regular customer or looking for bulk orders, our founders are just a call away.
             </p>
           </div>
 
@@ -31,9 +34,27 @@ export default function ContactPage() {
                 <div className="bg-primary/10 w-14 h-14 rounded-2xl flex items-center justify-center text-primary mb-6">
                   <Phone className="w-6 h-6" />
                 </div>
-                <h3 className="font-black text-xl mb-2">Call Us</h3>
-                <p className="text-muted-foreground text-sm">+91 88508 59140</p>
-                <p className="text-muted-foreground text-sm">+91 98679 77942</p>
+                <h3 className="font-black text-xl mb-4">Contact Founders</h3>
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
+                      <User className="w-4 h-4 text-muted-foreground" />
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-black uppercase text-muted-foreground">Amit Jaiswal</p>
+                      <p className="text-sm font-bold">+91 98679 77942</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
+                      <User className="w-4 h-4 text-muted-foreground" />
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-black uppercase text-muted-foreground">Karan Sawant</p>
+                      <p className="text-sm font-bold">+91 93248 10532</p>
+                    </div>
+                  </div>
+                </div>
               </Card>
 
               <Card className="rounded-[2rem] border-none shadow-sm bg-white p-8">
@@ -84,7 +105,7 @@ export default function ContactPage() {
                     </Button>
                     <Button variant="outline" className="h-16 px-8 rounded-2xl border-2 border-primary text-primary font-black text-lg hover:bg-primary/10" asChild>
                       <a href={`https://wa.me/${shopNumber}`}>
-                        <MessageCircle className="mr-2 w-6 h-6" /> WhatsApp Us
+                        <MessageCircle className="mr-2 w-6 h-6" /> WhatsApp Shop
                       </a>
                     </Button>
                   </div>

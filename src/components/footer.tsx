@@ -1,3 +1,4 @@
+
 "use client";
 
 import { UtensilsCrossed, Phone, MapPin, Clock, ExternalLink } from "lucide-react";
@@ -19,7 +20,7 @@ export function Footer() {
               <p className="font-headline font-bold text-2xl tracking-tight">Meow Momo</p>
             </Link>
             <p className="text-muted-foreground text-sm leading-relaxed">
-              Serving the freshest Pure Veg and Jain Momos in Malad East. Affordable prices, hygienic preparation, and great taste since day one.
+              Serving the freshest Pure Veg and Jain Momos in Malad East. Tech-powered street food experience founded by Amit Jaiswal & Karan Sawant.
             </p>
             <div className="space-y-4">
               <div className="flex items-start gap-3 text-sm text-muted-foreground">
@@ -28,7 +29,7 @@ export function Footer() {
               </div>
               <div className="flex items-center gap-3 text-sm text-muted-foreground">
                 <Phone className="w-5 h-5 text-primary flex-shrink-0" />
-                <span>+91 88508 59140 / 98679 77942</span>
+                <span>+91 88508 59140 (Shop)</span>
               </div>
               <div className="flex items-center gap-3 text-sm text-muted-foreground">
                 <Clock className="w-5 h-5 text-primary flex-shrink-0" />
@@ -53,7 +54,7 @@ export function Footer() {
           <div>
             <h3 className="font-bold text-lg mb-6 text-white">Company</h3>
             <ul className="space-y-4 text-sm text-muted-foreground">
-              <li><Link href="/about" className="hover:text-primary transition-colors">About Us</Link></li>
+              <li><Link href="/about" className="hover:text-primary transition-colors">About Founders</Link></li>
               <li><Link href="/contact" className="hover:text-primary transition-colors">Contact Us</Link></li>
               <li><Link href="/terms" className="hover:text-primary transition-colors">Terms of Service</Link></li>
               <li><a href={mapUrl} target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors flex items-center gap-2">Get Directions <ExternalLink className="w-3 h-3" /></a></li>
@@ -79,7 +80,7 @@ export function Footer() {
         </div>
 
         <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-muted-foreground text-center md:text-left">
-          <p>© {new Date().getFullYear()} Meow Momo Malad. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Meow Momo Malad. Developed by Amit & Karan.</p>
           <div className="flex gap-8">
             <span className="text-accent font-bold">Pure Veg Only</span>
             <span className="text-accent font-bold">Jain Options Available</span>

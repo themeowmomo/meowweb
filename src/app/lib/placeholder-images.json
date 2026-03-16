@@ -80,6 +80,18 @@
       "imageHint": "food combo"
     },
     {
+      "id": "founder-amit",
+      "description": "Amit Jaiswal - Founder & Technology Lead",
+      "imageUrl": "https://picsum.photos/seed/amit-founder/400/400",
+      "imageHint": "professional man"
+    },
+    {
+      "id": "founder-karan",
+      "description": "Karan Sawant - Founder & Data Analyst",
+      "imageUrl": "https://picsum.photos/seed/karan-founder/400/400",
+      "imageHint": "professional man"
+    },
+    {
       "id": "user-1",
       "description": "Happy customer Rohan",
       "imageUrl": "https://picsum.photos/seed/rohan/100/100",
