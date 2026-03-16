@@ -11,7 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Loader2, ShoppingCart, Image as ImageIcon, ShieldAlert, Copy, Check, Lock, LogOut, Users, Store, DollarSign, Activity, Utensils } from 'lucide-react';
+import { Loader2, ShoppingCart, Image as ImageIcon, ShieldAlert, Copy, Check, Lock, LogOut, Users, Store, DollarSign, Activity, Utensils, Info } from 'lucide-react';
 import { Navbar } from '@/components/navbar';
 import { useToast } from '@/hooks/use-toast';
 import { setDocumentNonBlocking, updateDocumentNonBlocking } from '@/firebase/non-blocking-updates';
@@ -265,10 +265,10 @@ export default function AdminPage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
           {[
-            { label: "Total Revenue", value: `Rs.${totalRevenue}`, icon: DollarSign, color: "text-green-600" },
-            { label: "Active Orders", value: pendingOrders, icon: ShoppingCart, color: "text-blue-600" },
-            { label: "Menu Items", value: categories?.length || 0, icon: Utensils, color: "text-orange-600" },
-            { label: "Team Size", value: allAdmins?.length || 0, icon: Users, color: "text-purple-600" },
+            { label: "Total Revenue", value: isOrdersLoading ? "..." : `Rs.${totalRevenue}`, icon: DollarSign, color: "text-green-600" },
+            { label: "Active Orders", value: isOrdersLoading ? "..." : pendingOrders, icon: ShoppingCart, color: "text-blue-600" },
+            { label: "Categories", value: isCategoriesLoading ? "..." : categories?.length || 0, icon: Utensils, color: "text-orange-600" },
+            { label: "Team Size", value: isAdminsLoading ? "..." : allAdmins?.length || 0, icon: Users, color: "text-purple-600" },
           ].map((stat, i) => (
             <Card key={i} className="rounded-3xl border-none shadow-sm bg-white p-6 hover:shadow-md transition-all">
               <div className="flex items-center gap-4">
@@ -297,7 +297,7 @@ export default function AdminPage() {
               <ScrollArea className="h-[600px]">
                 {isOrdersLoading ? (
                   <div className="p-20 text-center"><Loader2 className="w-10 h-10 animate-spin mx-auto opacity-20" /></div>
-                ) : (
+                ) : orders && orders.length > 0 ? (
                   <Table>
                     <TableHeader className="bg-muted/30 h-16">
                       <TableRow>
@@ -322,6 +322,11 @@ export default function AdminPage() {
                       ))}
                     </TableBody>
                   </Table>
+                ) : (
+                  <div className="p-32 text-center space-y-4">
+                    <ShoppingCart className="w-12 h-12 text-muted-foreground/20 mx-auto" />
+                    <p className="font-bold text-muted-foreground">No orders found yet.</p>
+                  </div>
                 )}
               </ScrollArea>
             </Card>
@@ -329,17 +334,26 @@ export default function AdminPage() {
 
           <TabsContent value="menu">
             <div className="space-y-12">
-              {isCategoriesLoading ? <Loader2 className="animate-spin mx-auto" /> : categories?.map((cat: any) => (
-                <div key={cat.id} className="space-y-6">
-                  <div className="flex items-center gap-4">
-                    <h2 className="text-2xl font-black text-primary uppercase tracking-tight">{cat.name}</h2>
-                    <div className="flex-grow border-t border-dashed" />
+              {isCategoriesLoading ? (
+                <div className="p-20 text-center"><Loader2 className="animate-spin mx-auto opacity-20" /></div>
+              ) : categories && categories.length > 0 ? (
+                categories.map((cat: any) => (
+                  <div key={cat.id} className="space-y-6">
+                    <div className="flex items-center gap-4">
+                      <h2 className="text-2xl font-black text-primary uppercase tracking-tight">{cat.name}</h2>
+                      <div className="flex-grow border-t border-dashed" />
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                      <MenuItemList catId={cat.id} />
+                    </div>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <MenuItemList catId={cat.id} />
-                  </div>
+                ))
+              ) : (
+                <div className="p-32 text-center bg-white rounded-[3rem] border border-dashed">
+                  <Utensils className="w-12 h-12 text-muted-foreground/20 mx-auto mb-4" />
+                  <p className="font-bold text-muted-foreground">No menu categories found in database.</p>
                 </div>
-              ))}
+              )}
             </div>
           </TabsContent>
 
@@ -361,7 +375,9 @@ export default function AdminPage() {
                       onBlur={(e) => handleUpdateProfilePhoto(e.target.value)}
                     />
                   </div>
-                  <p className="text-[10px] text-muted-foreground font-bold uppercase text-center opacity-40 italic">Live Update Enabled</p>
+                  <p className="text-[10px] text-muted-foreground font-bold uppercase text-center opacity-40 italic flex items-center justify-center gap-2">
+                    <Info className="w-3 h-3" /> Live Update Enabled
+                  </p>
                 </div>
               </Card>
 
@@ -385,6 +401,9 @@ export default function AdminPage() {
                       </div>
                     </div>
                   ))}
+                  {(!categories || categories.length === 0) && (
+                    <p className="text-sm text-center text-muted-foreground py-8 italic">No categories to display.</p>
+                  )}
                 </div>
               </Card>
             </div>
@@ -418,7 +437,7 @@ export default function AdminPage() {
                       </div>
                       <span className="font-mono text-xs font-bold break-all">{admin.id}</span>
                     </div>
-                    {admin.id === user.uid && <Badge className="bg-primary/20 text-primary border-none font-black text-[10px] rounded-full px-3 py-1">ADMIN</Badge>}
+                    {admin.id === user.uid && <Badge className="bg-primary/20 text-primary border-none font-black text-[10px] rounded-full px-3 py-1">YOU</Badge>}
                   </div>
                 ))}
               </div>
@@ -449,9 +468,17 @@ function MenuItemList({ catId }: { catId: string }) {
 
   if (isLoading) return <div className="p-4 text-center"><Loader2 className="animate-spin opacity-20 mx-auto" /></div>;
 
+  if (!items || items.length === 0) {
+    return (
+      <div className="col-span-full p-12 bg-muted/10 border-2 border-dashed rounded-[2rem] text-center">
+        <p className="text-sm font-bold text-muted-foreground italic">No items found in this category.</p>
+      </div>
+    );
+  }
+
   return (
     <>
-      {items?.map((item: any) => (
+      {items.map((item: any) => (
         <Card key={item.id} className="rounded-[2.5rem] shadow-sm hover:shadow-xl transition-all border-none bg-white overflow-hidden group">
           <div className="h-48 relative bg-muted overflow-hidden">
             {item.imageUrl && <img src={item.imageUrl} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt={item.name} />}
