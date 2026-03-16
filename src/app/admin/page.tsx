@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
-import { useUser, useFirestore, useCollection, useMemoFirebase, useAuth, useDoc } from '@/firebase';
-import { collection, query, orderBy, doc } from 'firebase/firestore';
+import { useState, useRef } from 'react';
+import { useUser, useFirestore, useCollection, useMemoFirebase, useAuth, useDoc, useStorage } from '@/firebase';
+import { collection, query, orderBy, doc, serverTimestamp } from 'firebase/firestore';
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -11,10 +12,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Loader2, ShoppingCart, Image as ImageIcon, ShieldAlert, Copy, Check, Lock, LogOut, Users, Store, DollarSign, Activity, Utensils, Info } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Loader2, ShoppingCart, Image as ImageIcon, ShieldAlert, Copy, Check, Lock, LogOut, Users, Store, DollarSign, Activity, Utensils, Info, Plus, Upload, Trash2 } from 'lucide-react';
 import { Navbar } from '@/components/navbar';
 import { useToast } from '@/hooks/use-toast';
-import { setDocumentNonBlocking, updateDocumentNonBlocking } from '@/firebase/non-blocking-updates';
+import { setDocumentNonBlocking, updateDocumentNonBlocking, addDocumentNonBlocking } from '@/firebase/non-blocking-updates';
 import { cn } from '@/lib/utils';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 
@@ -35,6 +38,11 @@ export default function AdminPage() {
 
   // Management state
   const [newAdminUid, setNewAdminUid] = useState('');
+
+  // Category Creation State
+  const [isAddingCategory, setIsAddingCategory] = useState(false);
+  const [newCatName, setNewCatName] = useState('');
+  const [newCatDesc, setNewCatDesc] = useState('');
 
   // 1. Check if the user exists in the app_admins collection
   const adminDocRef = useMemoFirebase(() => {
@@ -104,6 +112,26 @@ export default function AdminPage() {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleAddCategory = () => {
+    if (!db || !newCatName.trim()) return;
+    const catId = `cat-${Date.now()}`;
+    const catRef = doc(db, 'restaurants', RESTAURANT_ID, 'menuCategories', catId);
+    
+    setDocumentNonBlocking(catRef, {
+      id: catId,
+      restaurantId: RESTAURANT_ID,
+      ownerId: user?.uid,
+      name: newCatName,
+      description: newCatDesc,
+      imageUrl: 'https://picsum.photos/seed/cat/400/300'
+    }, { merge: true });
+
+    toast({ title: "Category Created", description: `${newCatName} added to menu.` });
+    setIsAddingCategory(false);
+    setNewCatName('');
+    setNewCatDesc('');
   };
 
   const handleUpdateCategoryPhoto = (catId: string, newUrl: string) => {
@@ -333,6 +361,35 @@ export default function AdminPage() {
           </TabsContent>
 
           <TabsContent value="menu">
+            <div className="flex justify-between items-center mb-8">
+              <h2 className="text-2xl font-black tracking-tight">Menu Management</h2>
+              <Dialog open={isAddingCategory} onOpenChange={setIsAddingCategory}>
+                <DialogTrigger asChild>
+                  <Button className="h-12 px-6 rounded-xl font-black bg-primary">
+                    <Plus className="mr-2 w-5 h-5" /> Add Category
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="rounded-3xl">
+                  <DialogHeader>
+                    <DialogTitle className="font-black">Create Menu Category</DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4 py-4">
+                    <div className="space-y-2">
+                      <Label className="font-bold">Category Name</Label>
+                      <Input placeholder="e.g. Steam Momos" value={newCatName} onChange={(e) => setNewCatName(e.target.value)} />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="font-bold">Short Description</Label>
+                      <Input placeholder="e.g. Authentic steamed perfection" value={newCatDesc} onChange={(e) => setNewCatDesc(e.target.value)} />
+                    </div>
+                  </div>
+                  <DialogFooter>
+                    <Button onClick={handleAddCategory} className="font-black">Create Category</Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            </div>
+
             <div className="space-y-12">
               {isCategoriesLoading ? (
                 <div className="p-20 text-center"><Loader2 className="animate-spin mx-auto opacity-20" /></div>
@@ -342,6 +399,7 @@ export default function AdminPage() {
                     <div className="flex items-center gap-4">
                       <h2 className="text-2xl font-black text-primary uppercase tracking-tight">{cat.name}</h2>
                       <div className="flex-grow border-t border-dashed" />
+                      <AddItemDialog catId={cat.id} />
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                       <MenuItemList catId={cat.id} />
@@ -351,7 +409,7 @@ export default function AdminPage() {
               ) : (
                 <div className="p-32 text-center bg-white rounded-[3rem] border border-dashed">
                   <Utensils className="w-12 h-12 text-muted-foreground/20 mx-auto mb-4" />
-                  <p className="font-bold text-muted-foreground">No menu categories found in database.</p>
+                  <p className="font-bold text-muted-foreground">No menu categories found. Click "Add Category" above to start.</p>
                 </div>
               )}
             </div>
@@ -366,14 +424,19 @@ export default function AdminPage() {
                   <div className="aspect-video relative rounded-[2rem] overflow-hidden bg-muted group">
                     {profile?.imageUrl && <img src={profile.imageUrl} className="object-cover w-full h-full group-hover:scale-105 transition-transform" alt="Store hero" />}
                   </div>
-                  <div className="space-y-2">
-                    <Label className="text-[10px] font-black uppercase text-muted-foreground ml-1">Unsplash URL</Label>
-                    <Input 
-                      placeholder="Paste image link..." 
-                      className="h-14 rounded-2xl bg-muted/30 border-none"
-                      defaultValue={profile?.imageUrl}
-                      onBlur={(e) => handleUpdateProfilePhoto(e.target.value)}
-                    />
+                  <div className="flex gap-2">
+                    <div className="flex-grow">
+                      <Label className="text-[10px] font-black uppercase text-muted-foreground ml-1">Unsplash URL</Label>
+                      <Input 
+                        placeholder="Paste image link..." 
+                        className="h-14 rounded-2xl bg-muted/30 border-none"
+                        defaultValue={profile?.imageUrl}
+                        onBlur={(e) => handleUpdateProfilePhoto(e.target.value)}
+                      />
+                    </div>
+                    <div className="self-end pb-1">
+                      <ImageUploadButton onUploadComplete={handleUpdateProfilePhoto} path={`hero/${RESTAURANT_ID}`} />
+                    </div>
                   </div>
                   <p className="text-[10px] text-muted-foreground font-bold uppercase text-center opacity-40 italic flex items-center justify-center gap-2">
                     <Info className="w-3 h-3" /> Live Update Enabled
@@ -392,12 +455,15 @@ export default function AdminPage() {
                       </div>
                       <div className="flex-grow space-y-2">
                         <Label className="text-[10px] font-black uppercase tracking-widest text-primary">{cat.name}</Label>
-                        <Input 
-                          placeholder="Icon URL..." 
-                          className="h-12 text-sm rounded-xl"
-                          defaultValue={cat.imageUrl}
-                          onBlur={(e) => handleUpdateCategoryPhoto(cat.id, e.target.value)}
-                        />
+                        <div className="flex gap-2">
+                          <Input 
+                            placeholder="Icon URL..." 
+                            className="h-12 text-sm rounded-xl"
+                            defaultValue={cat.imageUrl}
+                            onBlur={(e) => handleUpdateCategoryPhoto(cat.id, e.target.value)}
+                          />
+                          <ImageUploadButton onUploadComplete={(url) => handleUpdateCategoryPhoto(cat.id, url)} path={`categories/${cat.id}`} />
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -449,6 +515,141 @@ export default function AdminPage() {
   );
 }
 
+function ImageUploadButton({ onUploadComplete, path }: { onUploadComplete: (url: string) => void, path: string }) {
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const storage = useStorage();
+  const { toast } = useToast();
+
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploading(true);
+    const storageRef = ref(storage, `${path}/${Date.now()}_${file.name}`);
+    
+    try {
+      const uploadTask = uploadBytesResumable(storageRef, file);
+      
+      uploadTask.on('state_changed', 
+        (snapshot) => {
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log('Upload is ' + progress + '% done');
+        }, 
+        (error) => {
+          toast({ variant: "destructive", title: "Upload Failed", description: error.message });
+          setIsUploading(false);
+        }, 
+        async () => {
+          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+          onUploadComplete(downloadURL);
+          setIsUploading(false);
+          toast({ title: "Image Uploaded", description: "Storage updated successfully." });
+        }
+      );
+    } catch (err: any) {
+      toast({ variant: "destructive", title: "Error", description: err.message });
+      setIsUploading(false);
+    }
+  };
+
+  return (
+    <div className="flex-shrink-0">
+      <input 
+        type="file" 
+        accept="image/*" 
+        className="hidden" 
+        ref={fileInputRef} 
+        onChange={handleUpload} 
+      />
+      <Button 
+        variant="outline" 
+        size="icon" 
+        className="h-12 w-12 rounded-xl border-primary text-primary" 
+        onClick={() => fileInputRef.current?.click()}
+        disabled={isUploading}
+      >
+        {isUploading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Upload className="w-5 h-5" />}
+      </Button>
+    </div>
+  );
+}
+
+function AddItemDialog({ catId }: { catId: string }) {
+  const [open, setOpen] = useState(false);
+  const [name, setName] = useState('');
+  const [desc, setDesc] = useState('');
+  const [price, setPrice] = useState('');
+  const [isJain, setIsJain] = useState(false);
+  const db = useFirestore();
+  const { user } = useUser();
+  const { toast } = useToast();
+
+  const handleCreate = () => {
+    if (!name || !price) return;
+    const itemId = `item-${Date.now()}`;
+    const itemRef = doc(db, 'restaurants', RESTAURANT_ID, 'menuCategories', catId, 'menuItems', itemId);
+    
+    setDocumentNonBlocking(itemRef, {
+      id: itemId,
+      categoryId: catId,
+      restaurantId: RESTAURANT_ID,
+      ownerId: user?.uid,
+      name,
+      description: desc,
+      price: parseFloat(price),
+      isPureVeg: true,
+      isJain,
+      imageUrl: 'https://picsum.photos/seed/item/400/300'
+    }, { merge: true });
+
+    toast({ title: "Item Added" });
+    setOpen(false);
+    setName('');
+    setDesc('');
+    setPrice('');
+    setIsJain(false);
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button variant="ghost" size="sm" className="font-black text-[10px] uppercase tracking-widest text-primary">
+          <Plus className="w-3 h-3 mr-1" /> Add Item
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="rounded-3xl">
+        <DialogHeader>
+          <DialogTitle className="font-black">Add New Menu Item</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4 py-4">
+          <div className="space-y-2">
+            <Label className="font-bold">Item Name</Label>
+            <Input placeholder="Classic Steam Momos" value={name} onChange={(e) => setName(e.target.value)} />
+          </div>
+          <div className="space-y-2">
+            <Label className="font-bold">Description</Label>
+            <Input placeholder="Authentic veg fillings" value={desc} onChange={(e) => setDesc(e.target.value)} />
+          </div>
+          <div className="space-y-2">
+            <Label className="font-bold">Price (Rs.)</Label>
+            <Input type="number" placeholder="50" value={price} onChange={(e) => setPrice(e.target.value)} />
+          </div>
+          <div className="flex items-center space-x-2 pt-2">
+            <Checkbox id="jain" checked={isJain} onCheckedChange={(val) => setIsJain(val as boolean)} />
+            <label htmlFor="jain" className="text-sm font-bold leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+              Is Jain Specialty?
+            </label>
+          </div>
+        </div>
+        <DialogFooter>
+          <Button onClick={handleCreate} className="font-black">Add to Menu</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 function MenuItemList({ catId }: { catId: string }) {
   const db = useFirestore();
   const { toast } = useToast();
@@ -471,7 +672,7 @@ function MenuItemList({ catId }: { catId: string }) {
   if (!items || items.length === 0) {
     return (
       <div className="col-span-full p-12 bg-muted/10 border-2 border-dashed rounded-[2rem] text-center">
-        <p className="text-sm font-bold text-muted-foreground italic">No items found in this category.</p>
+        <p className="text-sm font-bold text-muted-foreground italic">No items found. Click "Add Item" to start.</p>
       </div>
     );
   }
@@ -490,12 +691,15 @@ function MenuItemList({ catId }: { catId: string }) {
             <h3 className="font-black text-xl truncate">{item.name}</h3>
             <div className="space-y-2">
               <Label className="text-[10px] font-black uppercase text-muted-foreground ml-1">Item Photo URL</Label>
-              <Input 
-                defaultValue={item.imageUrl}
-                placeholder="Paste Unsplash Link..." 
-                className="h-12 rounded-xl bg-muted/30 border-none px-4 text-sm"
-                onBlur={(e) => updatePhoto(item.id, e.target.value)}
-              />
+              <div className="flex gap-2">
+                <Input 
+                  defaultValue={item.imageUrl}
+                  placeholder="Paste Unsplash Link..." 
+                  className="h-12 rounded-xl bg-muted/30 border-none px-4 text-sm"
+                  onBlur={(e) => updatePhoto(item.id, e.target.value)}
+                />
+                <ImageUploadButton onUploadComplete={(url) => updatePhoto(item.id, url)} path={`items/${item.id}`} />
+              </div>
             </div>
           </CardContent>
         </Card>
