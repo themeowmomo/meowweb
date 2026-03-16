@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -177,13 +176,8 @@ export function Products() {
                           <div className="space-y-1">
                             <h4 className="text-xl font-black leading-tight">{item.name}</h4>
                             <div className="flex gap-2">
-                              <Badge className="bg-primary/10 text-primary border-none text-[8px] font-black">VEG</Badge>
                               {item.isJain && <Badge className="bg-accent/20 text-accent-foreground border-none text-[8px] font-black">JAIN</Badge>}
                             </div>
-                          </div>
-                          <div className="flex items-center text-accent">
-                            <Star className="w-4 h-4 fill-accent" />
-                            <span className="text-xs font-black ml-1.5">4.9</span>
                           </div>
                         </div>
 
