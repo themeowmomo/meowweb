@@ -41,28 +41,23 @@ export function Footer() {
           <div>
             <h3 className="font-bold text-lg mb-6 text-white">Menu Categories</h3>
             <ul className="space-y-4 text-sm text-muted-foreground">
-              <li><Link href="#menu" className="hover:text-primary transition-colors">Classic Steam & Fried</Link></li>
-              <li><Link href="#menu" className="hover:text-primary transition-colors">Cheese & Paneer Momos</Link></li>
-              <li><Link href="#menu" className="hover:text-primary transition-colors">Peri Peri Spicy Momos</Link></li>
-              <li><Link href="#menu" className="hover:text-primary transition-colors">Kurkure Crunch Momos</Link></li>
-              <li><Link href="#menu" className="hover:text-primary transition-colors">Jain Specialized Momos</Link></li>
-              <li><Link href="#menu" className="hover:text-primary transition-colors">Salted & Masala Fries</Link></li>
+              <li><Link href="/#menu" className="hover:text-primary transition-colors">Classic Steam & Fried</Link></li>
+              <li><Link href="/#menu" className="hover:text-primary transition-colors">Cheese & Paneer Momos</Link></li>
+              <li><Link href="/#menu" className="hover:text-primary transition-colors">Peri Peri Spicy Momos</Link></li>
+              <li><Link href="/#menu" className="hover:text-primary transition-colors">Kurkure Crunch Momos</Link></li>
+              <li><Link href="/#menu" className="hover:text-primary transition-colors">Jain Specialized Momos</Link></li>
             </ul>
           </div>
 
           {/* Quick Links Column */}
           <div>
-            <h3 className="font-bold text-lg mb-6 text-white">Quick Links</h3>
+            <h3 className="font-bold text-lg mb-6 text-white">Company</h3>
             <ul className="space-y-4 text-sm text-muted-foreground">
+              <li><Link href="/about" className="hover:text-primary transition-colors">About Us</Link></li>
+              <li><Link href="/contact" className="hover:text-primary transition-colors">Contact Us</Link></li>
+              <li><Link href="/terms" className="hover:text-primary transition-colors">Terms of Service</Link></li>
               <li><a href={mapUrl} target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors flex items-center gap-2">Get Directions <ExternalLink className="w-3 h-3" /></a></li>
-              <li><Link href="#menu" className="hover:text-primary transition-colors">View Digital Menu</Link></li>
-              <li><Link href="#ai-tool" className="hover:text-primary transition-colors">Momo Recommendation Tool</Link></li>
-              <li><Link href="#pricing" className="hover:text-primary transition-colors">Meal Combos</Link></li>
             </ul>
-            <div className="mt-8 p-4 bg-white/5 rounded-xl border border-white/10">
-              <p className="text-xs font-bold uppercase tracking-wider text-accent mb-2">Payment Methods</p>
-              <p className="text-sm">UPI, Cash on Delivery</p>
-            </div>
           </div>
 
           {/* Map Column */}
@@ -80,14 +75,6 @@ export function Footer() {
                 title="Meow Momo Google Maps Location"
               />
             </div>
-            <a 
-              href={mapUrl} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-xs font-bold text-primary hover:underline"
-            >
-              Open in Google Maps <ExternalLink className="w-3 h-3" />
-            </a>
           </div>
         </div>
 

@@ -16,10 +16,9 @@ export function Navbar() {
   }, []);
 
   const navLinks = [
-    { name: "Menu", href: "#menu" },
-    { name: "Reviews", href: "#testimonials" },
-    { name: "Momo Finder", href: "#ai-tool" },
-    { name: "Location", href: "#footer" },
+    { name: "Menu", href: "/#menu" },
+    { name: "About", href: "/about" },
+    { name: "Contact", href: "/contact" },
   ];
 
   return (
@@ -73,6 +72,20 @@ export function Navbar() {
                   </Link>
                 ))}
                 <Link 
+                  href="/about" 
+                  onClick={() => setIsOpen(false)}
+                  className="text-lg font-medium py-4 border-b hover:text-primary transition-colors"
+                >
+                  About Us
+                </Link>
+                <Link 
+                  href="/contact" 
+                  onClick={() => setIsOpen(false)}
+                  className="text-lg font-medium py-4 border-b hover:text-primary transition-colors"
+                >
+                  Contact
+                </Link>
+                <Link 
                   href="/admin" 
                   onClick={() => setIsOpen(false)}
                   className="text-lg font-medium py-4 border-b hover:text-primary transition-colors flex items-center gap-2"
@@ -81,7 +94,7 @@ export function Navbar() {
                 </Link>
                 <div className="mt-8">
                   <Button className="w-full h-12 bg-primary" asChild>
-                    <a href="#menu" onClick={() => setIsOpen(false)}>Browse Menu</a>
+                    <Link href="/#menu" onClick={() => setIsOpen(false)}>Browse Menu</Link>
                   </Button>
                 </div>
               </SheetContent>
