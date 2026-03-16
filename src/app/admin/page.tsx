@@ -1,7 +1,8 @@
+
 'use client';
 
 import { useState } from 'react';
-import { useUser, useFirestore, useCollection, useMemoFirebase, useAuth, useDoc, setDocumentNonBlocking } from '@/firebase';
+import { useUser, useFirestore, useCollection, useMemoFirebase, useAuth, useDoc, setDocumentNonBlocking, updateDocumentNonBlocking } from '@/firebase';
 import { collection, query, orderBy, doc } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,7 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Loader2, ShoppingCart, Image as ImageIcon, ShieldAlert, Copy, Check, Lock, Mail, LogOut, MapPin, Users, TrendingUp } from 'lucide-react';
+import { Loader2, ShoppingCart, Image as ImageIcon, ShieldAlert, Copy, Check, Lock, Mail, LogOut, MapPin, Users, TrendingUp, Store } from 'lucide-react';
 import { Navbar } from '@/components/navbar';
 import { useToast } from '@/hooks/use-toast';
 import { initiateEmailSignIn, initiateEmailSignUp } from '@/firebase/non-blocking-login';
@@ -32,7 +33,7 @@ export default function AdminPage() {
   const [password, setPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Team management state
+  // Management state
   const [newAdminUid, setNewAdminUid] = useState('');
 
   // 1. Check if the user exists in the app_admins collection
@@ -43,7 +44,14 @@ export default function AdminPage() {
   
   const { data: adminDoc, isLoading: isAdminDocLoading } = useDoc(adminDocRef);
 
-  // 2. Fetch orders ONLY if we have confirmed the user is an admin
+  // 2. Fetch Restaurant Profile
+  const profileRef = useMemoFirebase(() => {
+    if (!db || !user || !adminDoc) return null;
+    return doc(db, 'restaurants', RESTAURANT_ID);
+  }, [db, user, adminDoc]);
+  const { data: profile } = useDoc(profileRef);
+
+  // 3. Fetch orders
   const ordersQuery = useMemoFirebase(() => {
     if (!db || !user || !adminDoc) return null;
     return query(
@@ -51,15 +59,21 @@ export default function AdminPage() {
       orderBy('orderDate', 'desc')
     );
   }, [db, user, adminDoc]);
-  
   const { data: orders, isLoading: isOrdersLoading } = useCollection(ordersQuery);
 
-  // 3. Fetch all admins for the Team tab - Only if admin status confirmed
+  // 4. Fetch all admins
   const adminsQuery = useMemoFirebase(() => {
     if (!db || !user || !adminDoc) return null;
     return collection(db, 'app_admins');
   }, [db, user, adminDoc]);
   const { data: allAdmins, isLoading: isAdminsLoading } = useCollection(adminsQuery);
+
+  // 5. Fetch Menu Categories
+  const categoriesQuery = useMemoFirebase(() => {
+    if (!db || !user || !adminDoc) return null;
+    return collection(db, 'restaurants', RESTAURANT_ID, 'menuCategories');
+  }, [db, user, adminDoc]);
+  const { data: categories, isLoading: isCategoriesLoading } = useCollection(categoriesQuery);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -75,21 +89,34 @@ export default function AdminPage() {
     setIsSubmitting(true);
     if (isRegisterMode) {
       initiateEmailSignUp(auth, email, password);
-      toast({ title: "Account Registration", description: "Creating your admin account... Please wait." });
+      toast({ title: "Account Registration", description: "Creating your admin account..." });
     } else {
       initiateEmailSignIn(auth, email, password);
-      toast({ title: "Logging In", description: "Verifying your credentials..." });
+      toast({ title: "Logging In", description: "Verifying credentials..." });
     }
     
     setTimeout(() => setIsSubmitting(false), 2000); 
   };
 
-  const handleUpdatePhoto = (itemId: string, newUrl: string) => {
-    if (!db) return;
-    toast({ 
-      title: "Feature Update", 
-      description: "Photo update initiated for item: " + itemId,
-    });
+  const handleUpdateItemPhoto = (catId: string, itemId: string, newUrl: string) => {
+    if (!db || !newUrl.trim()) return;
+    const itemRef = doc(db, 'restaurants', RESTAURANT_ID, 'menuCategories', catId, 'menuItems', itemId);
+    updateDocumentNonBlocking(itemRef, { imageUrl: newUrl });
+    toast({ title: "Updated", description: "Menu item photo has been updated." });
+  };
+
+  const handleUpdateCategoryPhoto = (catId: string, newUrl: string) => {
+    if (!db || !newUrl.trim()) return;
+    const catRef = doc(db, 'restaurants', RESTAURANT_ID, 'menuCategories', catId);
+    updateDocumentNonBlocking(catRef, { imageUrl: newUrl });
+    toast({ title: "Updated", description: "Category icon has been updated." });
+  };
+
+  const handleUpdateProfilePhoto = (newUrl: string) => {
+    if (!db || !newUrl.trim()) return;
+    const profileRef = doc(db, 'restaurants', RESTAURANT_ID);
+    updateDocumentNonBlocking(profileRef, { imageUrl: newUrl });
+    toast({ title: "Updated", description: "Hero background has been updated." });
   };
 
   const handleAddTeamMember = () => {
@@ -100,10 +127,7 @@ export default function AdminPage() {
       addedAt: new Date().toISOString() 
     }, { merge: true });
     
-    toast({ 
-      title: "Team Member Added", 
-      description: "UID authorized. They can now access the dashboard." 
-    });
+    toast({ title: "Staff Authorized", description: "UID added to admin pool." });
     setNewAdminUid('');
   };
 
@@ -112,22 +136,18 @@ export default function AdminPage() {
       navigator.clipboard.writeText(user.uid);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-      toast({ title: "UID Copied", description: "Share this with your Lead Admin." });
+      toast({ title: "UID Copied" });
     }
   };
 
   if (isUserLoading || isAdminDocLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-muted/10">
-        <div className="flex flex-col items-center gap-4">
-          <Loader2 className="w-12 h-12 animate-spin text-primary" />
-          <p className="text-sm font-black text-muted-foreground uppercase tracking-widest">Securing Connection...</p>
-        </div>
+        <Loader2 className="w-12 h-12 animate-spin text-primary" />
       </div>
     );
   }
 
-  // Login Gate
   if (!user) {
     return (
       <div className="min-h-screen bg-[#FDFBF7] flex flex-col">
@@ -139,42 +159,36 @@ export default function AdminPage() {
               <h1 className="text-3xl font-black tracking-tight mb-2">
                 {isRegisterMode ? "Create Admin" : "Shop Login"}
               </h1>
-              <p className="text-white/40 font-bold text-[10px] uppercase tracking-widest">Meow Momo Management</p>
+              <p className="text-white/40 font-bold text-[10px] uppercase tracking-widest">Security Gate</p>
             </div>
             <CardContent className="p-10">
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-2">
                   <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Email</Label>
-                  <div className="relative">
-                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                    <Input 
-                      type="email" 
-                      placeholder="admin@meowmomo.com" 
-                      className="pl-11 h-14 rounded-2xl bg-muted/30 border-none"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                    />
-                  </div>
+                  <Input 
+                    type="email" 
+                    placeholder="admin@meowmomo.com" 
+                    className="h-14 rounded-2xl bg-muted/30 border-none"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Password</Label>
-                  <div className="relative">
-                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                    <Input 
-                      type="password" 
-                      placeholder="••••••••" 
-                      className="pl-11 h-14 rounded-2xl bg-muted/30 border-none"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                    />
-                  </div>
+                  <Input 
+                    type="password" 
+                    placeholder="••••••••" 
+                    className="h-14 rounded-2xl bg-muted/30 border-none"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
                 </div>
                 <Button 
                   type="submit" 
                   disabled={isSubmitting}
-                  className="w-full h-16 text-lg font-black rounded-2xl bg-primary shadow-xl shadow-primary/20"
+                  className="w-full h-16 text-lg font-black rounded-2xl bg-primary shadow-xl"
                 >
                   {isSubmitting ? <Loader2 className="w-6 h-6 animate-spin" /> : isRegisterMode ? "Register Account" : "Sign In"}
                 </Button>
@@ -184,7 +198,7 @@ export default function AdminPage() {
                 className="w-full mt-6 text-xs font-black uppercase tracking-widest text-muted-foreground"
                 onClick={() => setIsRegisterMode(!isRegisterMode)}
               >
-                {isRegisterMode ? "Already have an account? Login" : "First time? Click here to Register"}
+                {isRegisterMode ? "Already have an account? Login" : "First time? Register here"}
               </Button>
             </CardContent>
           </Card>
@@ -193,245 +207,216 @@ export default function AdminPage() {
     );
   }
 
-  // Not an Admin yet screen
   if (!adminDoc) {
     return (
       <div className="min-h-screen bg-[#FDFBF7] flex flex-col">
         <Navbar />
-        <div className="flex-grow flex items-center justify-center p-4">
-          <Card className="max-w-2xl w-full shadow-2xl rounded-[3rem] overflow-hidden border-none bg-white">
-            <div className="bg-destructive p-12 text-white text-center">
-              <ShieldAlert className="w-16 h-16 mx-auto mb-4" />
-              <h1 className="text-4xl font-black tracking-tight mb-2">Access Denied</h1>
-              <p className="text-white/60 font-medium">Your account is active, but you aren't authorized to manage this shop.</p>
-            </div>
-            <CardContent className="p-12 space-y-10">
-              <div className="space-y-4 p-8 bg-muted/30 rounded-[2rem] border-2 border-dashed border-muted text-center">
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Your User UID</p>
-                <div className="flex items-center gap-3 justify-center">
-                  <code className="text-sm font-mono bg-white p-5 rounded-2xl border shadow-inner">{user.uid}</code>
-                  <Button variant="outline" size="icon" onClick={copyUid} className="h-16 w-16 shrink-0 rounded-2xl">
-                    {copied ? <Check className="w-6 h-6 text-green-500" /> : <Copy className="w-6 h-6 text-primary" />}
-                  </Button>
-                </div>
-                <div className="mt-8 text-left space-y-4 max-w-sm mx-auto">
-                  <p className="text-sm font-bold text-foreground">Next Steps for Authorization:</p>
-                  <ol className="text-xs text-muted-foreground space-y-2 list-decimal pl-4">
-                    <li>Go to the <strong>Firebase Console</strong></li>
-                    <li>Open <strong>Firestore Database</strong></li>
-                    <li>Find the <code>app_admins</code> collection</li>
-                    <li>Add a document with the ID: <code>{user.uid}</code></li>
-                  </ol>
-                </div>
-              </div>
-              <Button variant="ghost" className="w-full font-black uppercase tracking-widest text-muted-foreground" onClick={() => auth.signOut()}>
-                <LogOut className="mr-2 w-4 h-4" /> Sign Out
+        <div className="flex-grow flex items-center justify-center p-4 text-center">
+          <Card className="max-w-2xl w-full shadow-2xl rounded-[3rem] overflow-hidden border-none bg-white p-12">
+            <ShieldAlert className="w-16 h-16 mx-auto mb-4 text-destructive" />
+            <h1 className="text-4xl font-black mb-4">Pending Approval</h1>
+            <p className="text-muted-foreground mb-8">Copy your UID and add it to the 'app_admins' collection.</p>
+            <div className="flex items-center gap-3 justify-center mb-8">
+              <code className="text-sm font-mono bg-muted p-5 rounded-2xl border">{user.uid}</code>
+              <Button variant="outline" size="icon" onClick={copyUid} className="h-16 w-16 rounded-2xl">
+                {copied ? <Check className="w-6 h-6 text-green-500" /> : <Copy className="w-6 h-6 text-primary" />}
               </Button>
-            </CardContent>
+            </div>
+            <Button variant="ghost" onClick={() => auth.signOut()}>Sign Out</Button>
           </Card>
         </div>
       </div>
     );
   }
 
-  // Full Admin Dashboard
   return (
     <div className="min-h-screen bg-[#FDFBF7]">
       <Navbar />
       <div className="container mx-auto px-4 pt-28 pb-12">
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8 mb-12">
           <div>
-            <div className="flex items-center gap-3 mb-2">
-              <div className="bg-green-500 w-2.5 h-2.5 rounded-full animate-pulse shadow-[0_0_10px_rgba(34,197,94,0.5)]" />
-              <p className="text-[10px] font-black uppercase tracking-widest text-primary">Live Operations Console</p>
-            </div>
-            <h1 className="text-5xl font-black tracking-tighter text-foreground leading-none">Meow Dashboard</h1>
+            <h1 className="text-5xl font-black tracking-tighter text-foreground leading-none">Management</h1>
             <p className="text-muted-foreground font-medium mt-2 flex items-center gap-2">
-              <MapPin className="w-4 h-4" /> Malad East Branch, Mumbai
+              <MapPin className="w-4 h-4" /> Live Control Panel
             </p>
           </div>
-          <div className="flex items-center gap-4 p-3 bg-white rounded-[1.5rem] border shadow-sm">
-            <div className="px-5 py-2">
-              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Admin Session</p>
-              <p className="text-sm font-bold text-foreground">{user.email}</p>
-            </div>
-            <Button variant="ghost" size="icon" className="h-14 w-14 rounded-2xl text-muted-foreground hover:text-destructive hover:bg-destructive/10" onClick={() => auth.signOut()}>
-              <LogOut className="w-5 h-5" />
-            </Button>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          <Card className="rounded-[2rem] border-none shadow-sm bg-white p-8">
-            <div className="flex justify-between items-start mb-4">
-              <div className="bg-primary/10 p-4 rounded-2xl text-primary">
-                <ShoppingCart className="w-6 h-6" />
-              </div>
-              <Badge variant="secondary" className="font-black text-[10px] tracking-widest">LIVE</Badge>
-            </div>
-            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-1">Today's Orders</p>
-            <p className="text-5xl font-black tracking-tighter">{orders?.length || 0}</p>
-          </Card>
-          <Card className="rounded-[2rem] border-none shadow-sm bg-white p-8">
-            <div className="flex justify-between items-start mb-4">
-              <div className="bg-accent/10 p-4 rounded-2xl text-accent">
-                <TrendingUp className="w-6 h-6" />
-              </div>
-              <Badge variant="secondary" className="font-black text-[10px] tracking-widest">+12%</Badge>
-            </div>
-            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-1">Peak Time Activity</p>
-            <p className="text-3xl font-black tracking-tighter">7PM - 9PM</p>
-          </Card>
-          <Card className="rounded-[2rem] border-none shadow-sm bg-white p-8">
-            <div className="flex justify-between items-start mb-4">
-              <div className="bg-foreground/5 p-4 rounded-2xl text-foreground">
-                <Users className="w-6 h-6" />
-              </div>
-              <Badge variant="secondary" className="font-black text-[10px] tracking-widest">{allAdmins?.length || 0} ACTIVE</Badge>
-            </div>
-            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-1">Staff Access</p>
-            <p className="text-3xl font-black tracking-tighter">Team Portal</p>
-          </Card>
+          <Button variant="outline" className="h-14 px-8 rounded-2xl" onClick={() => auth.signOut()}>
+            <LogOut className="mr-2 w-4 h-4" /> Sign Out
+          </Button>
         </div>
 
         <Tabs defaultValue="orders" className="space-y-8">
-          <TabsList className="bg-white p-2 h-20 rounded-[1.5rem] border shadow-sm grid grid-cols-3 w-full max-w-2xl">
-            <TabsTrigger value="orders" className="rounded-xl font-black text-xs data-[state=active]:bg-primary data-[state=active]:text-white">
-              <ShoppingCart className="w-4 h-4 mr-2" /> Recent Orders
-            </TabsTrigger>
-            <TabsTrigger value="menu" className="rounded-xl font-black text-xs data-[state=active]:bg-primary data-[state=active]:text-white">
-              <ImageIcon className="w-4 h-4 mr-2" /> Menu Photos
-            </TabsTrigger>
-            <TabsTrigger value="team" className="rounded-xl font-black text-xs data-[state=active]:bg-primary data-[state=active]:text-white">
-              <Users className="w-4 h-4 mr-2" /> Staff Team
-            </TabsTrigger>
+          <TabsList className="bg-white p-2 h-20 rounded-[1.5rem] border shadow-sm grid grid-cols-4 w-full max-w-4xl">
+            <TabsTrigger value="orders" className="rounded-xl font-black text-xs">Orders</TabsTrigger>
+            <TabsTrigger value="menu" className="rounded-xl font-black text-xs">Menu Items</TabsTrigger>
+            <TabsTrigger value="store" className="rounded-xl font-black text-xs">Storefront</TabsTrigger>
+            <TabsTrigger value="team" className="rounded-xl font-black text-xs">Team</TabsTrigger>
           </TabsList>
 
           <TabsContent value="orders">
             <Card className="border-none shadow-2xl rounded-[3rem] overflow-hidden bg-white">
-              <CardContent className="p-0">
-                {isOrdersLoading ? (
-                  <div className="p-32 text-center"><Loader2 className="w-16 h-16 animate-spin mx-auto text-primary/20" /></div>
-                ) : (
-                  <ScrollArea className="h-[600px]">
-                    <Table>
-                      <TableHeader className="bg-muted/30 sticky top-0 z-10 border-b h-16">
-                        <TableRow className="hover:bg-transparent border-none">
-                          <TableHead className="font-black uppercase text-[10px] tracking-widest pl-12">Customer</TableHead>
-                          <TableHead className="font-black uppercase text-[10px] tracking-widest">Order Details</TableHead>
-                          <TableHead className="font-black uppercase text-[10px] tracking-widest text-right">Amount</TableHead>
-                          <TableHead className="font-black uppercase text-[10px] tracking-widest text-center pr-12">Status</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {orders?.map((order: any) => (
-                          <TableRow key={order.id} className="hover:bg-muted/10 transition-colors h-24">
-                            <TableCell className="pl-12">
-                              <div className="flex flex-col">
-                                <span className="font-black text-base">{order.customerName}</span>
-                                <span className="text-[10px] text-muted-foreground font-bold uppercase">{order.orderDate?.seconds ? new Date(order.orderDate.seconds * 1000).toLocaleString() : 'Recent'}</span>
-                              </div>
-                            </TableCell>
-                            <TableCell>
-                              <p className="text-xs font-medium text-muted-foreground max-w-xs truncate">{order.deliveryAddress}</p>
-                              <Badge variant="outline" className="text-[9px] mt-1 font-bold">{order.paymentMethod}</Badge>
-                            </TableCell>
-                            <TableCell className="text-right font-black text-primary text-lg pr-12">Rs.{order.totalAmount}</TableCell>
-                            <TableCell className="text-center pr-12">
-                              <Badge className={cn(
-                                "font-black text-[10px] uppercase tracking-widest px-4 py-1.5 rounded-full border-none",
-                                order.status === 'Completed' ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700'
-                              )}>
-                                {order.status}
-                              </Badge>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </ScrollArea>
-                )}
-              </CardContent>
+              <ScrollArea className="h-[600px]">
+                <Table>
+                  <TableHeader className="bg-muted/30 h-16">
+                    <TableRow>
+                      <TableHead className="pl-12">Customer</TableHead>
+                      <TableHead>Details</TableHead>
+                      <TableHead className="text-right">Amount</TableHead>
+                      <TableHead className="text-center pr-12">Status</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {orders?.map((order: any) => (
+                      <TableRow key={order.id} className="h-24">
+                        <TableCell className="pl-12 font-black">{order.customerName}</TableCell>
+                        <TableCell className="text-xs text-muted-foreground">{order.deliveryAddress}</TableCell>
+                        <TableCell className="text-right font-black text-primary">Rs.{order.totalAmount}</TableCell>
+                        <TableCell className="text-center pr-12">
+                          <Badge variant="secondary">{order.status}</Badge>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </ScrollArea>
             </Card>
           </TabsContent>
 
           <TabsContent value="menu">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {['Classic Steam', 'Classic Fried', 'Paneer Steam', 'Cheese Fried', 'Kurkure Veg', 'Jain Steam'].map((item) => (
-                <Card key={item} className="rounded-[2.5rem] shadow-sm hover:shadow-xl transition-all border-none bg-white overflow-hidden group">
-                  <div className="bg-primary/5 p-8 border-b">
-                    <h3 className="font-black text-xl tracking-tight text-primary">{item}</h3>
-                    <p className="text-xs font-bold text-primary/40 uppercase tracking-widest mt-1">Menu Master Update</p>
+            <div className="space-y-12">
+              {isCategoriesLoading ? <Loader2 className="animate-spin mx-auto" /> : categories?.map((cat: any) => (
+                <div key={cat.id} className="space-y-6">
+                  <div className="flex items-center gap-4">
+                    <h2 className="text-2xl font-black text-primary uppercase tracking-tight">{cat.name}</h2>
+                    <div className="flex-grow border-t border-dashed" />
                   </div>
-                  <CardContent className="p-8 space-y-6">
-                    <div className="space-y-2">
-                      <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">New Photo URL</Label>
-                      <Input placeholder="Unsplash/Picsum Link..." className="h-12 rounded-xl bg-muted/30 border-none shadow-inner" />
-                    </div>
-                    <Button 
-                      className="w-full h-12 bg-primary font-black rounded-xl"
-                      onClick={() => handleUpdatePhoto(item, 'new-url')}
-                    >
-                      Apply Update
-                    </Button>
-                  </CardContent>
-                </Card>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <MenuItemList catId={cat.id} />
+                  </div>
+                </div>
               ))}
             </div>
           </TabsContent>
 
+          <TabsContent value="store">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <Card className="rounded-[2.5rem] p-8 border-none bg-white shadow-sm">
+                <Store className="w-10 h-10 text-primary mb-6" />
+                <h3 className="text-2xl font-black mb-4">Hero Background</h3>
+                <div className="space-y-4">
+                  <div className="aspect-video relative rounded-2xl overflow-hidden bg-muted">
+                    {profile?.imageUrl && <img src={profile.imageUrl} className="object-cover w-full h-full" />}
+                  </div>
+                  <Input 
+                    placeholder="New Image URL..." 
+                    className="h-12 rounded-xl"
+                    defaultValue={profile?.imageUrl}
+                    onBlur={(e) => handleUpdateProfilePhoto(e.target.value)}
+                  />
+                  <p className="text-[10px] text-muted-foreground font-bold uppercase">Auto-saves on blur</p>
+                </div>
+              </Card>
+
+              <Card className="rounded-[2.5rem] p-8 border-none bg-white shadow-sm">
+                <ImageIcon className="w-10 h-10 text-primary mb-6" />
+                <h3 className="text-2xl font-black mb-4">Category Icons</h3>
+                <div className="space-y-4">
+                  {categories?.map((cat: any) => (
+                    <div key={cat.id} className="flex items-center gap-4 p-4 bg-muted/20 rounded-2xl">
+                      <div className="w-12 h-12 rounded-xl overflow-hidden bg-white">
+                        <img src={cat.imageUrl} className="w-full h-full object-cover" />
+                      </div>
+                      <div className="flex-grow">
+                        <Label className="text-[10px] font-black uppercase mb-1 block">{cat.name}</Label>
+                        <Input 
+                          placeholder="Icon URL..." 
+                          className="h-10 text-xs"
+                          defaultValue={cat.imageUrl}
+                          onBlur={(e) => handleUpdateCategoryPhoto(cat.id, e.target.value)}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            </div>
+          </TabsContent>
+
           <TabsContent value="team">
-            <Card className="rounded-[3rem] border-none shadow-2xl bg-white overflow-hidden">
-              <CardHeader className="p-12 bg-foreground text-white relative">
-                <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-                  <div>
-                    <CardTitle className="text-3xl font-black tracking-tight leading-none mb-2">Team Access Control</CardTitle>
-                    <CardDescription className="text-white/40 font-bold">Authorize new shop managers by their UID.</CardDescription>
-                  </div>
-                  <div className="flex gap-4 w-full md:w-auto">
-                    <Input 
-                      placeholder="Enter Staff UID..." 
-                      className="h-14 md:w-80 rounded-2xl bg-white/10 border-white/20 text-white placeholder:text-white/20"
-                      value={newAdminUid}
-                      onChange={(e) => setNewAdminUid(e.target.value)}
-                    />
-                    <Button className="h-14 px-8 bg-primary font-black rounded-2xl" onClick={handleAddTeamMember}>
-                      Add Admin
-                    </Button>
-                  </div>
+            <Card className="rounded-[3rem] border-none shadow-2xl bg-white p-12">
+              <div className="flex flex-col md:flex-row justify-between gap-6 mb-12">
+                <div>
+                  <h2 className="text-3xl font-black">Authorized Team</h2>
+                  <p className="text-muted-foreground">Manage who has access to this dashboard.</p>
                 </div>
-              </CardHeader>
-              <CardContent className="p-12">
-                <div className="space-y-6">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Currently Authorized Staff</p>
-                  <div className="grid gap-4">
-                    {isAdminsLoading ? (
-                      <Loader2 className="w-8 h-8 animate-spin mx-auto text-primary/20" />
-                    ) : (
-                      allAdmins?.map((admin: any) => (
-                        <div key={admin.id} className="flex items-center justify-between p-6 bg-muted/20 rounded-[1.5rem] group hover:bg-white hover:shadow-sm transition-all border border-transparent">
-                          <div className="flex items-center gap-4">
-                            <div className="bg-white p-3 rounded-xl shadow-sm group-hover:bg-primary/10">
-                              <Users className="w-5 h-5 text-muted-foreground group-hover:text-primary" />
-                            </div>
-                            <div>
-                              <p className="font-mono text-sm font-bold text-foreground">{admin.id}</p>
-                              <p className="text-[10px] text-muted-foreground font-medium italic">Added on {admin.addedAt ? new Date(admin.addedAt).toLocaleDateString() : 'System Origin'}</p>
-                            </div>
-                          </div>
-                          {admin.id === user.uid && (
-                            <Badge className="bg-primary/20 text-primary border-none font-black text-[9px] uppercase tracking-widest px-3 py-1">YOU</Badge>
-                          )}
-                        </div>
-                      ))
-                    )}
-                  </div>
+                <div className="flex gap-4">
+                  <Input 
+                    placeholder="Enter Staff UID..." 
+                    className="h-14 w-80 rounded-2xl"
+                    value={newAdminUid}
+                    onChange={(e) => setNewAdminUid(e.target.value)}
+                  />
+                  <Button className="h-14 px-8 bg-primary font-black rounded-2xl" onClick={handleAddTeamMember}>
+                    Add Member
+                  </Button>
                 </div>
-              </CardContent>
+              </div>
+              <div className="grid gap-4">
+                {allAdmins?.map((admin: any) => (
+                  <div key={admin.id} className="flex items-center justify-between p-6 bg-muted/20 rounded-[1.5rem]">
+                    <span className="font-mono text-sm font-bold">{admin.id}</span>
+                    {admin.id === user.uid && <Badge className="bg-primary/20 text-primary border-none">YOU</Badge>}
+                  </div>
+                ))}
+              </div>
             </Card>
           </TabsContent>
         </Tabs>
       </div>
     </div>
+  );
+}
+
+function MenuItemList({ catId }: { catId: string }) {
+  const db = useFirestore();
+  const { toast } = useToast();
+  const itemsQuery = useMemoFirebase(() => {
+    if (!db) return null;
+    return collection(db, 'restaurants', RESTAURANT_ID, 'menuCategories', catId, 'menuItems');
+  }, [db, catId]);
+  
+  const { data: items, isLoading } = useCollection(itemsQuery);
+
+  const updatePhoto = (itemId: string, newUrl: string) => {
+    if (!db || !newUrl.trim()) return;
+    const itemRef = doc(db, 'restaurants', RESTAURANT_ID, 'menuCategories', catId, 'menuItems', itemId);
+    updateDocumentNonBlocking(itemRef, { imageUrl: newUrl });
+    toast({ title: "Updated" });
+  };
+
+  if (isLoading) return <div className="p-4 text-center">Loading...</div>;
+
+  return (
+    <>
+      {items?.map((item: any) => (
+        <Card key={item.id} className="rounded-[2.5rem] shadow-sm hover:shadow-xl transition-all border-none bg-white overflow-hidden group">
+          <div className="h-40 relative bg-muted">
+            {item.imageUrl && <img src={item.imageUrl} className="w-full h-full object-cover" />}
+          </div>
+          <CardContent className="p-6 space-y-4">
+            <h3 className="font-black text-lg truncate">{item.name}</h3>
+            <div className="space-y-2">
+              <Label className="text-[10px] font-black uppercase text-muted-foreground">Photo URL</Label>
+              <Input 
+                defaultValue={item.imageUrl}
+                placeholder="Unsplash Link..." 
+                className="h-10 rounded-xl bg-muted/30 border-none"
+                onBlur={(e) => updatePhoto(item.id, e.target.value)}
+              />
+            </div>
+          </CardContent>
+        </Card>
+      ))}
+    </>
   );
 }

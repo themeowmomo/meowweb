@@ -1,3 +1,4 @@
+
 {
   "entities": {
     "RestaurantProfile": {
@@ -17,6 +18,11 @@
         "category": {
           "type": "string",
           "description": "The category of the restaurant, e.g., 'Fast Food Restaurant'."
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "Hero image URL for the restaurant landing page.",
+          "format": "uri"
         },
         "googleRating": {
           "type": "number",
@@ -143,6 +149,11 @@
         "name": {
           "type": "string",
           "description": "The name of the menu category, e.g., 'Momos', 'Fries'."
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "Icon or thumbnail URL for this category.",
+          "format": "uri"
         },
         "description": {
           "type": "string",
