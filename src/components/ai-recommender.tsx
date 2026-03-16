@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -5,32 +6,33 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import { aiProductRecommendation, type AiProductRecommendationOutput } from "@/ai/flows/ai-product-recommendation-flow";
-import { Sparkles, Loader2, CheckCircle2, Flame, Utensils, Heart, Plus, Minus, ShoppingCart } from "lucide-react";
+import { Sparkles, Loader2, CheckCircle2, Flame, Utensils, Heart, Plus, Minus } from "lucide-react";
 import { useCart } from "@/context/cart-context";
 import { useToast } from "@/hooks/use-toast";
-import { cn } from "@/lib/utils";
 
 // Mapping common AI recommendations to actual menu items/prices for cart integration
 const PRODUCT_MAP: Record<string, { price: number; variant: string }> = {
-  "Classic Steam": { price: 50, variant: "5-PCS" },
-  "Classic Fried": { price: 60, variant: "5-PCS" },
-  "Cheese Steam": { price: 65, variant: "5-PCS" },
-  "Cheese Fried": { price: 75, variant: "5-PCS" },
-  "Peri Peri Steam": { price: 70, variant: "5-PCS" },
-  "Peri Peri Fried": { price: 80, variant: "5-PCS" },
-  "Paneer Steam": { price: 60, variant: "5-PCS" },
-  "Paneer Fried": { price: 70, variant: "5-PCS" },
-  "Kurkure Veg Fried": { price: 70, variant: "5-PCS" },
-  "Jain Steam": { price: 80, variant: "5-PCS" },
-  "Salted Fries": { price: 35, variant: "Half" },
-  "Cheese Fries": { price: 50, variant: "Half" },
-  "Peri Peri Fries": { price: 45, variant: "Half" },
-  "Masala Fries": { price: 40, variant: "Half" },
-  "Classic Steam Meal": { price: 90, variant: "Combo" },
-  "Classic Fried Meal": { price: 99, variant: "Combo" },
-  "Paneer Steam Meal": { price: 110, variant: "Combo" },
-  "Cheese Meal": { price: 130, variant: "Combo" },
-  "Peri Peri Meal": { price: 130, variant: "Combo" },
+  "Classic Steam": { price: 50, variant: "5 PCS" },
+  "Classic Fried": { price: 60, variant: "5 PCS" },
+  "Cheese Steam": { price: 70, variant: "5 PCS" },
+  "Cheese Fried": { price: 80, variant: "5 PCS" },
+  "Peri Peri Steam": { price: 70, variant: "5 PCS" },
+  "Peri Peri Fried": { price: 80, variant: "5 PCS" },
+  "Paneer Steam": { price: 60, variant: "5 PCS" },
+  "Paneer Fried": { price: 70, variant: "5 PCS" },
+  "Kurkure Veg Fried": { price: 70, variant: "5 PCS" },
+  "Jain Steam": { price: 80, variant: "5 PCS" },
+  "Jain Fried": { price: 90, variant: "5 PCS" },
+  "Salted Fries": { price: 40, variant: "Half" },
+  "Cheese Fries": { price: 60, variant: "Half" },
+  "Peri Peri Fries": { price: 50, variant: "Half" },
+  "Masala Fries": { price: 50, variant: "Half" },
+  "Classic Steam Meal": { price: 110, variant: "Combo" },
+  "Classic Fried Meal": { price: 120, variant: "Combo" },
+  "Paneer Steam Meal": { price: 120, variant: "Combo" },
+  "Cheese Meal": { price: 140, variant: "Combo" },
+  "Peri Peri Meal": { price: 140, variant: "Combo" },
+  "Paneer Fried Meal": { price: 130, variant: "Combo" },
 };
 
 export function AiRecommender() {
@@ -58,7 +60,7 @@ export function AiRecommender() {
       name.toLowerCase().includes(key.toLowerCase())
     ) || "";
     
-    const productData = PRODUCT_MAP[matchKey] || { price: 70, variant: "Standard" };
+    const productData = PRODUCT_MAP[matchKey] || { price: 70, variant: "5 PCS" };
 
     addToCart({
       id: `${name}-${productData.variant}`,
@@ -69,7 +71,7 @@ export function AiRecommender() {
     
     toast({
       title: "Added to cart",
-      description: `${name} (${productData.variant}) added to your order!`,
+      description: `${name} added to your order!`,
     });
   };
 
@@ -77,11 +79,11 @@ export function AiRecommender() {
     const matchKey = Object.keys(PRODUCT_MAP).find(key => 
       name.toLowerCase().includes(key.toLowerCase())
     ) || "";
-    const productData = PRODUCT_MAP[matchKey] || { price: 70, variant: "Standard" };
+    const productData = PRODUCT_MAP[matchKey] || { price: 70, variant: "5 PCS" };
     
-    const cartItem = cart.find(item => item.name === name && item.variant === productData.variant);
-    const quantity = cartItem ? cartItem.quantity : 0;
     const itemId = `${name}-${productData.variant}`;
+    const cartItem = cart.find(item => item.id === itemId);
+    const quantity = cartItem ? cartItem.quantity : 0;
 
     if (quantity > 0) {
       return (
@@ -90,10 +92,7 @@ export function AiRecommender() {
             size="icon" 
             variant="outline"
             className="h-10 w-10 rounded-full border-primary text-primary hover:bg-primary hover:text-white"
-            onClick={(e) => {
-              e.stopPropagation();
-              updateQuantity(itemId, quantity - 1, productData.variant);
-            }}
+            onClick={() => updateQuantity(itemId, quantity - 1, productData.variant)}
           >
             <Minus className="h-4 w-4" />
           </Button>
@@ -102,10 +101,7 @@ export function AiRecommender() {
             size="icon" 
             variant="outline"
             className="h-10 w-10 rounded-full border-primary text-primary hover:bg-primary hover:text-white"
-            onClick={(e) => {
-              e.stopPropagation();
-              updateQuantity(itemId, quantity + 1, productData.variant);
-            }}
+            onClick={() => updateQuantity(itemId, quantity + 1, productData.variant)}
           >
             <Plus className="h-4 w-4" />
           </Button>

@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview An AI agent that recommends suitable momos from Meow Momo
@@ -51,24 +52,24 @@ const prompt = ai.definePrompt({
   output: {schema: AiProductRecommendationOutputSchema},
   prompt: `You are the friendly "Momo Expert" at Meow Momo in Malad East, Mumbai. Your job is to suggest the perfect momos or meal combos.
 
-Meow Momo's Menu & Pricing (Summary):
-- **Classic (Veg)**: Steam (₹50/100), Fried (₹60/120), Cheese (₹65/140), Peri Peri (₹70/140). Prices for 5-PCS | 11-PCS.
-- **Paneer Specialty**: Paneer Steam (₹60/120), Paneer Cheese (₹80/160), Paneer Peri Peri (₹90/180).
-- **Kurkure Crunch**: Crunchy fried momos. Kurkure Veg (₹70/140), Kurkure Paneer (₹90/180).
-- **Jain Specialized**: No onion/garlic/root veg. Jain Steam (₹80/150), Jain Fried (₹90/170), Jain Peri Peri (₹90/180).
-- **Fries**: Salted (₹35/70), Cheese (₹50/99), Peri Peri (₹45/90), Masala (₹40/80).
-- **Meal Combos**:
-    - Classic Steam Meal (₹90): 5pcs Classic Steam + Half Masala Fries + Drink.
-    - Classic Fried Meal (₹99): 5pcs Classic Fried + Half Masala Fries + Drink.
-    - Paneer Steam Meal (₹110): 5pcs Paneer Steam + Half Masala Fries + Drink.
-    - Cheese Meal (₹130): 5pcs Cheese Fried + Half Cheese Fries + Drink.
-- **Loyalty Program**: Buy 10 plates, get 1 plate free!
+Meow Momo's Detailed Menu & Pricing:
+- **Classic Veg**: Steam (₹50/100), Fried (₹60/120), Cheese (₹70/140), Peri Peri (₹70/140).
+- **Paneer Specialty**: Paneer Steam (₹60/120), Paneer Fried (₹70/140), Paneer Cheese (₹80/160), Paneer Peri Peri (₹90/180).
+- **Kurkure Crunch (Ultra Crispy)**: Kurkure Veg (₹70/140), Kurkure Paneer (₹99/199), Kurkure Paneer Cheese (₹110/200).
+- **Jain Specialized (No onion/garlic)**: Jain Steam (₹80/150), Jain Fried (₹90/170), Jain Cheese (₹90/180), Jain Peri Peri (₹99/190).
+- **Fries**: Salted (₹40/70), Cheese (₹60/110), Peri Peri (₹50/90), Masala (₹50/90).
+- **Meal Combos (Highly Recommended for Hunger)**:
+    - Classic Steam Meal (₹110): 5pcs Steam + Half Masala Fries + Drink.
+    - Classic Fried Meal (₹120): 5pcs Fried + Half Masala Fries + Drink.
+    - Cheese Meal (₹140): 5pcs Cheese Fried + Half Cheese Fries + Drink.
+    - Peri Peri Meal (₹140): 5pcs Peri Peri Fried + Half Peri Peri Fries + Drink.
+    - Paneer Fried Meal (₹130): 5pcs Paneer Fried + Half Masala Fries + Drink.
 
 Based on: "{{{businessNeeds}}}", suggest 2-3 specific items. 
-- If they are very hungry, suggest a "Meal Combo".
+- If they are very hungry, ALWAYS suggest a "Meal Combo".
 - If they want spice, suggest "Peri Peri" or "Masala Fries".
 - If they want something crunchy, suggest "Kurkure Momos".
-- ALWAYS prioritize Jain items if they mention Jain or dietary restrictions.
+- If they mention Jain, prioritize "Jain" items exclusively.
 
 Customer's Request: {{{businessNeeds}}}`,
 });
