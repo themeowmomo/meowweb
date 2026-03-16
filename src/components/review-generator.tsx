@@ -18,19 +18,14 @@ export function ReviewGenerator() {
 
   const reviewUrl = "https://g.page/r/CUiIdrmfjbsKEBM/review";
 
-  const handleGenerate = async () => {
-    if (rating === 0) {
-      toast({
-        title: "Select a Rating",
-        description: "Please select a star rating first!",
-        variant: "destructive",
-      });
-      return;
-    }
+  const handleSelectRating = async (selectedRating: number) => {
+    setRating(selectedRating);
     setLoading(true);
+    setGeneratedReview("");
     setCopied(false);
+    
     try {
-      const result = await generateReview({ rating });
+      const result = await generateReview({ rating: selectedRating });
       setGeneratedReview(result.reviewText);
     } catch (error) {
       console.error("Failed to generate review", error);
@@ -74,20 +69,23 @@ export function ReviewGenerator() {
           <Card className="border-none shadow-2xl bg-white rounded-[2rem] overflow-hidden">
             <CardContent className="p-8 md:p-12 space-y-10">
               <div className="space-y-6">
-                <p className="text-xs font-black uppercase tracking-[0.2em] text-primary">Step 1: Rate Your Experience</p>
+                <p className="text-xs font-black uppercase tracking-[0.2em] text-primary">Select a Rating to Start</p>
                 <div className="flex justify-center gap-2 md:gap-4">
                   {[1, 2, 3, 4, 5].map((star) => {
-                    // Check if the star should be filled (selected) or just highlighted (hovered)
                     const isSelected = rating >= star;
                     const isHovered = hoveredRating >= star;
                     
                     return (
                       <button
                         key={star}
-                        onMouseEnter={() => setHoveredRating(star)}
-                        onMouseLeave={() => setHoveredRating(0)}
-                        onClick={() => setRating(star)}
-                        className="transition-all transform hover:scale-110 active:scale-95 outline-none"
+                        disabled={loading}
+                        onMouseEnter={() => !loading && setHoveredRating(star)}
+                        onMouseLeave={() => !loading && setHoveredRating(0)}
+                        onClick={() => handleSelectRating(star)}
+                        className={cn(
+                          "transition-all transform hover:scale-110 active:scale-95 outline-none",
+                          loading && "opacity-50 cursor-not-allowed"
+                        )}
                       >
                         <Star
                           className={cn(
@@ -106,21 +104,15 @@ export function ReviewGenerator() {
               </div>
 
               <div className="space-y-6 pt-4 border-t border-dashed">
-                <p className="text-xs font-black uppercase tracking-[0.2em] text-primary">Step 2: Generate & Share</p>
-                <Button
-                  onClick={handleGenerate}
-                  disabled={loading || rating === 0}
-                  className="w-full h-16 text-xl font-black bg-primary hover:bg-primary/90 shadow-xl rounded-2xl transition-all disabled:bg-muted disabled:text-muted-foreground disabled:shadow-none"
-                >
-                  {loading ? (
-                    <><Loader2 className="mr-2 h-6 w-6 animate-spin" /> Cooking your review...</>
-                  ) : (
-                    <><Sparkles className="mr-2 h-6 w-6" /> Create Review Text</>
-                  )}
-                </Button>
+                {loading && (
+                  <div className="flex flex-col items-center gap-4 animate-in fade-in duration-300">
+                    <Loader2 className="w-10 h-10 animate-spin text-primary" />
+                    <p className="font-black text-primary uppercase tracking-widest text-xs">AI is writing your review...</p>
+                  </div>
+                )}
 
-                {generatedReview && (
-                  <div className="mt-8 space-y-6 animate-in fade-in slide-in-from-top-4 duration-500">
+                {generatedReview && !loading && (
+                  <div className="space-y-6 animate-in fade-in slide-in-from-top-4 duration-500">
                     <div className="p-8 bg-muted/20 rounded-[1.5rem] border-2 border-dashed border-primary/10 relative group">
                       <p className="text-xl italic text-foreground/80 leading-relaxed font-medium">
                         "{generatedReview}"
@@ -145,6 +137,12 @@ export function ReviewGenerator() {
                       <ExternalLink className="w-4 h-4" /> 
                       Paste the text on the page that opens!
                     </div>
+                  </div>
+                )}
+                
+                {!generatedReview && !loading && rating === 0 && (
+                  <div className="flex items-center justify-center gap-2 text-muted-foreground/40 font-black uppercase text-[10px] tracking-widest">
+                    <Sparkles className="w-4 h-4" /> Click stars to generate
                   </div>
                 )}
               </div>
