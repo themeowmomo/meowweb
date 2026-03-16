@@ -1,21 +1,20 @@
-
 'use client';
 
 import { useState } from 'react';
-import { useUser, useFirestore, useCollection, useMemoFirebase, useAuth, useDoc, setDocumentNonBlocking, updateDocumentNonBlocking } from '@/firebase';
+import { useUser, useFirestore, useCollection, useMemoFirebase, useAuth, useDoc } from '@/firebase';
 import { collection, query, orderBy, doc } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Loader2, ShoppingCart, Image as ImageIcon, ShieldAlert, Copy, Check, Lock, Mail, LogOut, MapPin, Users, TrendingUp, Store, DollarSign, Activity, PieChart } from 'lucide-react';
+import { Loader2, ShoppingCart, Image as ImageIcon, ShieldAlert, Copy, Check, Lock, LogOut, Users, Store, DollarSign, Activity, Utensils } from 'lucide-react';
 import { Navbar } from '@/components/navbar';
 import { useToast } from '@/hooks/use-toast';
-import { initiateEmailSignIn, initiateEmailSignUp } from '@/firebase/non-blocking-login';
+import { setDocumentNonBlocking, updateDocumentNonBlocking } from '@/firebase/non-blocking-updates';
 import { cn } from '@/lib/utils';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 
@@ -107,13 +106,6 @@ export default function AdminPage() {
     }
   };
 
-  const handleUpdateItemPhoto = (catId: string, itemId: string, newUrl: string) => {
-    if (!db || !newUrl.trim()) return;
-    const itemRef = doc(db, 'restaurants', RESTAURANT_ID, 'menuCategories', catId, 'menuItems', itemId);
-    updateDocumentNonBlocking(itemRef, { imageUrl: newUrl });
-    toast({ title: "Updated", description: "Menu item photo has been updated." });
-  };
-
   const handleUpdateCategoryPhoto = (catId: string, newUrl: string) => {
     if (!db || !newUrl.trim()) return;
     const catRef = doc(db, 'restaurants', RESTAURANT_ID, 'menuCategories', catId);
@@ -150,7 +142,6 @@ export default function AdminPage() {
     }
   };
 
-  // Stats Calculations
   const totalRevenue = orders?.reduce((acc: number, order: any) => acc + (order.totalAmount || 0), 0) || 0;
   const pendingOrders = orders?.filter((o: any) => o.status === 'Pending').length || 0;
 
@@ -272,7 +263,6 @@ export default function AdminPage() {
           </Button>
         </div>
 
-        {/* Professional Stats Row */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
           {[
             { label: "Total Revenue", value: `Rs.${totalRevenue}`, icon: DollarSign, color: "text-green-600" },
@@ -360,7 +350,7 @@ export default function AdminPage() {
                 <h3 className="text-2xl font-black mb-4">Hero Background</h3>
                 <div className="space-y-4">
                   <div className="aspect-video relative rounded-[2rem] overflow-hidden bg-muted group">
-                    {profile?.imageUrl && <img src={profile.imageUrl} className="object-cover w-full h-full group-hover:scale-105 transition-transform" />}
+                    {profile?.imageUrl && <img src={profile.imageUrl} className="object-cover w-full h-full group-hover:scale-105 transition-transform" alt="Store hero" />}
                   </div>
                   <div className="space-y-2">
                     <Label className="text-[10px] font-black uppercase text-muted-foreground ml-1">Unsplash URL</Label>
@@ -382,7 +372,7 @@ export default function AdminPage() {
                   {categories?.map((cat: any) => (
                     <div key={cat.id} className="flex items-center gap-6 p-6 bg-muted/20 rounded-3xl border border-transparent hover:border-primary/10 transition-all">
                       <div className="w-16 h-16 rounded-2xl overflow-hidden bg-white shadow-sm">
-                        <img src={cat.imageUrl} className="w-full h-full object-cover" />
+                        <img src={cat.imageUrl} className="w-full h-full object-cover" alt={cat.name} />
                       </div>
                       <div className="flex-grow space-y-2">
                         <Label className="text-[10px] font-black uppercase tracking-widest text-primary">{cat.name}</Label>
@@ -464,7 +454,7 @@ function MenuItemList({ catId }: { catId: string }) {
       {items?.map((item: any) => (
         <Card key={item.id} className="rounded-[2.5rem] shadow-sm hover:shadow-xl transition-all border-none bg-white overflow-hidden group">
           <div className="h-48 relative bg-muted overflow-hidden">
-            {item.imageUrl && <img src={item.imageUrl} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />}
+            {item.imageUrl && <img src={item.imageUrl} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt={item.name} />}
             <div className="absolute bottom-4 right-4">
               <Badge className="bg-white/90 text-primary font-black text-[10px] border-none shadow-sm">{item.isJain ? 'JAIN' : 'VEG'}</Badge>
             </div>
