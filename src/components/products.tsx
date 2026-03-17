@@ -244,8 +244,12 @@ export function Products() {
 
         <Accordion type="multiple" defaultValue={activeCategories.map((_, i) => `category-${i}`)} className="space-y-6">
           {activeCategories.map((category, catIdx) => (
-            <AccordionItem key={catIdx} value={`category-${catIdx}`} className="border-none">
-              <AccordionTrigger className="hover:no-underline bg-white px-8 py-4 rounded-[2rem] shadow-sm border border-primary/5 mb-4 group transition-all data-[state=open]:shadow-md data-[state=open]:border-primary/10">
+            <AccordionItem 
+              key={catIdx} 
+              value={`category-${catIdx}`} 
+              className="border-none bg-white rounded-[2rem] shadow-sm border border-primary/5 mb-6 overflow-hidden transition-all data-[state=open]:shadow-md data-[state=open]:border-primary/10"
+            >
+              <AccordionTrigger className="hover:no-underline px-8 py-5 group transition-all">
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 rounded-2xl bg-primary/5 flex items-center justify-center text-primary group-data-[state=open]:bg-primary group-data-[state=open]:text-white transition-all duration-500">
                     <Utensils className="w-5 h-5" />
@@ -253,10 +257,10 @@ export function Products() {
                   <h3 className="text-lg font-black text-foreground uppercase tracking-widest">{category.category}</h3>
                 </div>
               </AccordionTrigger>
-              <AccordionContent className="pt-2">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <AccordionContent className="px-8 pb-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
                   {category.items.map((item: any, itemIdx: number) => (
-                    <Card key={item.id || itemIdx} className="rounded-[2.5rem] border-none shadow-sm bg-white overflow-hidden hover:shadow-xl transition-all duration-500 group">
+                    <Card key={item.id || itemIdx} className="rounded-[2.5rem] border-none shadow-sm bg-muted/10 overflow-hidden hover:shadow-xl transition-all duration-500 group">
                       <CardContent className="p-7 space-y-6">
                         <div className="flex justify-between items-start">
                           <div className="space-y-1">
