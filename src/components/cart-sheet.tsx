@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useCart } from "@/context/cart-context";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, Plus, Minus, Trash2, Send, User, MapPin, CreditCard, Wallet, Loader2, History, Package, Calendar, Phone, LogIn } from "lucide-react";
+import { ShoppingCart, Plus, Minus, Trash2, Send, User, MapPin, CreditCard, Wallet, Loader2, History, Package, Calendar, Phone, LogIn, ArrowRight } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
@@ -28,6 +28,7 @@ export function CartSheet() {
   const [mounted, setMounted] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
 
+  // Memoized query for order history - filtered by current user's UID
   const ordersQuery = useMemoFirebase(() => {
     if (!db || !user) return null;
     return query(
@@ -128,6 +129,9 @@ export function CartSheet() {
               <div className="flex-grow flex flex-col items-center justify-center space-y-4 opacity-40">
                 <ShoppingCart className="w-16 h-16" />
                 <p className="font-bold">Your cart is empty</p>
+                <Button variant="outline" asChild className="rounded-xl mt-4">
+                  <Link href="/#menu">Browse Menu</Link>
+                </Button>
               </div>
             ) : (
               <>
@@ -137,7 +141,7 @@ export function CartSheet() {
                       <div className="bg-primary/5 p-4 rounded-2xl border border-primary/10 flex items-center justify-between">
                         <div className="text-xs">
                           <p className="font-black text-primary">Returning customer?</p>
-                          <p className="text-muted-foreground">Log in to save your history.</p>
+                          <p className="text-muted-foreground">Log in to track your order history.</p>
                         </div>
                         <Button variant="outline" size="sm" asChild className="rounded-xl border-primary text-primary">
                           <Link href="/login"><LogIn className="w-4 h-4 mr-1" /> Login</Link>
@@ -148,9 +152,18 @@ export function CartSheet() {
                     <div className="space-y-4">
                       <h3 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2"><User className="w-3.5 h-3.5" /> Recipient Details</h3>
                       <div className="grid gap-3">
-                        <Input placeholder="Name" value={customerInfo.name} onChange={(e) => updateCustomerInfo({ name: e.target.value })} className="rounded-xl" />
-                        <Input placeholder="Mobile Number" value={customerInfo.mobile} onChange={(e) => updateCustomerInfo({ mobile: e.target.value })} className="rounded-xl" />
-                        <Input placeholder="Delivery Address" value={customerInfo.address} onChange={(e) => updateCustomerInfo({ address: e.target.value })} className="rounded-xl" />
+                        <div className="space-y-1">
+                          <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground ml-1">Full Name</Label>
+                          <Input placeholder="Enter your name" value={customerInfo.name} onChange={(e) => updateCustomerInfo({ name: e.target.value })} className="rounded-xl h-11" />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground ml-1">Mobile Number (WhatsApp)</Label>
+                          <Input type="tel" placeholder="e.g. 9876543210" value={customerInfo.mobile} onChange={(e) => updateCustomerInfo({ mobile: e.target.value })} className="rounded-xl h-11" />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground ml-1">Delivery Address</Label>
+                          <Input placeholder="Enter full address" value={customerInfo.address} onChange={(e) => updateCustomerInfo({ address: e.target.value })} className="rounded-xl h-11" />
+                        </div>
                       </div>
                     </div>
 
@@ -159,11 +172,11 @@ export function CartSheet() {
                     <div className="space-y-4">
                       <h3 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2"><CreditCard className="w-3.5 h-3.5" /> Payment Option</h3>
                       <RadioGroup value={customerInfo.paymentMethod} onValueChange={(val) => updateCustomerInfo({ paymentMethod: val as any })} className="grid grid-cols-2 gap-3">
-                        <Label htmlFor="cod" className="flex items-center justify-center gap-2 rounded-xl border p-4 cursor-pointer hover:bg-muted/50 [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-primary/5">
+                        <Label htmlFor="cod" className="flex items-center justify-center gap-2 rounded-xl border p-4 cursor-pointer hover:bg-muted/50 [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-primary/5 transition-all">
                           <RadioGroupItem value="cod" id="cod" className="sr-only" />
                           <Wallet className="w-4 h-4" /> <span className="text-xs font-bold">COD</span>
                         </Label>
-                        <Label htmlFor="upi" className="flex items-center justify-center gap-2 rounded-xl border p-4 cursor-pointer hover:bg-muted/50 [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-primary/5">
+                        <Label htmlFor="upi" className="flex items-center justify-center gap-2 rounded-xl border p-4 cursor-pointer hover:bg-muted/50 [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-primary/5 transition-all">
                           <RadioGroupItem value="upi" id="upi" className="sr-only" />
                           <Send className="w-4 h-4" /> <span className="text-xs font-bold">UPI</span>
                         </Label>
@@ -173,29 +186,33 @@ export function CartSheet() {
                     <Separator />
 
                     <div className="space-y-4">
-                      <div className="flex justify-between items-center"><h3 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Your Selection</h3><Button variant="ghost" size="sm" onClick={clearCart} className="text-[10px] text-destructive">Clear</Button></div>
+                      <div className="flex justify-between items-center"><h3 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Your Selection</h3><Button variant="ghost" size="sm" onClick={clearCart} className="text-[10px] text-destructive uppercase font-black">Clear All</Button></div>
                       {cart.map((item) => (
-                        <div key={`${item.id}-${item.variant}`} className="flex gap-4 bg-muted/20 p-4 rounded-2xl border border-primary/5">
+                        <div key={`${item.id}-${item.variant}`} className="flex gap-4 bg-muted/20 p-4 rounded-2xl border border-primary/5 group">
                           <div className="flex-grow space-y-1">
                             <h4 className="font-bold text-sm">{item.name} {item.variant && <span className="text-[10px] text-muted-foreground">({item.variant})</span>}</h4>
                             <p className="text-xs text-primary font-black">Rs.{item.price * item.quantity}</p>
                             <div className="flex items-center gap-2 mt-2">
-                              <Button variant="outline" size="icon" className="h-7 w-7 rounded-lg" onClick={() => updateQuantity(item.id, item.quantity - 1, item.variant)}><Minus className="h-3 w-3" /></Button>
-                              <span className="text-xs font-black">{item.quantity}</span>
-                              <Button variant="outline" size="icon" className="h-7 w-7 rounded-lg" onClick={() => updateQuantity(item.id, item.quantity + 1, item.variant)}><Plus className="h-3 w-3" /></Button>
+                              <Button variant="outline" size="icon" className="h-7 w-7 rounded-lg hover:bg-primary hover:text-white" onClick={() => updateQuantity(item.id, item.quantity - 1, item.variant)}><Minus className="h-3 w-3" /></Button>
+                              <span className="text-xs font-black w-4 text-center">{item.quantity}</span>
+                              <Button variant="outline" size="icon" className="h-7 w-7 rounded-lg hover:bg-primary hover:text-white" onClick={() => updateQuantity(item.id, item.quantity + 1, item.variant)}><Plus className="h-3 w-3" /></Button>
                             </div>
                           </div>
-                          <Button variant="ghost" size="icon" className="text-muted-foreground" onClick={() => removeFromCart(item.id, item.variant)}><Trash2 className="h-4 h-4" /></Button>
+                          <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity" onClick={() => removeFromCart(item.id, item.variant)}><Trash2 className="h-4 h-4" /></Button>
                         </div>
                       ))}
                     </div>
                   </div>
                 </ScrollArea>
                 <div className="p-6 bg-white border-t space-y-4">
-                  <div className="flex justify-between items-center"><span className="font-bold text-muted-foreground">Grand Total</span><span className="text-2xl font-black text-primary">Rs.{totalPrice}</span></div>
-                  <Button onClick={handleWhatsAppOrder} disabled={isProcessing} className="w-full h-14 bg-primary text-lg font-black rounded-xl">
-                    {isProcessing ? <Loader2 className="w-5 h-5 animate-spin" /> : <>Send Order <Send className="ml-2 w-4 h-4" /></>}
+                  <div className="flex justify-between items-center">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Grand Total</span>
+                    <span className="text-2xl font-black text-primary">Rs.{totalPrice}</span>
+                  </div>
+                  <Button onClick={handleWhatsAppOrder} disabled={isProcessing} className="w-full h-14 bg-primary text-lg font-black rounded-xl shadow-xl shadow-primary/20">
+                    {isProcessing ? <Loader2 className="w-5 h-5 animate-spin" /> : <>Place WhatsApp Order <Send className="ml-2 w-4 h-4" /></>}
                   </Button>
+                  <p className="text-[9px] text-center text-muted-foreground font-medium">By placing an order, you agree to our Terms of Service.</p>
                 </div>
               </>
             )}
@@ -204,26 +221,48 @@ export function CartSheet() {
           <TabsContent value="history" className="flex-grow flex flex-col overflow-hidden m-0">
             <ScrollArea className="flex-grow px-6">
               {isHistoryLoading ? (
-                <div className="flex justify-center items-center h-64"><Loader2 className="w-8 h-8 animate-spin text-primary opacity-20" /></div>
+                <div className="flex flex-col items-center justify-center h-64 gap-4">
+                  <Loader2 className="w-8 h-8 animate-spin text-primary opacity-20" />
+                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Loading history...</p>
+                </div>
               ) : orderHistory && orderHistory.length > 0 ? (
                 <div className="space-y-4 py-4">
+                  <div className="bg-primary/5 p-4 rounded-2xl border border-primary/10 mb-2">
+                    <p className="text-[10px] font-black uppercase text-primary mb-1">Loyalty Perk</p>
+                    <p className="text-xs text-muted-foreground">Every plate counts towards a free Classic Steam plate!</p>
+                  </div>
                   {orderHistory.map((order: any) => (
-                    <div key={order.id} className="p-4 rounded-2xl border border-primary/10 bg-white">
-                      <div className="flex justify-between items-start mb-2">
+                    <div key={order.id} className="p-5 rounded-2xl border border-primary/10 bg-white shadow-sm hover:shadow-md transition-all">
+                      <div className="flex justify-between items-start mb-3">
                         <div>
-                          <p className="text-[9px] font-black uppercase text-primary">{order.id}</p>
-                          <p className="text-[10px] text-muted-foreground flex items-center gap-1 mt-0.5"><Calendar className="w-3 h-3" /> {order.orderDate?.toDate ? new Date(order.orderDate.toDate()).toLocaleDateString() : 'Just now'}</p>
+                          <p className="text-[10px] font-black uppercase text-primary tracking-tighter">{order.id}</p>
+                          <p className="text-[10px] text-muted-foreground flex items-center gap-1 mt-0.5"><Calendar className="w-3 h-3" /> {order.orderDate?.toDate ? new Date(order.orderDate.toDate()).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Processing...'}</p>
                         </div>
-                        <span className="text-xs font-black text-primary">Rs.{order.totalAmount}</span>
+                        <span className="text-sm font-black text-primary">Rs.{order.totalAmount}</span>
                       </div>
-                      <div className="flex items-center gap-2"><span className="text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-secondary text-primary">{order.status}</span></div>
+                      <div className="flex items-center justify-between gap-2">
+                        <Badge variant={order.status === 'Pending' ? 'secondary' : 'outline'} className="text-[9px] font-black uppercase rounded-full px-3">
+                          {order.status}
+                        </Badge>
+                        <div className="flex items-center gap-1 text-[9px] font-black uppercase text-muted-foreground">
+                          <CreditCard className="w-3 h-3" /> {order.paymentMethod}
+                        </div>
+                      </div>
                     </div>
                   ))}
+                  <div className="pt-8 text-center">
+                    <p className="text-[10px] font-black uppercase text-muted-foreground opacity-30">End of History</p>
+                  </div>
                 </div>
               ) : (
-                <div className="flex flex-col items-center justify-center space-y-4 opacity-40 h-64">
-                  <History className="w-12 h-12" />
-                  <p className="text-sm font-bold">No previous orders</p>
+                <div className="flex flex-col items-center justify-center space-y-4 opacity-40 h-64 text-center">
+                  <div className="bg-muted p-6 rounded-full">
+                    <History className="w-12 h-12" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-black uppercase tracking-widest">No orders found</p>
+                    <p className="text-[10px] mt-1">Start your snack journey today!</p>
+                  </div>
                 </div>
               )}
             </ScrollArea>

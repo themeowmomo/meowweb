@@ -29,14 +29,18 @@ service cloud.firestore {
 
       // Orders subcollection rules
       match /orders/{orderId} {
-        // Use 'read' to cover both 'get' and 'list'
-        allow read: if isGlobalAdmin() || (isSignedIn() && (resource == null || resource.data.customerId == request.auth.uid));
+        // Explicitly handle get and list to avoid permission confusion
+        allow get: if isGlobalAdmin() || (isSignedIn() && resource != null && resource.data.customerId == request.auth.uid);
+        
+        // List permission requires the client to query with a filter: where('customerId', '==', auth.uid)
+        allow list: if isGlobalAdmin() || (isSignedIn() && resource.data.customerId == request.auth.uid);
         
         allow create: if isSignedIn();
         allow update, delete: if isGlobalAdmin();
 
         match /orderItems/{orderItemId} {
-          allow read: if isGlobalAdmin() || isSignedIn();
+          // Items are readable if the parent order is readable
+          allow read: if isGlobalAdmin() || (isSignedIn() && get(/databases/$(database)/documents/restaurants/$(restaurantId)/orders/$(orderId)).data.customerId == request.auth.uid);
           allow create: if isSignedIn();
           allow update, delete: if isGlobalAdmin();
         }

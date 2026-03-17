@@ -33,27 +33,32 @@ export default function AdminPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [newAdminUid, setNewAdminUid] = useState('');
 
+  // 1. Get the admin document for the current user
   const adminDocRef = useMemoFirebase(() => {
-    if (!db || !user) return null;
+    if (!db || !user || user.isAnonymous) return null;
     return doc(db, 'app_admins', user.uid);
   }, [db, user]);
   
   const { data: adminDoc, isLoading: isAdminDocLoading } = useDoc(adminDocRef);
 
-  // Robust check: queries are NULL until admin status is confirmed
+  // 2. ONLY query orders if we are CERTAIN the user is an admin
   const ordersQuery = useMemoFirebase(() => {
+    // Crucial: adminDoc must be truthy (loaded and existing)
     if (!db || !user || !adminDoc) return null;
     return query(
       collection(db, 'restaurants', RESTAURANT_ID, 'orders'),
       orderBy('orderDate', 'desc')
     );
   }, [db, user, adminDoc]);
+  
   const { data: orders, isLoading: isOrdersLoading } = useCollection(ordersQuery);
 
+  // 3. ONLY query team members if we are CERTAIN the user is an admin
   const adminsQuery = useMemoFirebase(() => {
     if (!db || !user || !adminDoc) return null;
     return collection(db, 'app_admins');
   }, [db, user, adminDoc]);
+  
   const { data: allAdmins, isLoading: isAdminsLoading } = useCollection(adminsQuery);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -98,10 +103,17 @@ export default function AdminPage() {
     }
   };
 
+  // Show loading state while determining auth and admin status
   if (isUserLoading || isAdminDocLoading) {
-    return <div className="min-h-screen flex items-center justify-center"><Loader2 className="w-10 h-10 animate-spin text-primary opacity-20" /></div>;
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-background">
+        <Loader2 className="w-10 h-10 animate-spin text-primary opacity-20 mb-4" />
+        <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Verifying Authorization...</p>
+      </div>
+    );
   }
 
+  // Handle unauthenticated or anonymous users
   if (!user || user.isAnonymous) {
     return (
       <div className="min-h-screen bg-[#FDFBF7] flex flex-col">
@@ -137,6 +149,7 @@ export default function AdminPage() {
     );
   }
 
+  // Handle authenticated users who are NOT admins
   if (!adminDoc) {
     return (
       <div className="min-h-screen bg-[#FDFBF7] flex flex-col">
@@ -219,13 +232,27 @@ export default function AdminPage() {
           <TabsContent value="team">
             <Card className="rounded-[2rem] border-none shadow-xl bg-white p-8">
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
-                <Input placeholder="Staff UID..." value={newAdminUid} onChange={(e) => setNewAdminUid(e.target.value)} className="rounded-xl h-12 flex-grow" />
-                <Button onClick={handleAddTeamMember} className="h-12 px-8 font-black rounded-xl">Add Authorized UID</Button>
+                <Card className="flex-grow p-4 bg-muted/20 border-dashed border-2 flex items-center justify-between rounded-xl">
+                  <div className="text-xs">
+                    <p className="font-black">New Staff Member?</p>
+                    <p className="text-muted-foreground">Enter their UID from the 'Access Not Activated' screen.</p>
+                  </div>
+                </Card>
+                <div className="flex gap-2">
+                  <Input placeholder="Staff UID..." value={newAdminUid} onChange={(e) => setNewAdminUid(e.target.value)} className="rounded-xl h-12 w-64" />
+                  <Button onClick={handleAddTeamMember} className="h-12 px-8 font-black rounded-xl">Add UID</Button>
+                </div>
               </div>
               <div className="grid gap-3">
+                <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Current Authorized Staff</h4>
                 {allAdmins?.map((admin: any) => (
                   <div key={admin.id} className="flex items-center justify-between p-4 bg-muted/20 rounded-xl">
-                    <span className="font-mono text-[10px] font-bold truncate">{admin.id}</span>
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                        <Users className="w-4 h-4" />
+                      </div>
+                      <span className="font-mono text-[10px] font-bold truncate max-w-[200px]">{admin.id}</span>
+                    </div>
                     {admin.id === user.uid && <Badge className="text-[9px] font-black uppercase">Your Account</Badge>}
                   </div>
                 ))}
