@@ -1,9 +1,9 @@
+
 import { Navbar } from "@/components/navbar";
 import { Hero } from "@/components/hero";
 import { Products } from "@/components/products";
 import { Testimonials } from "@/components/testimonials";
 import { AiRecommender } from "@/components/ai-recommender";
-import { ReviewGenerator } from "@/components/review-generator";
 import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ShoppingBag, Star } from "lucide-react";
@@ -20,10 +20,8 @@ export default function Home() {
         <Products />
       </div>
       
+      {/* Testimonials now includes the AI Review Generator joined inside it */}
       <Testimonials />
-      
-      {/* Review Helper placed right after testimonials */}
-      <ReviewGenerator />
       
       <AiRecommender />
 
