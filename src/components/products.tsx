@@ -207,7 +207,7 @@ export function Products() {
   const activeCategories = MENU_DATA[activeTab as keyof typeof MENU_DATA];
 
   return (
-    <section id="menu" className="py-12 bg-[#FDFBF7]">
+    <section id="menu" className="py-8 bg-[#FDFBF7]">
       <div className="container mx-auto px-4 max-w-5xl">
         <div className="text-center mb-8 space-y-2">
           <Badge className="bg-primary/10 text-primary border-none px-4 py-1 font-black tracking-widest text-[10px] rounded-full uppercase">

@@ -120,7 +120,7 @@ export function AiRecommender() {
   };
 
   return (
-    <section id="ai-tool" className="py-12 bg-[#FDFBF7]">
+    <section id="ai-tool" className="py-8 bg-[#FDFBF7]">
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto">
           <Card className="border-none shadow-xl overflow-hidden rounded-[3rem] bg-white">
@@ -129,7 +129,6 @@ export function AiRecommender() {
                 <div className="inline-flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-[0.2em] mb-1">
                   <Sparkles className="w-3.5 h-3.5" /> Momo Intelligence
                 </div>
-                <h2 className="text-3xl md:text-5xl font-black tracking-tighter leading-none">Get Food Help by AI</h2>
                 <p className="text-muted-foreground max-w-xl mx-auto text-sm font-medium">
                   Struggling to choose? Describe your mood (Spicy? Jain? Extra Cheese?) and our AI will find the perfect fix for your craving instantly.
                 </p>

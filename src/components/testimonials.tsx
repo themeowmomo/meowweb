@@ -56,7 +56,7 @@ export function Testimonials() {
   };
 
   return (
-    <section id="testimonials" className="py-12 bg-background overflow-hidden relative">
+    <section id="testimonials" className="py-8 bg-background overflow-hidden relative">
       <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-[100px] -z-10" />
       
       <div className="container mx-auto px-4">
