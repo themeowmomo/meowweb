@@ -45,14 +45,14 @@ export function Hero() {
             </Button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-16">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-16 max-w-5xl mx-auto">
             {[
               { icon: Leaf, title: "100% Pure Veg", desc: "Dedicated pure vegetarian and Jain preparation." },
               { icon: Star, title: "4.9 Google Rating", desc: "Loved by the community for taste and quality." },
               { icon: Clock, title: "Quick Evening Bites", desc: "Open 4:00 PM – 10:30 PM for your daily cravings." }
             ].map((feature, idx) => (
               <div key={idx} className="flex flex-col items-center justify-center text-center p-8 rounded-[2rem] bg-white/50 backdrop-blur-sm border border-muted/50 hover:border-primary/20 hover:shadow-xl transition-all group duration-500">
-                <feature.icon className="w-10 h-10 text-primary mb-4 group-hover:scale-110 transition-transform mx-auto" />
+                <feature.icon className="w-10 h-10 text-primary mb-4 group-hover:scale-110 transition-transform" />
                 <h3 className="font-black text-lg mb-2 tracking-tight">{feature.title}</h3>
                 <p className="text-xs text-muted-foreground font-medium leading-relaxed max-w-[200px]">{feature.desc}</p>
               </div>
