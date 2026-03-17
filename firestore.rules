@@ -11,44 +11,44 @@ service cloud.firestore {
       return isSignedIn() && request.auth.uid == userId;
     }
 
-    function isGlobalAdmin() {
-      // Direct check for admin document existence to avoid recursion
+    function isAdmin() {
       return isSignedIn() && exists(/databases/$(database)/documents/app_admins/$(request.auth.uid));
     }
 
     // Admin collection rules
     match /app_admins/{userId} {
-      // Users can always read their own admin status to verify permissions
-      allow get: if isOwner(userId) || isGlobalAdmin();
-      // Only existing global admins can list, create, or modify admin records
-      allow list, create, update: if isGlobalAdmin();
-      allow delete: if false;
+      allow get: if isOwner(userId) || isAdmin();
+      allow list, write: if isAdmin();
     }
 
     // Restaurant profile rules
     match /restaurants/{restaurantId} {
-      allow get, list: if true;
-      allow write: if isGlobalAdmin();
+      allow read: if true;
+      allow write: if isAdmin();
 
       // Orders subcollection rules
       match /orders/{orderId} {
         // Customers can read their own orders. Staff can read all.
-        // For 'list', customers MUST filter by 'customerId == auth.uid'
-        allow read: if isGlobalAdmin() || (isSignedIn() && resource.data.customerId == request.auth.uid);
+        // For 'list' queries, the customer MUST filter by 'customerId == auth.uid'
+        allow read: if isAdmin() || (isSignedIn() && (resource == null || resource.data.customerId == request.auth.uid));
         
         // Any signed-in user can place an order
         allow create: if isSignedIn();
         
         // Only staff can modify or remove orders
-        allow update, delete: if isGlobalAdmin();
+        allow update, delete: if isAdmin();
 
         match /orderItems/{orderItemId} {
-          // Items are accessible if the parent order is accessible
-          allow read: if isGlobalAdmin() || (isSignedIn() && get(/databases/$(database)/documents/restaurants/$(restaurantId)/orders/$(orderId)).data.customerId == request.auth.uid);
+          allow read: if isAdmin() || (isSignedIn() && get(/databases/$(database)/documents/restaurants/$(restaurantId)/orders/$(orderId)).data.customerId == request.auth.uid);
           allow create: if isSignedIn();
-          allow update, delete: if isGlobalAdmin();
+          allow update, delete: if isAdmin();
         }
       }
+    }
+
+    // Platform Admins fallback
+    match /app_admins/{userId} {
+       allow read: if isOwner(userId) || isAdmin();
     }
   }
 }

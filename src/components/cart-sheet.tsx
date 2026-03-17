@@ -28,9 +28,11 @@ export function CartSheet() {
   const [mounted, setMounted] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
 
-  // Memoized query for order history - filtered by current user's UID
+  // Memoized query for order history - ONLY for non-anonymous users to prevent permission errors for guests
   const ordersQuery = useMemoFirebase(() => {
-    if (!db || !user) return null;
+    // Only query server if user is logged in (not anonymous) and we have a DB instance
+    if (!db || !user || user.isAnonymous) return null;
+    
     return query(
       collection(db, 'restaurants', RESTAURANT_ID, 'orders'),
       where('customerId', '==', user.uid),
@@ -42,8 +44,9 @@ export function CartSheet() {
 
   useEffect(() => {
     setMounted(true);
+    // Silent anonymous sign-in for guests to support basic session tracking
     if (!user && auth) {
-      signInAnonymously(auth).catch(console.error);
+      signInAnonymously(auth).catch(() => {});
     }
   }, [user, auth]);
 
@@ -65,6 +68,7 @@ export function CartSheet() {
     }
 
     setIsProcessing(true);
+    // Save to server only at the moment of ordering
     const orderId = await saveOrderToFirestore(user.uid);
     const shopNumber = "918850859140";
     
@@ -137,11 +141,11 @@ export function CartSheet() {
               <>
                 <ScrollArea className="flex-grow px-6">
                   <div className="space-y-6 pb-6">
-                    {user?.isAnonymous && (
+                    {(!user || user.isAnonymous) && (
                       <div className="bg-primary/5 p-4 rounded-2xl border border-primary/10 flex items-center justify-between">
                         <div className="text-xs">
                           <p className="font-black text-primary">Returning customer?</p>
-                          <p className="text-muted-foreground">Log in to track your order history.</p>
+                          <p className="text-muted-foreground">Log in to see your order history.</p>
                         </div>
                         <Button variant="outline" size="sm" asChild className="rounded-xl border-primary text-primary">
                           <Link href="/login"><LogIn className="w-4 h-4 mr-1" /> Login</Link>
@@ -241,9 +245,7 @@ export function CartSheet() {
                         <span className="text-sm font-black text-primary">Rs.{order.totalAmount}</span>
                       </div>
                       <div className="flex items-center justify-between gap-2">
-                        <Badge variant={order.status === 'Pending' ? 'secondary' : 'outline'} className="text-[9px] font-black uppercase rounded-full px-3">
-                          {order.status}
-                        </Badge>
+                        <div className="inline-flex items-center px-2 py-0.5 rounded-full bg-muted text-[9px] font-black uppercase">{order.status}</div>
                         <div className="flex items-center gap-1 text-[9px] font-black uppercase text-muted-foreground">
                           <CreditCard className="w-3 h-3" /> {order.paymentMethod}
                         </div>
@@ -257,11 +259,11 @@ export function CartSheet() {
               ) : (
                 <div className="flex flex-col items-center justify-center space-y-4 opacity-40 h-64 text-center">
                   <div className="bg-muted p-6 rounded-full">
-                    <History className="w-12 h-12" />
+                    {user?.isAnonymous ? <LogIn className="w-12 h-12" /> : <History className="w-12 h-12" />}
                   </div>
                   <div>
-                    <p className="text-sm font-black uppercase tracking-widest">No orders found</p>
-                    <p className="text-[10px] mt-1">Start your snack journey today!</p>
+                    <p className="text-sm font-black uppercase tracking-widest">{user?.isAnonymous ? "Login to see history" : "No orders found"}</p>
+                    <p className="text-[10px] mt-1">{user?.isAnonymous ? "Guest sessions don't store history." : "Start your snack journey today!"}</p>
                   </div>
                 </div>
               )}
