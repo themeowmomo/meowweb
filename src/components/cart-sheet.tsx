@@ -22,6 +22,25 @@ export function CartSheet() {
     setMounted(true);
   }, []);
 
+  const getShortItemName = (name: string, variant?: string) => {
+    // Map full names to very short codes to fit in UPI transaction note
+    const shortName = name
+      .replace(/Classic/gi, 'C')
+      .replace(/Veg/gi, 'V')
+      .replace(/Paneer/gi, 'Pn')
+      .replace(/Cheese/gi, 'Ch')
+      .replace(/Kurkure/gi, 'Kk')
+      .replace(/Jain/gi, 'Jn')
+      .replace(/Steam/gi, 'St')
+      .replace(/Fried/gi, 'Fr')
+      .replace(/Fries/gi, 'Fs')
+      .replace(/Meal/gi, 'Ml')
+      .replace(/\s+/g, '');
+    
+    const vCode = variant ? `-${variant.replace(/PCS/gi, '').trim()}` : '';
+    return shortName + vCode;
+  };
+
   const handleWhatsAppOrder = async () => {
     if (cart.length === 0) return;
     
@@ -55,11 +74,18 @@ export function CartSheet() {
     const fullMessage = header + separator + customerSection + itemsSection + summarySection + footer;
 
     if (customerInfo.paymentMethod === 'upi') {
-      const upiUrl = `upi://pay?pa=amitjaisawal0123-2@okhdfcbank&pn=Amit%20Jaisawal&am=${totalPrice}&cu=INR&tn=MeowMomoOrder`;
+      // Create a short summary for the UPI transaction note
+      const shortItems = cart.map(item => `${item.quantity}x${getShortItemName(item.name, item.variant)}`).join(',');
+      const upiNote = encodeURIComponent(`${orderId || 'Order'}: ${shortItems}`.slice(0, 50));
+      
+      const upiUrl = `upi://pay?pa=amitjaisawal0123-2@okhdfcbank&pn=Meow%20Momo&am=${totalPrice}&cu=INR&tn=${upiNote}`;
+      
       window.location.href = upiUrl;
+      
+      // Delay WhatsApp to allow UPI app to open
       setTimeout(() => {
         window.open(`https://wa.me/${shopNumber}?text=${fullMessage}`, "_blank");
-      }, 2500);
+      }, 3500);
     } else {
       window.open(`https://wa.me/${shopNumber}?text=${fullMessage}`, "_blank");
     }
@@ -170,7 +196,7 @@ export function CartSheet() {
               <span className="text-2xl font-black text-primary">Rs.{totalPrice}</span>
             </div>
             <Button onClick={handleWhatsAppOrder} disabled={isProcessing} className="w-full h-14 bg-primary text-lg font-black rounded-xl shadow-xl shadow-primary/20 transition-all active:scale-[0.98]">
-              {isProcessing ? <Loader2 className="w-5 h-5 animate-spin" /> : <>Confirm via WhatsApp <Send className="ml-2 w-4 h-4" /></>}
+              {isProcessing ? <Loader2 className="w-5 h-5 animate-spin" /> : <>Confirm Order <Send className="ml-2 w-4 h-4" /></>}
             </Button>
             <p className="text-[9px] text-center text-muted-foreground font-medium uppercase tracking-widest">Open 4:00 PM – 10:30 PM Daily</p>
           </div>
