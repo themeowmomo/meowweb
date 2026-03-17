@@ -17,7 +17,6 @@ service cloud.firestore {
 
     // Admin collection rules
     match /app_admins/{userId} {
-      // Allow users to check their own admin status (needed for UI logic)
       allow get: if isOwner(userId) || isGlobalAdmin();
       allow list, create, update: if isGlobalAdmin();
       allow delete: if false;
@@ -30,19 +29,14 @@ service cloud.firestore {
 
       // Orders subcollection rules
       match /orders/{orderId} {
-        // Explicitly handle get and list to ensure filtered queries work for customers
-        allow get: if isGlobalAdmin() || (isSignedIn() && request.auth.uid == resource.data.customerId);
-        allow list: if isGlobalAdmin() || (isSignedIn() && request.auth.uid == resource.data.customerId);
+        // Use 'read' to cover both 'get' and 'list'
+        allow read: if isGlobalAdmin() || (isSignedIn() && (resource == null || resource.data.customerId == request.auth.uid));
         
-        // Signed in users can create orders
         allow create: if isSignedIn();
-        
-        // Only admins can modify status or delete orders
         allow update, delete: if isGlobalAdmin();
 
-        // Order items rules
         match /orderItems/{orderItemId} {
-          allow get, list: if isGlobalAdmin() || isSignedIn();
+          allow read: if isGlobalAdmin() || isSignedIn();
           allow create: if isSignedIn();
           allow update, delete: if isGlobalAdmin();
         }

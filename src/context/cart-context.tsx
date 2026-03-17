@@ -1,5 +1,4 @@
-
-"use client";
+'use client';
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useFirestore } from '@/firebase';
@@ -18,6 +17,7 @@ export type PaymentMethod = 'cod' | 'upi';
 export type CustomerInfo = {
   name: string;
   address: string;
+  mobile: string;
   paymentMethod: PaymentMethod;
 };
 
@@ -43,11 +43,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [customerInfo, setCustomerInfo] = useState<CustomerInfo>({ 
     name: '', 
     address: '',
+    mobile: '',
     paymentMethod: 'cod'
   });
   const db = useFirestore();
 
-  // Load data from local storage on mount
   useEffect(() => {
     const savedCart = localStorage.getItem('meow_momo_cart');
     if (savedCart) {
@@ -66,6 +66,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         setCustomerInfo({
           name: parsed.name || '',
           address: parsed.address || '',
+          mobile: parsed.mobile || '',
           paymentMethod: parsed.paymentMethod || 'cod'
         });
       } catch (e) {
@@ -74,14 +75,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  // Save cart to local storage on change
   useEffect(() => {
-    if (cart.length > 0) {
-      localStorage.setItem('meow_momo_cart', JSON.stringify(cart));
-    }
+    localStorage.setItem('meow_momo_cart', JSON.stringify(cart));
   }, [cart]);
 
-  // Save customer info to local storage on change
   useEffect(() => {
     localStorage.setItem('meow_momo_customer', JSON.stringify(customerInfo));
   }, [customerInfo]);
@@ -104,9 +101,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const removeFromCart = (id: string, variant?: string) => {
     setCart(prevCart => {
-      const newCart = prevCart.filter(item => !(item.id === id && item.variant === variant));
-      if (newCart.length === 0) localStorage.removeItem('meow_momo_cart');
-      return newCart;
+      return prevCart.filter(item => !(item.id === id && item.variant === variant));
     });
   };
 
@@ -127,7 +122,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   const saveOrderToFirestore = async (userId: string) => {
-    if (cart.length === 0 || !userId) return null;
+    if (cart.length === 0 || !userId || !db) return null;
     
     try {
       const orderId = `ORDER-${Date.now()}`;
@@ -139,7 +134,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         customerId: userId,
         orderDate: serverTimestamp(),
         customerName: customerInfo.name,
-        customerContact: 'User',
+        customerContact: customerInfo.mobile || 'User',
         deliveryAddress: customerInfo.address,
         totalAmount: totalPrice,
         paymentMethod: customerInfo.paymentMethod === 'upi' ? 'UPI' : 'Cash on Delivery',
@@ -149,11 +144,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
       await setDoc(orderRef, orderData);
       
-      // Save items
       for (const item of cart) {
-        const itemRef = doc(db, 'restaurants', RESTAURANT_ID, 'orders', orderId, 'orderItems', `${item.id}-${item.variant}`);
+        const itemRef = doc(db, 'restaurants', RESTAURANT_ID, 'orders', orderId, 'orderItems', `${item.id}-${item.variant || 'default'}`);
         await setDoc(itemRef, {
-          id: `${item.id}-${item.variant}`,
+          id: `${item.id}-${item.variant || 'default'}`,
           orderId: orderId,
           menuItemId: item.id,
           quantity: item.quantity,
