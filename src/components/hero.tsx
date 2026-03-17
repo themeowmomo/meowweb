@@ -51,7 +51,7 @@ export function Hero() {
               { icon: Star, title: "4.9 Google Rating", desc: "Loved by the community for taste and quality." },
               { icon: Clock, title: "Quick Evening Bites", desc: "Open 4:00 PM – 10:30 PM for your daily cravings." }
             ].map((feature, idx) => (
-              <div key={idx} className="flex flex-col items-center md:items-start p-6 rounded-2xl bg-white/50 backdrop-blur-sm border hover:border-primary/50 hover:shadow-xl transition-all group">
+              <div key={idx} className="flex flex-col items-center text-center p-6 rounded-2xl bg-white/50 backdrop-blur-sm border hover:border-primary/50 hover:shadow-xl transition-all group">
                 <feature.icon className="w-10 h-10 text-primary mb-4 group-hover:scale-110 transition-transform" />
                 <h3 className="font-bold text-lg mb-2">{feature.title}</h3>
                 <p className="text-sm text-muted-foreground">{feature.desc}</p>
