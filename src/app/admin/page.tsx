@@ -42,22 +42,26 @@ export default function AdminPage() {
   const { data: adminDoc, isLoading: isAdminDocLoading } = useDoc(adminDocRef);
 
   // 2. ONLY query orders if we are CERTAIN the user is an admin
+  // This avoids triggering "Missing or insufficient permissions" for non-admins
   const ordersQuery = useMemoFirebase(() => {
-    // Crucial: adminDoc must be truthy (loaded and existing)
-    if (!db || !user || !adminDoc) return null;
+    const isActuallyAdmin = !!adminDoc && !isAdminDocLoading;
+    if (!db || !user || !isActuallyAdmin) return null;
+    
     return query(
       collection(db, 'restaurants', RESTAURANT_ID, 'orders'),
       orderBy('orderDate', 'desc')
     );
-  }, [db, user, adminDoc]);
+  }, [db, user, adminDoc, isAdminDocLoading]);
   
   const { data: orders, isLoading: isOrdersLoading } = useCollection(ordersQuery);
 
   // 3. ONLY query team members if we are CERTAIN the user is an admin
   const adminsQuery = useMemoFirebase(() => {
-    if (!db || !user || !adminDoc) return null;
+    const isActuallyAdmin = !!adminDoc && !isAdminDocLoading;
+    if (!db || !user || !isActuallyAdmin) return null;
+    
     return collection(db, 'app_admins');
-  }, [db, user, adminDoc]);
+  }, [db, user, adminDoc, isAdminDocLoading]);
   
   const { data: allAdmins, isLoading: isAdminsLoading } = useCollection(adminsQuery);
 
@@ -104,7 +108,7 @@ export default function AdminPage() {
   };
 
   // Show loading state while determining auth and admin status
-  if (isUserLoading || isAdminDocLoading) {
+  if (isUserLoading || (user && !user.isAnonymous && isAdminDocLoading)) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-background">
         <Loader2 className="w-10 h-10 animate-spin text-primary opacity-20 mb-4" />
@@ -150,7 +154,7 @@ export default function AdminPage() {
   }
 
   // Handle authenticated users who are NOT admins
-  if (!adminDoc) {
+  if (!adminDoc && !isAdminDocLoading) {
     return (
       <div className="min-h-screen bg-[#FDFBF7] flex flex-col">
         <Navbar />
