@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useCart } from "@/context/cart-context";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, Plus, Minus, Trash2, Send, User, MapPin, CreditCard, Wallet, Loader2, Package, Phone } from "lucide-react";
+import { ShoppingCart, Plus, Minus, Trash2, Send, User, MapPin, CreditCard, Wallet, Loader2, Package } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
@@ -25,10 +25,10 @@ export function CartSheet() {
   const handleWhatsAppOrder = async () => {
     if (cart.length === 0) return;
     
-    if (!customerInfo.name.trim() || !customerInfo.address.trim() || !customerInfo.mobile.trim()) {
+    if (!customerInfo.name.trim() || !customerInfo.address.trim()) {
       toast({
         title: "Details Required",
-        description: "Please fill in your name, address, and mobile number.",
+        description: "Please fill in your name and delivery address.",
         variant: "destructive",
       });
       return;
@@ -36,13 +36,13 @@ export function CartSheet() {
 
     setIsProcessing(true);
     
-    // Attempt to save order record in Firestore (optional but good for tracking)
+    // Attempt to save order record in Firestore
     const orderId = await saveOrderToFirestore();
     const shopNumber = "918850859140";
     
     const header = "*NEW MOMO ORDER*%0A";
     const separator = "--------------------------%0A";
-    const customerSection = `*Recipient Details*%0AName: ${customerInfo.name}%0APhone: ${customerInfo.mobile}%0AAddress: ${customerInfo.address}%0A${orderId ? `Order ID: ${orderId}%0A` : ""}`;
+    const customerSection = `*Recipient Details*%0AName: ${customerInfo.name}%0AAddress: ${customerInfo.address}%0A${orderId ? `Order ID: ${orderId}%0A` : ""}`;
     
     const itemsSection = "%0A*Items Selection*%0A" + cart
       .map(item => `- ${item.name}${item.variant ? ` (${item.variant})` : ""} x ${item.quantity}: Rs.${item.price * item.quantity}`)
@@ -108,10 +108,6 @@ export function CartSheet() {
                     <div className="space-y-1">
                       <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground ml-1">Full Name</Label>
                       <Input placeholder="Enter your name" value={customerInfo.name} onChange={(e) => updateCustomerInfo({ name: e.target.value })} className="rounded-xl h-11" />
-                    </div>
-                    <div className="space-y-1">
-                      <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground ml-1">Mobile (WhatsApp)</Label>
-                      <Input type="tel" placeholder="e.g. 9876543210" value={customerInfo.mobile} onChange={(e) => updateCustomerInfo({ mobile: e.target.value })} className="rounded-xl h-11" />
                     </div>
                     <div className="space-y-1">
                       <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground ml-1">Full Address</Label>

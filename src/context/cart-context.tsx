@@ -17,7 +17,6 @@ export type PaymentMethod = 'cod' | 'upi';
 export type CustomerInfo = {
   name: string;
   address: string;
-  mobile: string;
   paymentMethod: PaymentMethod;
 };
 
@@ -43,7 +42,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [customerInfo, setCustomerInfo] = useState<CustomerInfo>({ 
     name: '', 
     address: '',
-    mobile: '',
     paymentMethod: 'cod'
   });
   const db = useFirestore();
@@ -66,7 +64,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
         setCustomerInfo({
           name: parsed.name || '',
           address: parsed.address || '',
-          mobile: parsed.mobile || '',
           paymentMethod: parsed.paymentMethod || 'cod'
         });
       } catch (e) {
@@ -134,7 +131,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         customerId: 'GUEST',
         orderDate: serverTimestamp(),
         customerName: customerInfo.name,
-        customerContact: customerInfo.mobile || 'Guest',
+        customerContact: 'Guest',
         deliveryAddress: customerInfo.address,
         totalAmount: totalPrice,
         paymentMethod: customerInfo.paymentMethod === 'upi' ? 'UPI' : 'Cash on Delivery',
