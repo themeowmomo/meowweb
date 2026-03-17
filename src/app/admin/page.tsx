@@ -44,8 +44,8 @@ export default function AdminPage() {
   // 2. ONLY query orders if we are CERTAIN the user is an admin
   // This avoids triggering "Missing or insufficient permissions" for non-admins
   const ordersQuery = useMemoFirebase(() => {
-    const isActuallyAdmin = !!adminDoc && !isAdminDocLoading;
-    if (!db || !user || !isActuallyAdmin) return null;
+    // Only even define the query if we have a verified admin doc and it's not loading
+    if (!db || !user || !adminDoc || isAdminDocLoading) return null;
     
     return query(
       collection(db, 'restaurants', RESTAURANT_ID, 'orders'),
@@ -57,9 +57,7 @@ export default function AdminPage() {
 
   // 3. ONLY query team members if we are CERTAIN the user is an admin
   const adminsQuery = useMemoFirebase(() => {
-    const isActuallyAdmin = !!adminDoc && !isAdminDocLoading;
-    if (!db || !user || !isActuallyAdmin) return null;
-    
+    if (!db || !user || !adminDoc || isAdminDocLoading) return null;
     return collection(db, 'app_admins');
   }, [db, user, adminDoc, isAdminDocLoading]);
   

@@ -11,13 +11,20 @@ service cloud.firestore {
       return isSignedIn() && request.auth.uid == userId;
     }
 
+    // Fixed: Non-recursive admin check
+    // This function checks if a record exists for the user in the app_admins collection.
+    // The rules for app_admins allow a user to 'get' their own record, allowing this exists() to work.
     function isAdmin() {
       return isSignedIn() && exists(/databases/$(database)/documents/app_admins/$(request.auth.uid));
     }
 
     // Admin collection rules
     match /app_admins/{userId} {
-      allow get: if isOwner(userId) || isAdmin();
+      // Crucial: Allow users to check their own admin status without a recursive isAdmin call.
+      // This is what the isAdmin() helper function above uses via exists().
+      allow get: if isOwner(userId);
+      
+      // Global admins can manage the admin list
       allow list, write: if isAdmin();
     }
 
@@ -28,8 +35,8 @@ service cloud.firestore {
 
       // Orders subcollection rules
       match /orders/{orderId} {
-        // Customers can read their own orders. Staff can read all.
-        // For 'list' queries, the customer MUST filter by 'customerId == auth.uid'
+        // Staff can read all orders.
+        // Customers can only read/list their own orders (must use customerId filter for listing).
         allow read: if isAdmin() || (isSignedIn() && (resource == null || resource.data.customerId == request.auth.uid));
         
         // Any signed-in user can place an order
@@ -39,16 +46,12 @@ service cloud.firestore {
         allow update, delete: if isAdmin();
 
         match /orderItems/{orderItemId} {
+          // Allow reading items if user owns the parent order or is an admin
           allow read: if isAdmin() || (isSignedIn() && get(/databases/$(database)/documents/restaurants/$(restaurantId)/orders/$(orderId)).data.customerId == request.auth.uid);
           allow create: if isSignedIn();
           allow update, delete: if isAdmin();
         }
       }
-    }
-
-    // Platform Admins fallback
-    match /app_admins/{userId} {
-       allow read: if isOwner(userId) || isAdmin();
     }
   }
 }

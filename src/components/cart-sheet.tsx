@@ -28,7 +28,7 @@ export function CartSheet() {
   const [mounted, setMounted] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
 
-  // Memoized query for order history - ONLY for non-anonymous users to prevent permission errors for guests
+  // Memoized query for order history - ONLY for non-anonymous users to prevent permission errors
   const ordersQuery = useMemoFirebase(() => {
     // Only query server if user is logged in (not anonymous) and we have a DB instance
     if (!db || !user || user.isAnonymous) return null;
