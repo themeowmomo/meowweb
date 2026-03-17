@@ -44,21 +44,24 @@ export default function AdminPage() {
   
   const { data: adminDoc, isLoading: isAdminDocLoading } = useDoc(adminDocRef);
 
+  // Robust check for administrative access
+  const isAuthorizedAdmin = !!adminDoc && !isAdminDocLoading;
+
   // 2. Fetch orders (Only if authorized and admin check is finished)
   const ordersQuery = useMemoFirebase(() => {
-    if (!db || !user || isAdminDocLoading || !adminDoc) return null;
+    if (!db || !user || !isAuthorizedAdmin) return null;
     return query(
       collection(db, 'restaurants', RESTAURANT_ID, 'orders'),
       orderBy('orderDate', 'desc')
     );
-  }, [db, user, adminDoc, isAdminDocLoading]);
+  }, [db, user, isAuthorizedAdmin]);
   const { data: orders, isLoading: isOrdersLoading } = useCollection(ordersQuery);
 
   // 3. Fetch all admins (Only if authorized and admin check is finished)
   const adminsQuery = useMemoFirebase(() => {
-    if (!db || !user || isAdminDocLoading || !adminDoc) return null;
+    if (!db || !user || !isAuthorizedAdmin) return null;
     return collection(db, 'app_admins');
-  }, [db, user, adminDoc, isAdminDocLoading]);
+  }, [db, user, isAuthorizedAdmin]);
   const { data: allAdmins, isLoading: isAdminsLoading } = useCollection(adminsQuery);
 
   const handleSubmit = async (e: React.FormEvent) => {
