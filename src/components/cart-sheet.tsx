@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -84,8 +85,8 @@ export function CartSheet() {
 
     if (customerInfo.paymentMethod === 'upi') {
       // Create a short summary for the UPI transaction note: e.g. "1xCV-St,2xPn-Fr"
-      const shortItems = cart.map(item => `${item.quantity}x${getShortItemName(item.name, item.variant)}`).join(',');
-      const upiNote = encodeURIComponent(shortItems.slice(0, 50));
+      // Pure item string as requested by user
+      const upiNote = encodeURIComponent(cart.map(item => `${item.quantity}x${getShortItemName(item.name, item.variant)}`).join(',').slice(0, 50));
       
       const upiUrl = `upi://pay?pa=amitjaisawal0123-2@okhdfcbank&pn=Meow%20Momo&am=${totalPrice}&cu=INR&tn=${upiNote}`;
       
@@ -185,7 +186,7 @@ export function CartSheet() {
                           <div className="flex items-center gap-2 mt-2">
                             <Button variant="outline" size="icon" className="h-7 w-7 rounded-lg hover:bg-primary hover:text-white" onClick={() => updateQuantity(item.id, item.quantity - 1, item.variant)}><Minus className="h-3 w-3" /></Button>
                             <span className="text-xs font-black w-4 text-center">{item.quantity}</span>
-                            <Button variant="outline" size="icon" className="h-7 w-7 rounded-lg hover:bg-primary hover:text-white" onClick={() => updateQuantity(item.id, item.quantity + 1, item.variant)}><Plus className="h-3 w-3" /></Button>
+                            <Button variant="outline" size="icon" className="h-7 w-7 rounded-lg hover:bg-primary hover:text-white" onClick={() => updateQuantity(item.id, quantity + 1, item.variant)}><Plus className="h-3 w-3" /></Button>
                           </div>
                         </div>
                         <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity" onClick={() => removeFromCart(item.id, item.variant)}><Trash2 className="h-4 w-4" /></Button>
