@@ -120,14 +120,14 @@ export function AiRecommender() {
   };
 
   return (
-    <section id="ai-tool" className="py-24 bg-[#FDFBF7]">
+    <section id="ai-tool" className="py-16 bg-[#FDFBF7]">
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto">
           <Card className="border-none shadow-2xl overflow-hidden rounded-[3rem] bg-white">
-            <div className="bg-primary/5 px-10 py-16 text-foreground relative overflow-hidden border-b border-primary/10">
+            <div className="bg-primary/5 px-10 py-12 text-foreground relative overflow-hidden border-b border-primary/10">
               <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl" />
-              <div className="relative z-10 space-y-3 text-center md:text-left">
-                <div className="inline-flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-[0.2em] mb-2">
+              <div className="relative z-10 space-y-2 text-center md:text-left">
+                <div className="inline-flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-[0.2em] mb-1">
                   <Sparkles className="w-3.5 h-3.5" /> AI Powered Suggester
                 </div>
                 <h2 className="text-3xl md:text-5xl font-black tracking-tighter leading-none">Get Food Help by AI</h2>
@@ -137,7 +137,7 @@ export function AiRecommender() {
               </div>
             </div>
             
-            <CardContent className="p-10 space-y-10">
+            <CardContent className="p-8 md:p-10 space-y-8">
               <div className="space-y-6">
                 <div className="space-y-2">
                   <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">What's on your mind?</label>
@@ -164,8 +164,8 @@ export function AiRecommender() {
               </div>
 
               {recommendations && (
-                <div className="pt-10 border-t border-dashed border-muted animate-in fade-in slide-in-from-top-4 duration-500">
-                  <h3 className="text-xl font-black mb-8 flex items-center justify-center gap-2 text-primary tracking-tight">
+                <div className="pt-8 border-t border-dashed border-muted animate-in fade-in slide-in-from-top-4 duration-500">
+                  <h3 className="text-xl font-black mb-6 flex items-center justify-center gap-2 text-primary tracking-tight">
                     <CheckCircle2 className="text-accent w-6 h-6" /> 
                     AI Handpicked for You
                   </h3>

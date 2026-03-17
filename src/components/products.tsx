@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -207,9 +206,9 @@ export function Products() {
   const activeCategories = MENU_DATA[activeTab as keyof typeof MENU_DATA];
 
   return (
-    <section id="menu" className="py-24 bg-[#FDFBF7]">
+    <section id="menu" className="py-16 bg-[#FDFBF7]">
       <div className="container mx-auto px-4 max-w-5xl">
-        <div className="text-center mb-12 space-y-4">
+        <div className="text-center mb-8 space-y-3">
           <Badge className="bg-primary/10 text-primary border-none px-5 py-2 font-black tracking-widest text-[11px] rounded-full uppercase shadow-sm">
             100% PURE VEG & JAIN SPECIALIST
           </Badge>
@@ -220,7 +219,7 @@ export function Products() {
         </div>
 
         {/* Tab Switcher */}
-        <div className="sticky top-20 z-40 mb-16 flex justify-center px-4">
+        <div className="sticky top-20 z-40 mb-10 flex justify-center px-4">
           <div className="bg-white/95 backdrop-blur-xl border border-primary/10 p-1.5 rounded-3xl shadow-2xl shadow-black/5 flex items-center gap-1.5 w-full max-w-lg">
             {[
               { id: 'momos', name: 'Momos', icon: Utensils },
@@ -243,10 +242,10 @@ export function Products() {
           </div>
         </div>
 
-        <Accordion type="multiple" defaultValue={activeCategories.map((_, i) => `category-${i}`)} className="space-y-8">
+        <Accordion type="multiple" defaultValue={activeCategories.map((_, i) => `category-${i}`)} className="space-y-6">
           {activeCategories.map((category, catIdx) => (
             <AccordionItem key={catIdx} value={`category-${catIdx}`} className="border-none">
-              <AccordionTrigger className="hover:no-underline bg-white px-8 py-5 rounded-[2rem] shadow-sm border border-primary/5 mb-6 group transition-all data-[state=open]:shadow-md data-[state=open]:border-primary/10">
+              <AccordionTrigger className="hover:no-underline bg-white px-8 py-4 rounded-[2rem] shadow-sm border border-primary/5 mb-4 group transition-all data-[state=open]:shadow-md data-[state=open]:border-primary/10">
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 rounded-2xl bg-primary/5 flex items-center justify-center text-primary group-data-[state=open]:bg-primary group-data-[state=open]:text-white transition-all duration-500">
                     <Utensils className="w-5 h-5" />

@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -18,9 +17,9 @@ export function Hero() {
   const { data: profile, isLoading } = useDoc(profileRef);
 
   return (
-    <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden">
+    <section className="relative pt-24 pb-12 md:pt-36 md:pb-20 overflow-hidden">
       <div className="container mx-auto px-4 relative z-10">
-        <div className="max-w-4xl mx-auto text-center space-y-8">
+        <div className="max-w-4xl mx-auto text-center space-y-6 md:space-y-8">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary text-primary text-xs font-bold uppercase tracking-wider animate-in fade-in slide-in-from-bottom-2 duration-500">
             <span className="flex h-2 w-2 rounded-full bg-accent animate-pulse"></span>
             {profile?.category || "Pure Veg & Jain Specialist in Malad East"}
@@ -34,7 +33,7 @@ export function Hero() {
             {profile?.description || "Freshly prepared steam, fried, and kurkure momos. Pure veg and Jain options that will keep you coming back for more."}
           </p>
           
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 animate-in fade-in slide-in-from-bottom-8 duration-1000">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2 animate-in fade-in slide-in-from-bottom-8 duration-1000">
             <Button size="lg" className="w-full sm:w-auto px-8 h-14 text-base bg-primary hover:bg-primary/90 shadow-lg shadow-primary/25" asChild>
               <a href="#menu">
                 View Delicious Menu <ArrowRight className="ml-2 w-4 h-4" />
@@ -45,15 +44,15 @@ export function Hero() {
             </Button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-16 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-12 max-w-5xl mx-auto">
             {[
               { icon: Leaf, title: "100% Pure Veg", desc: "Dedicated pure vegetarian and Jain preparation." },
               { icon: Star, title: "4.9 Google Rating", desc: "Loved by the community for taste and quality." },
               { icon: Clock, title: "Quick Evening Bites", desc: "Open 4:00 PM – 10:30 PM for your daily cravings." }
             ].map((feature, idx) => (
-              <div key={idx} className="flex flex-col items-center justify-center text-center p-8 rounded-[2rem] bg-white/50 backdrop-blur-sm border border-muted/50 hover:border-primary/20 hover:shadow-xl transition-all group duration-500">
-                <feature.icon className="w-10 h-10 text-primary mb-4 group-hover:scale-110 transition-transform" />
-                <h3 className="font-black text-lg mb-2 tracking-tight">{feature.title}</h3>
+              <div key={idx} className="flex flex-col items-center justify-center text-center p-6 rounded-[2rem] bg-white/50 backdrop-blur-sm border border-muted/50 hover:border-primary/20 hover:shadow-xl transition-all group duration-500">
+                <feature.icon className="w-10 h-10 text-primary mb-3 group-hover:scale-110 transition-transform" />
+                <h3 className="font-black text-lg mb-1 tracking-tight">{feature.title}</h3>
                 <p className="text-xs text-muted-foreground font-medium leading-relaxed max-w-[200px]">{feature.desc}</p>
               </div>
             ))}

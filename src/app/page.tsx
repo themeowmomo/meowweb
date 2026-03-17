@@ -15,26 +15,25 @@ export default function Home() {
       <Navbar />
       <Hero />
       
-      <div id="pricing">
+      <div id="menu">
         <Products />
       </div>
 
       <AiRecommender />
       
-      {/* Testimonials now includes the AI Review Generator joined inside it */}
       <Testimonials />
 
       {/* Final CTA Section */}
-      <section className="py-24 relative overflow-hidden">
+      <section className="py-16 relative overflow-hidden">
         <div className="absolute inset-0 bg-primary -z-10" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,_rgba(255,255,255,0.2)_0%,_transparent_50%)] -z-10" />
         
-        <div className="container mx-auto px-4 text-center text-white space-y-8">
+        <div className="container mx-auto px-4 text-center text-white space-y-6">
           <h2 className="text-4xl md:text-5xl font-black font-headline tracking-tight">Ready for a Delicious Snack?</h2>
           <p className="text-primary-foreground/90 max-w-2xl mx-auto text-lg md:text-xl">
             Order your favorite Pure Veg and Jain momos today. Freshly prepared and delivered with care.
           </p>
-          <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button size="lg" className="h-16 px-10 text-lg bg-white text-primary hover:bg-secondary hover:text-primary shadow-2xl font-black rounded-2xl group" asChild>
               <a href="#menu">
                 Browse Full Menu <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -44,16 +43,16 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Loyalty Reward Section - WhatsApp stays here per user request */}
-      <section className="py-24 bg-white">
+      {/* Loyalty Reward Section */}
+      <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
-          <div className="p-10 bg-foreground text-white rounded-[2rem] relative overflow-hidden group shadow-2xl">
+          <div className="p-8 md:p-10 bg-foreground text-white rounded-[2rem] relative overflow-hidden group shadow-2xl">
             <div className="absolute top-0 right-0 w-96 h-96 bg-primary/20 rounded-full -translate-y-1/2 translate-x-1/2 blur-[100px]" />
-            <div className="relative z-10 flex flex-col lg:grid lg:grid-cols-12 items-center gap-10">
+            <div className="relative z-10 flex flex-col lg:grid lg:grid-cols-12 items-center gap-8">
               <div className="lg:col-span-3 bg-white/10 backdrop-blur-xl p-8 rounded-[1.5rem] border border-white/20 shadow-2xl rotate-3 group-hover:rotate-0 transition-transform duration-500">
                 <Star className="w-16 h-16 text-accent" fill="currentColor" />
               </div>
-              <div className="lg:col-span-6 text-center lg:text-left space-y-4">
+              <div className="lg:col-span-6 text-center lg:text-left space-y-3">
                 <div className="inline-block bg-accent/20 text-accent px-4 py-1 rounded-full text-[10px] font-black tracking-widest uppercase">Loyalty Reward</div>
                 <h3 className="text-3xl md:text-4xl font-black font-headline tracking-tighter leading-none">Meow Momo Rewards</h3>
                 <p className="text-primary-foreground/70 text-lg leading-relaxed max-w-xl">
