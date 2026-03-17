@@ -1,7 +1,8 @@
+
 "use client";
 
 import { useState } from "react";
-import { Plus, Minus, Leaf, Utensils, Zap, Package, Info } from "lucide-react";
+import { Plus, Minus, Utensils, Zap, Package, Info } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -9,6 +10,7 @@ import { useCart } from "@/context/cart-context";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
+// Hardcoded menu data per user request
 const MENU_DATA = {
   momos: [
     {
@@ -47,12 +49,12 @@ const MENU_DATA = {
     {
       category: "Jain Special",
       items: [
-        { id: "jn-steam", name: "Jain Steam", price5: 80, price11: 150, isJain: true },
-        { id: "jn-fried", name: "Jain Fried", price5: 90, price11: 170, isJain: true },
-        { id: "jn-cheese-steam", name: "Jain Cheese Steam", price5: 90, price11: 180, isJain: true },
-        { id: "jn-cheese-fried", name: "Jain Cheese Fried", price5: 99, price11: 190, isJain: true },
-        { id: "jn-peri-steam", name: "Jain Peri Peri Steam", price5: 90, price11: 180, isJain: true },
-        { id: "jn-peri-fried", name: "Jain Peri Peri Fried", price5: 99, price11: 190, isJain: true },
+        { id: "jn-steam", name: "Jain Steam", price5: 80, price11: 150 },
+        { id: "jn-fried", name: "Jain Fried", price5: 90, price11: 170 },
+        { id: "jn-cheese-steam", name: "Jain Cheese Steam", price5: 90, price11: 180 },
+        { id: "jn-cheese-fried", name: "Jain Cheese Fried", price5: 99, price11: 190 },
+        { id: "jn-peri-steam", name: "Jain Peri Peri Steam", price5: 90, price11: 180 },
+        { id: "jn-peri-fried", name: "Jain Peri Peri Fried", price5: 99, price11: 190 },
       ]
     }
   ],
@@ -108,23 +110,23 @@ export function Products() {
 
     if (quantity > 0) {
       return (
-        <div className="flex items-center gap-2 bg-primary/5 rounded-lg p-1">
+        <div className="flex items-center gap-2">
           <Button 
             size="icon" 
-            variant="ghost"
-            className="h-7 w-7 rounded-md text-primary hover:bg-primary hover:text-white transition-all"
+            variant="outline"
+            className="h-6 w-6 rounded-full border-primary/20 text-primary"
             onClick={() => updateQuantity(itemId, quantity - 1, variant)}
           >
-            <Minus className="h-3 w-3" />
+            <Minus className="h-2.5 w-2.5" />
           </Button>
-          <span className="text-xs font-black w-4 text-center">{quantity}</span>
+          <span className="text-[10px] font-black w-4 text-center">{quantity}</span>
           <Button 
             size="icon" 
-            variant="ghost"
-            className="h-7 w-7 rounded-md text-primary hover:bg-primary hover:text-white transition-all"
+            variant="outline"
+            className="h-6 w-6 rounded-full border-primary/20 text-primary"
             onClick={() => updateQuantity(itemId, quantity + 1, variant)}
           >
-            <Plus className="h-3 w-3" />
+            <Plus className="h-2.5 w-2.5" />
           </Button>
         </div>
       );
@@ -134,7 +136,7 @@ export function Products() {
       <Button 
         size="sm"
         variant="outline"
-        className="h-8 px-4 text-[10px] font-black uppercase tracking-widest rounded-lg border-primary/20 text-primary hover:bg-primary hover:text-white transition-all"
+        className="h-6 px-2.5 text-[8px] font-black uppercase tracking-widest rounded-md border-primary/20 text-primary"
         onClick={() => handleAddToCart(name, price, variant, id)}
       >
         Add
@@ -145,19 +147,18 @@ export function Products() {
   const activeCategories = MENU_DATA[activeTab as keyof typeof MENU_DATA];
 
   return (
-    <section id="menu" className="py-20 bg-[#FDFBF7]">
-      <div className="container mx-auto px-4 max-w-5xl">
-        <div className="text-center mb-12 space-y-3">
-          <Badge className="bg-primary/10 text-primary border-none mb-2 px-4 py-1.5 font-black tracking-widest text-[9px] rounded-full">
+    <section id="menu" className="py-12 bg-[#FDFBF7]">
+      <div className="container mx-auto px-4 max-w-4xl">
+        <div className="text-center mb-6 space-y-1">
+          <Badge className="bg-primary/10 text-primary border-none mb-1 px-3 py-1 font-black tracking-widest text-[7px] rounded-full">
             100% PURE VEG & JAIN
           </Badge>
-          <h2 className="text-3xl md:text-5xl font-black font-headline tracking-tighter">Menu Selection</h2>
-          <p className="text-muted-foreground text-sm font-medium">Professional Street Food. Freshly Prepared Daily.</p>
+          <h2 className="text-xl md:text-3xl font-black font-headline tracking-tighter">Menu Selection</h2>
         </div>
 
         {/* Sticky Nav Bar */}
-        <div className="sticky top-16 z-40 mb-10 flex justify-center">
-          <div className="bg-white/90 backdrop-blur-md border border-primary/10 p-1.5 rounded-2xl shadow-xl flex items-center gap-1 w-full max-w-sm">
+        <div className="sticky top-16 z-40 mb-6 flex justify-center">
+          <div className="bg-white/90 backdrop-blur-md border border-primary/10 p-1 rounded-lg shadow-md flex items-center gap-0.5 w-full max-w-xs">
             {[
               { id: 'momos', name: 'Momos', icon: Utensils },
               { id: 'fries', name: 'Fries', icon: Zap },
@@ -167,98 +168,84 @@ export function Products() {
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={cn(
-                  "flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all",
+                  "flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-md text-[7px] font-black uppercase tracking-widest transition-all",
                   activeTab === tab.id 
-                    ? "bg-primary text-white shadow-md shadow-primary/20" 
+                    ? "bg-primary text-white shadow-sm" 
                     : "hover:bg-muted text-muted-foreground"
                 )}
               >
-                <tab.icon className="w-3.5 h-3.5" /> {tab.name}
+                <tab.icon className="w-2.5 h-2.5" /> {tab.name}
               </button>
             ))}
           </div>
         </div>
 
-        <div className="space-y-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {activeCategories.map((group, gIdx) => (
-            <div key={gIdx} className="space-y-6">
-              <div className="flex items-center gap-4">
-                <h3 className="text-sm font-black text-primary uppercase tracking-[0.2em] whitespace-nowrap">{group.category}</h3>
-                <div className="h-[1px] w-full bg-primary/10" />
-              </div>
+            <div key={gIdx} className="space-y-2">
+              <h3 className="text-[9px] font-black text-primary/40 uppercase tracking-[0.2em] px-1">{group.category}</h3>
+              {group.items.map((item: any) => (
+                <Card key={item.id} className="rounded-xl border-none shadow-sm bg-white hover:shadow-md transition-all duration-300">
+                  <CardContent className="p-3.5 space-y-2">
+                    <div className="flex justify-between items-start">
+                      <div className="space-y-0.5">
+                        <h4 className="text-[11px] font-black tracking-tight">{item.name}</h4>
+                        {item.desc && <p className="text-[8px] text-muted-foreground font-medium flex items-center gap-1"><Info className="w-2 h-2" /> {item.desc}</p>}
+                      </div>
+                    </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {group.items.map((item: any) => (
-                  <Card key={item.id} className="rounded-2xl border-none shadow-sm bg-white hover:shadow-md transition-all duration-300 overflow-hidden border border-muted/50">
-                    <CardContent className="p-5 space-y-4">
-                      <div className="flex justify-between items-start">
-                        <div className="space-y-1">
-                          <h4 className="text-base font-black tracking-tight">{item.name}</h4>
-                          {item.desc && <p className="text-[11px] text-muted-foreground font-medium flex items-center gap-1"><Info className="w-3 h-3" /> {item.desc}</p>}
+                    <div className="space-y-1">
+                      {/* Momo Pricing Row */}
+                      {'price5' in item && (
+                        <div className="flex items-center justify-between py-1 border-t border-muted/20">
+                          <div className="flex items-center gap-2">
+                            <span className="text-[8px] font-black text-muted-foreground">5 PCS</span>
+                            <span className="text-[10px] font-black text-primary">₹{item.price5}</span>
+                          </div>
+                          <QuantityControl name={item.name} variant="5 PCS" price={item.price5} id={item.id} />
                         </div>
-                        {item.isJain && (
-                          <Badge className="bg-accent/10 text-accent-foreground border-none text-[8px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest">
-                            Jain
-                          </Badge>
-                        )}
-                      </div>
+                      )}
+                      {'price11' in item && (
+                        <div className="flex items-center justify-between py-1 border-t border-muted/20">
+                          <div className="flex items-center gap-2">
+                            <span className="text-[8px] font-black text-muted-foreground">11 PCS</span>
+                            <span className="text-[10px] font-black text-primary">₹{item.price11}</span>
+                          </div>
+                          <QuantityControl name={item.name} variant="11 PCS" price={item.price11} id={item.id} />
+                        </div>
+                      )}
 
-                      <div className="flex flex-col gap-3">
-                        {/* Momo Pricing Row */}
-                        {'price5' in item && (
-                          <div className="flex items-center justify-between p-3 rounded-xl bg-muted/20 border border-muted/50 group/row hover:bg-white hover:border-primary/20 transition-all">
-                            <div className="flex flex-col">
-                              <span className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">5 PCS</span>
-                              <span className="text-sm font-black text-foreground">₹{item.price5}</span>
-                            </div>
-                            <QuantityControl name={item.name} variant="5 PCS" price={item.price5} id={item.id} />
+                      {/* Fries Pricing Row */}
+                      {'priceHalf' in item && (
+                        <div className="flex items-center justify-between py-1 border-t border-muted/20">
+                          <div className="flex items-center gap-2">
+                            <span className="text-[8px] font-black text-muted-foreground">HALF</span>
+                            <span className="text-[10px] font-black text-primary">₹{item.priceHalf}</span>
                           </div>
-                        )}
-                        {'price11' in item && (
-                          <div className="flex items-center justify-between p-3 rounded-xl bg-muted/20 border border-muted/50 group/row hover:bg-white hover:border-primary/20 transition-all">
-                            <div className="flex flex-col">
-                              <span className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">11 PCS</span>
-                              <span className="text-sm font-black text-foreground">₹{item.price11}</span>
-                            </div>
-                            <QuantityControl name={item.name} variant="11 PCS" price={item.price11} id={item.id} />
+                          <QuantityControl name={item.name} variant="Half" price={item.priceHalf} id={item.id} />
+                        </div>
+                      )}
+                      {'priceFull' in item && (
+                        <div className="flex items-center justify-between py-1 border-t border-muted/20">
+                          <div className="flex items-center gap-2">
+                            <span className="text-[8px] font-black text-muted-foreground">FULL</span>
+                            <span className="text-[10px] font-black text-primary">₹{item.priceFull}</span>
                           </div>
-                        )}
+                          <QuantityControl name={item.name} variant="Full" price={item.priceFull} id={item.id} />
+                        </div>
+                      )}
 
-                        {/* Fries Pricing Row */}
-                        {'priceHalf' in item && (
-                          <div className="flex items-center justify-between p-3 rounded-xl bg-muted/20 border border-muted/50 group/row hover:bg-white hover:border-primary/20 transition-all">
-                            <div className="flex flex-col">
-                              <span className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">Half</span>
-                              <span className="text-sm font-black text-foreground">₹{item.priceHalf}</span>
-                            </div>
-                            <QuantityControl name={item.name} variant="Half" price={item.priceHalf} id={item.id} />
-                          </div>
-                        )}
-                        {'priceFull' in item && (
-                          <div className="flex items-center justify-between p-3 rounded-xl bg-muted/20 border border-muted/50 group/row hover:bg-white hover:border-primary/20 transition-all">
-                            <div className="flex flex-col">
-                              <span className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">Full</span>
-                              <span className="text-sm font-black text-foreground">₹{item.priceFull}</span>
-                            </div>
-                            <QuantityControl name={item.name} variant="Full" price={item.priceFull} id={item.id} />
-                          </div>
-                        )}
-
-                        {/* Combo Pricing Row */}
-                        {'price' in item && !('price5' in item) && (
-                          <div className="flex items-center justify-between p-4 rounded-xl bg-primary/5 border border-primary/10 group/row hover:bg-white hover:border-primary/30 transition-all">
-                            <div className="flex flex-col">
-                              <span className="text-[8px] font-black text-primary uppercase tracking-widest">Combo Meal</span>
-                              <span className="text-lg font-black text-foreground">₹{item.price}</span>
-                            </div>
-                            <QuantityControl name={item.name} variant="Combo" price={item.price} id={item.id} />
-                          </div>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+                      {/* Combo Pricing Row */}
+                      {'price' in item && !('price5' in item) && (
+                        <div className="flex items-center justify-between py-1 border-t border-muted/20">
+                          <span className="text-[10px] font-black text-primary">₹{item.price}</span>
+                          <QuantityControl name={item.name} variant="Combo" price={item.price} id={item.id} />
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           ))}
         </div>
@@ -266,4 +253,3 @@ export function Products() {
     </section>
   );
 }
-
