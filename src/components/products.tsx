@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, Minus, Leaf, Utensils, Zap, Package } from "lucide-react";
+import { Plus, Minus, Leaf, Utensils, Zap, Package, Info } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -34,7 +34,7 @@ const MENU_DATA = {
       ]
     },
     {
-      category: "Kurkure Momos (Only Fried)",
+      category: "Kurkure Momos",
       items: [
         { id: "kk-fried", name: "Kurkure Fried", price5: 70, price11: 140 },
         { id: "kk-cheese", name: "Kurkure Cheese Fried", price5: 90, price11: 180 },
@@ -45,7 +45,7 @@ const MENU_DATA = {
       ]
     },
     {
-      category: "Jain Momos",
+      category: "Jain Special",
       items: [
         { id: "jn-steam", name: "Jain Steam", price5: 80, price11: 150, isJain: true },
         { id: "jn-fried", name: "Jain Fried", price5: 90, price11: 170, isJain: true },
@@ -58,7 +58,7 @@ const MENU_DATA = {
   ],
   fries: [
     {
-      category: "Fries",
+      category: "Crispy Fries",
       items: [
         { id: "fr-salted", name: "Salted Fries", priceHalf: 40, priceFull: 70 },
         { id: "fr-cheese", name: "Cheese Fries", priceHalf: 60, priceFull: 110 },
@@ -71,12 +71,12 @@ const MENU_DATA = {
     {
       category: "Meal Combos",
       items: [
-        { id: "ml-classic-steam", name: "Classic Steam Meal", price: 110, desc: "Classic Steam Momos (5 pcs) + Masala Fries (Half) + Soft Drink (250 ml)" },
-        { id: "ml-classic-fried", name: "Classic Fried Meal", price: 120, desc: "Classic Fried Momos (5 pcs) + Masala Fries (Half) + Soft Drink (250 ml)" },
-        { id: "ml-cheese", name: "Cheese Meal", price: 140, desc: "Cheese Fried Momos (5 pcs) + Cheese Fries (Half) + Soft Drink (250 ml)" },
-        { id: "ml-peri", name: "Peri Peri Meal", price: 140, desc: "Peri Peri Fried Momos (5 pcs) + Peri Peri Fries (Half) + Soft Drink (250 ml)" },
-        { id: "ml-paneer-steam", name: "Paneer Steam Meal", price: 120, desc: "Paneer Steam Momos (5 pcs) + Masala Fries (Half) + Soft Drink (250 ml)" },
-        { id: "ml-paneer-fried", name: "Paneer Fried Meal", price: 130, desc: "Paneer Fried Momos (5 pcs) + Masala Fries (Half) + Soft Drink (250 ml)" },
+        { id: "ml-classic-steam", name: "Classic Steam Meal", price: 110, desc: "Classic Steam (5 pcs) + Masala Fries (H) + 250ml Drink" },
+        { id: "ml-classic-fried", name: "Classic Fried Meal", price: 120, desc: "Classic Fried (5 pcs) + Masala Fries (H) + 250ml Drink" },
+        { id: "ml-cheese", name: "Cheese Meal", price: 140, desc: "Cheese Fried (5 pcs) + Cheese Fries (H) + 250ml Drink" },
+        { id: "ml-peri", name: "Peri Peri Meal", price: 140, desc: "Peri Peri Fried (5 pcs) + Peri Peri Fries (H) + 250ml Drink" },
+        { id: "ml-paneer-steam", name: "Paneer Steam Meal", price: 120, desc: "Paneer Steam (5 pcs) + Masala Fries (H) + 250ml Drink" },
+        { id: "ml-paneer-fried", name: "Paneer Fried Meal", price: 130, desc: "Paneer Fried (5 pcs) + Masala Fries (H) + 250ml Drink" },
       ]
     }
   ]
@@ -96,8 +96,8 @@ export function Products() {
     });
     
     toast({
-      title: "Added to cart",
-      description: `${name} (${variant}) added!`,
+      title: "Added",
+      description: `${name} (${variant})`,
     });
   };
 
@@ -108,23 +108,23 @@ export function Products() {
 
     if (quantity > 0) {
       return (
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 bg-primary/5 rounded-lg p-1">
           <Button 
             size="icon" 
-            variant="outline"
-            className="h-10 w-10 rounded-full border-primary/30 text-primary hover:bg-primary hover:text-white transition-all"
+            variant="ghost"
+            className="h-7 w-7 rounded-md text-primary hover:bg-primary hover:text-white transition-all"
             onClick={() => updateQuantity(itemId, quantity - 1, variant)}
           >
-            <Minus className="h-4 w-4" />
+            <Minus className="h-3 w-3" />
           </Button>
-          <span className="text-lg font-black w-6 text-center">{quantity}</span>
+          <span className="text-xs font-black w-4 text-center">{quantity}</span>
           <Button 
             size="icon" 
-            variant="outline"
-            className="h-10 w-10 rounded-full border-primary/30 text-primary hover:bg-primary hover:text-white transition-all"
+            variant="ghost"
+            className="h-7 w-7 rounded-md text-primary hover:bg-primary hover:text-white transition-all"
             onClick={() => updateQuantity(itemId, quantity + 1, variant)}
           >
-            <Plus className="h-4 w-4" />
+            <Plus className="h-3 w-3" />
           </Button>
         </div>
       );
@@ -132,12 +132,12 @@ export function Products() {
 
     return (
       <Button 
-        size="lg" 
+        size="sm"
         variant="outline"
-        className="h-12 px-8 text-xs font-black uppercase tracking-widest rounded-xl border-primary/20 text-primary hover:bg-primary hover:text-white shadow-sm transition-all"
+        className="h-8 px-4 text-[10px] font-black uppercase tracking-widest rounded-lg border-primary/20 text-primary hover:bg-primary hover:text-white transition-all"
         onClick={() => handleAddToCart(name, price, variant, id)}
       >
-        <Plus className="w-4 h-4 mr-2" /> Add
+        Add
       </Button>
     );
   };
@@ -145,21 +145,19 @@ export function Products() {
   const activeCategories = MENU_DATA[activeTab as keyof typeof MENU_DATA];
 
   return (
-    <section id="menu" className="py-24 bg-white relative">
-      <div className="container mx-auto px-4">
-        <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-          <Badge className="bg-primary/10 text-primary border-none mb-2 px-5 py-2 font-black tracking-widest text-[10px] rounded-full">
-            <Leaf className="w-3.5 h-3.5 mr-2" /> 100% PURE VEG & JAIN
+    <section id="menu" className="py-20 bg-[#FDFBF7]">
+      <div className="container mx-auto px-4 max-w-5xl">
+        <div className="text-center mb-12 space-y-3">
+          <Badge className="bg-primary/10 text-primary border-none mb-2 px-4 py-1.5 font-black tracking-widest text-[9px] rounded-full">
+            100% PURE VEG & JAIN
           </Badge>
-          <h2 className="text-4xl md:text-6xl font-black font-headline tracking-tighter">Our Menu</h2>
-          <p className="text-muted-foreground text-lg font-medium">
-            Professional quality Street Food. Pure Veg & Jain Specialty.
-          </p>
+          <h2 className="text-3xl md:text-5xl font-black font-headline tracking-tighter">Menu Selection</h2>
+          <p className="text-muted-foreground text-sm font-medium">Professional Street Food. Freshly Prepared Daily.</p>
         </div>
 
         {/* Sticky Nav Bar */}
-        <div className="sticky top-20 z-40 mb-12 flex justify-center">
-          <div className="bg-white/80 backdrop-blur-xl border-2 border-primary/10 p-2 rounded-[2rem] shadow-2xl flex items-center gap-2 max-w-md w-full">
+        <div className="sticky top-16 z-40 mb-10 flex justify-center">
+          <div className="bg-white/90 backdrop-blur-md border border-primary/10 p-1.5 rounded-2xl shadow-xl flex items-center gap-1 w-full max-w-sm">
             {[
               { id: 'momos', name: 'Momos', icon: Utensils },
               { id: 'fries', name: 'Fries', icon: Zap },
@@ -169,85 +167,89 @@ export function Products() {
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={cn(
-                  "flex-1 flex items-center justify-center gap-2 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all",
+                  "flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all",
                   activeTab === tab.id 
-                    ? "bg-primary text-white shadow-lg shadow-primary/20 scale-[1.05]" 
+                    ? "bg-primary text-white shadow-md shadow-primary/20" 
                     : "hover:bg-muted text-muted-foreground"
                 )}
               >
-                <tab.icon className="w-4 h-4" /> {tab.name}
+                <tab.icon className="w-3.5 h-3.5" /> {tab.name}
               </button>
             ))}
           </div>
         </div>
 
-        <div className="space-y-24">
+        <div className="space-y-12">
           {activeCategories.map((group, gIdx) => (
-            <div key={gIdx} className="space-y-12">
-              <div className="flex flex-col items-center gap-2">
-                <h3 className="text-3xl font-black text-foreground tracking-tighter uppercase">{group.category}</h3>
-                <div className="w-24 h-1 bg-primary rounded-full mt-2" />
+            <div key={gIdx} className="space-y-6">
+              <div className="flex items-center gap-4">
+                <h3 className="text-sm font-black text-primary uppercase tracking-[0.2em] whitespace-nowrap">{group.category}</h3>
+                <div className="h-[1px] w-full bg-primary/10" />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {group.items.map((item: any) => (
-                  <Card key={item.id} className="rounded-[2.5rem] border-none shadow-xl bg-white hover:shadow-2xl transition-all duration-500 overflow-hidden group border-2 border-transparent hover:border-primary/5">
-                    <CardContent className="p-10 space-y-8">
-                      <div className="flex justify-between items-start gap-4">
-                        <div className="space-y-2">
-                          <h4 className="text-2xl font-black leading-none tracking-tight">{item.name}</h4>
-                          {item.desc && <p className="text-sm text-muted-foreground font-medium leading-relaxed">{item.desc}</p>}
+                  <Card key={item.id} className="rounded-2xl border-none shadow-sm bg-white hover:shadow-md transition-all duration-300 overflow-hidden border border-muted/50">
+                    <CardContent className="p-5 space-y-4">
+                      <div className="flex justify-between items-start">
+                        <div className="space-y-1">
+                          <h4 className="text-base font-black tracking-tight">{item.name}</h4>
+                          {item.desc && <p className="text-[11px] text-muted-foreground font-medium flex items-center gap-1"><Info className="w-3 h-3" /> {item.desc}</p>}
                         </div>
                         {item.isJain && (
-                          <Badge className="bg-accent/10 text-accent-foreground border-none text-[8px] font-black px-3 py-1 rounded-full uppercase tracking-widest shrink-0">
-                            Jain Special
+                          <Badge className="bg-accent/10 text-accent-foreground border-none text-[8px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest">
+                            Jain
                           </Badge>
                         )}
                       </div>
 
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        {/* Option 1 */}
+                      <div className="flex flex-col gap-3">
+                        {/* Momo Pricing Row */}
                         {'price5' in item && (
-                          <div className="bg-[#FDFBF7] p-8 rounded-[1.5rem] border border-muted/50 flex flex-col items-center justify-center gap-4 group/box hover:border-primary/20 hover:bg-white transition-all duration-300">
-                            <div className="text-center">
-                              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">5 PCS</p>
-                              <p className="text-2xl font-black text-foreground">₹{item.price5}</p>
+                          <div className="flex items-center justify-between p-3 rounded-xl bg-muted/20 border border-muted/50 group/row hover:bg-white hover:border-primary/20 transition-all">
+                            <div className="flex flex-col">
+                              <span className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">5 PCS</span>
+                              <span className="text-sm font-black text-foreground">₹{item.price5}</span>
                             </div>
                             <QuantityControl name={item.name} variant="5 PCS" price={item.price5} id={item.id} />
                           </div>
                         )}
                         {'price11' in item && (
-                          <div className="bg-[#FDFBF7] p-8 rounded-[1.5rem] border border-muted/50 flex flex-col items-center justify-center gap-4 group/box hover:border-primary/20 hover:bg-white transition-all duration-300">
-                            <div className="text-center">
-                              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">11 PCS</p>
-                              <p className="text-2xl font-black text-foreground">₹{item.price11}</p>
+                          <div className="flex items-center justify-between p-3 rounded-xl bg-muted/20 border border-muted/50 group/row hover:bg-white hover:border-primary/20 transition-all">
+                            <div className="flex flex-col">
+                              <span className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">11 PCS</span>
+                              <span className="text-sm font-black text-foreground">₹{item.price11}</span>
                             </div>
                             <QuantityControl name={item.name} variant="11 PCS" price={item.price11} id={item.id} />
                           </div>
                         )}
+
+                        {/* Fries Pricing Row */}
                         {'priceHalf' in item && (
-                          <div className="bg-[#FDFBF7] p-8 rounded-[1.5rem] border border-muted/50 flex flex-col items-center justify-center gap-4 group/box hover:border-primary/20 hover:bg-white transition-all duration-300">
-                            <div className="text-center">
-                              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Half</p>
-                              <p className="text-2xl font-black text-foreground">₹{item.priceHalf}</p>
+                          <div className="flex items-center justify-between p-3 rounded-xl bg-muted/20 border border-muted/50 group/row hover:bg-white hover:border-primary/20 transition-all">
+                            <div className="flex flex-col">
+                              <span className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">Half</span>
+                              <span className="text-sm font-black text-foreground">₹{item.priceHalf}</span>
                             </div>
                             <QuantityControl name={item.name} variant="Half" price={item.priceHalf} id={item.id} />
                           </div>
                         )}
                         {'priceFull' in item && (
-                          <div className="bg-[#FDFBF7] p-8 rounded-[1.5rem] border border-muted/50 flex flex-col items-center justify-center gap-4 group/box hover:border-primary/20 hover:bg-white transition-all duration-300">
-                            <div className="text-center">
-                              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Full</p>
-                              <p className="text-2xl font-black text-foreground">₹{item.priceFull}</p>
+                          <div className="flex items-center justify-between p-3 rounded-xl bg-muted/20 border border-muted/50 group/row hover:bg-white hover:border-primary/20 transition-all">
+                            <div className="flex flex-col">
+                              <span className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">Full</span>
+                              <span className="text-sm font-black text-foreground">₹{item.priceFull}</span>
                             </div>
                             <QuantityControl name={item.name} variant="Full" price={item.priceFull} id={item.id} />
                           </div>
                         )}
+
+                        {/* Combo Pricing Row */}
                         {'price' in item && !('price5' in item) && (
-                          <div className="col-span-full bg-[#FDFBF7] p-8 rounded-[1.5rem] border border-muted/50 flex items-center justify-between group/box hover:border-primary/20 hover:bg-white transition-all duration-300">
-                            <div className="space-y-1">
-                              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Combo Price</p>
-                              <p className="text-2xl font-black text-foreground">₹{item.price}</p>
+                          <div className="flex items-center justify-between p-4 rounded-xl bg-primary/5 border border-primary/10 group/row hover:bg-white hover:border-primary/30 transition-all">
+                            <div className="flex flex-col">
+                              <span className="text-[8px] font-black text-primary uppercase tracking-widest">Combo Meal</span>
+                              <span className="text-lg font-black text-foreground">₹{item.price}</span>
                             </div>
                             <QuantityControl name={item.name} variant="Combo" price={item.price} id={item.id} />
                           </div>
@@ -264,3 +266,4 @@ export function Products() {
     </section>
   );
 }
+

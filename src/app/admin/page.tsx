@@ -11,7 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Loader2, ShoppingCart, ShieldAlert, Copy, Check, Lock, LogOut, Users, DollarSign, Activity, Info } from 'lucide-react';
+import { Loader2, ShoppingCart, ShieldAlert, Copy, Check, Lock, LogOut, Users, DollarSign, Activity, Settings } from 'lucide-react';
 import { Navbar } from '@/components/navbar';
 import { useToast } from '@/hooks/use-toast';
 import { setDocumentNonBlocking } from '@/firebase/non-blocking-updates';
@@ -256,13 +256,17 @@ export default function AdminPage() {
         </div>
 
         <Tabs defaultValue="orders" className="space-y-8">
-          <TabsList className="bg-white p-2 h-20 rounded-[1.5rem] border shadow-sm grid grid-cols-2 w-full max-w-2xl">
-            <TabsTrigger value="orders" className="rounded-xl font-black text-xs uppercase tracking-widest">Orders</TabsTrigger>
-            <TabsTrigger value="team" className="rounded-xl font-black text-xs uppercase tracking-widest">Team</TabsTrigger>
+          <TabsList className="bg-white p-2 h-16 rounded-2xl border shadow-sm grid grid-cols-2 w-full max-w-md mx-auto">
+            <TabsTrigger value="orders" className="rounded-xl font-black text-[10px] uppercase tracking-widest">
+              <ShoppingCart className="w-4 h-4 mr-2" /> Orders
+            </TabsTrigger>
+            <TabsTrigger value="team" className="rounded-xl font-black text-[10px] uppercase tracking-widest">
+              <Users className="w-4 h-4 mr-2" /> Team
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="orders">
-            <Card className="border-none shadow-2xl rounded-[3rem] overflow-hidden bg-white">
+            <Card className="border-none shadow-xl rounded-[2.5rem] overflow-hidden bg-white">
               <ScrollArea className="h-[600px]">
                 {isOrdersLoading ? (
                   <div className="p-20 text-center"><Loader2 className="w-10 h-10 animate-spin mx-auto opacity-20" /></div>
@@ -271,19 +275,19 @@ export default function AdminPage() {
                     <TableHeader className="bg-muted/30 h-16">
                       <TableRow>
                         <TableHead className="pl-12 font-black uppercase text-[10px] tracking-widest">Customer</TableHead>
-                        <TableHead className="font-black uppercase text-[10px] tracking-widest">Details</TableHead>
+                        <TableHead className="font-black uppercase text-[10px] tracking-widest">Address</TableHead>
                         <TableHead className="text-right font-black uppercase text-[10px] tracking-widest">Amount</TableHead>
                         <TableHead className="text-center pr-12 font-black uppercase text-[10px] tracking-widest">Status</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {orders?.map((order: any) => (
-                        <TableRow key={order.id} className="h-24 hover:bg-muted/10 transition-colors">
-                          <TableCell className="pl-12 font-black text-lg">{order.customerName}</TableCell>
+                        <TableRow key={order.id} className="h-20 hover:bg-muted/10 transition-colors">
+                          <TableCell className="pl-12 font-black">{order.customerName}</TableCell>
                           <TableCell className="text-xs text-muted-foreground leading-relaxed max-w-[200px] truncate">{order.deliveryAddress}</TableCell>
-                          <TableCell className="text-right font-black text-primary text-lg">Rs.{order.totalAmount}</TableCell>
+                          <TableCell className="text-right font-black text-primary">Rs.{order.totalAmount}</TableCell>
                           <TableCell className="text-center pr-12">
-                            <Badge variant={order.status === 'Pending' ? 'destructive' : 'secondary'} className="rounded-full px-4 py-1">
+                            <Badge variant={order.status === 'Pending' ? 'destructive' : 'secondary'} className="rounded-full px-4 py-1 text-[10px]">
                               {order.status}
                             </Badge>
                           </TableCell>
@@ -294,7 +298,7 @@ export default function AdminPage() {
                 ) : (
                   <div className="p-32 text-center space-y-4">
                     <ShoppingCart className="w-12 h-12 text-muted-foreground/20 mx-auto" />
-                    <p className="font-bold text-muted-foreground">No orders found yet.</p>
+                    <p className="font-bold text-muted-foreground">No active orders.</p>
                   </div>
                 )}
               </ScrollArea>
@@ -302,34 +306,34 @@ export default function AdminPage() {
           </TabsContent>
 
           <TabsContent value="team">
-            <Card className="rounded-[3rem] border-none shadow-2xl bg-white p-12">
-              <div className="flex flex-col md:flex-row justify-between gap-8 mb-16">
+            <Card className="rounded-[2.5rem] border-none shadow-xl bg-white p-10">
+              <div className="flex flex-col md:flex-row justify-between gap-8 mb-12">
                 <div className="space-y-2">
-                  <h2 className="text-3xl font-black tracking-tight">Access Control</h2>
-                  <p className="text-muted-foreground max-w-sm">Paste a staff member's UID below to grant them full access to this dashboard.</p>
+                  <h2 className="text-2xl font-black tracking-tight">Access Control</h2>
+                  <p className="text-muted-foreground text-sm max-w-sm">Authorize new staff members by adding their UID below.</p>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-4">
                   <Input 
-                    placeholder="Enter Staff UID..." 
-                    className="h-16 sm:w-80 rounded-2xl border-2 px-6"
+                    placeholder="Paste Staff UID..." 
+                    className="h-14 sm:w-80 rounded-xl border-2 px-5"
                     value={newAdminUid}
                     onChange={(e) => setNewAdminUid(e.target.value)}
                   />
-                  <Button className="h-16 px-10 bg-primary font-black rounded-2xl shadow-lg shadow-primary/20" onClick={handleAddTeamMember}>
-                    Grant Access
+                  <Button className="h-14 px-8 bg-primary font-black rounded-xl shadow-lg" onClick={handleAddTeamMember}>
+                    Add Staff
                   </Button>
                 </div>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {allAdmins?.map((admin: any) => (
-                  <div key={admin.id} className="flex items-center justify-between p-8 bg-muted/20 rounded-[2rem] border border-transparent hover:border-primary/10 transition-all">
-                    <div className="flex items-center gap-4">
-                      <div className="bg-white p-3 rounded-xl shadow-sm">
-                        <Users className="w-5 h-5 text-primary" />
+                  <div key={admin.id} className="flex items-center justify-between p-5 bg-muted/20 rounded-2xl border border-transparent hover:border-primary/10 transition-all">
+                    <div className="flex items-center gap-3 overflow-hidden">
+                      <div className="bg-white p-2 rounded-lg shadow-sm shrink-0">
+                        <Users className="w-4 h-4 text-primary" />
                       </div>
-                      <span className="font-mono text-xs font-bold break-all">{admin.id}</span>
+                      <span className="font-mono text-[10px] font-bold truncate">{admin.id}</span>
                     </div>
-                    {admin.id === user.uid && <Badge className="bg-primary/20 text-primary border-none font-black text-[10px] rounded-full px-3 py-1">YOU</Badge>}
+                    {admin.id === user.uid && <Badge className="bg-primary/20 text-primary border-none font-black text-[9px] rounded-full px-2 py-0.5">YOU</Badge>}
                   </div>
                 ))}
               </div>
