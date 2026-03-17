@@ -91,19 +91,19 @@ export function AiRecommender() {
           <Button 
             size="icon" 
             variant="outline"
-            className="h-10 w-10 rounded-full border-primary text-primary hover:bg-primary hover:text-white"
+            className="h-8 w-8 rounded-full border-primary text-primary hover:bg-primary hover:text-white"
             onClick={() => updateQuantity(itemId, quantity - 1, productData.variant)}
           >
-            <Minus className="h-4 w-4" />
+            <Minus className="h-3 w-3" />
           </Button>
-          <span className="text-lg font-black w-6 text-center">{quantity}</span>
+          <span className="text-sm font-black w-4 text-center">{quantity}</span>
           <Button 
             size="icon" 
             variant="outline"
-            className="h-10 w-10 rounded-full border-primary text-primary hover:bg-primary hover:text-white"
+            className="h-8 w-8 rounded-full border-primary text-primary hover:bg-primary hover:text-white"
             onClick={() => updateQuantity(itemId, quantity + 1, productData.variant)}
           >
-            <Plus className="h-4 w-4" />
+            <Plus className="h-3 w-3" />
           </Button>
         </div>
       );
@@ -113,38 +113,38 @@ export function AiRecommender() {
       <Button 
         onClick={() => handleAddToCart(name)}
         variant="outline"
-        className="h-12 px-6 rounded-xl font-black border-primary text-primary hover:bg-primary hover:text-white transition-all"
+        className="h-9 px-4 rounded-lg font-black border-primary text-primary hover:bg-primary hover:text-white transition-all text-xs"
       >
-        <Plus className="mr-2 w-5 h-5" /> Add to Order
+        <Plus className="mr-1 w-3.5 h-3.5" /> Add to Order
       </Button>
     );
   };
 
   return (
-    <section id="ai-tool" className="py-24 bg-white">
+    <section id="ai-tool" className="py-24 bg-background">
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto">
-          <Card className="border-2 border-primary/10 shadow-2xl overflow-hidden rounded-[2rem]">
-            <div className="bg-primary px-8 py-12 text-white relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-accent/20 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl" />
-              <div className="relative z-10 space-y-4">
-                <div className="flex items-center gap-2 text-accent-foreground font-bold text-xs uppercase tracking-widest">
-                  <Sparkles className="w-4 h-4" /> AI Powered Suggester
+          <Card className="border-none shadow-2xl overflow-hidden rounded-[2.5rem] bg-white">
+            <div className="bg-primary/5 px-10 py-16 text-foreground relative overflow-hidden border-b border-primary/10">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl" />
+              <div className="relative z-10 space-y-3 text-center md:text-left">
+                <div className="inline-flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-[0.2em] mb-2">
+                  <Sparkles className="w-3.5 h-3.5" /> Momo Intelligence
                 </div>
-                <h2 className="text-3xl md:text-5xl font-black font-headline tracking-tighter">What's Your Craving?</h2>
-                <p className="text-primary-foreground/90 max-w-xl text-lg">
-                  Not sure what to order? Describe your taste preferences, and our AI Momo Expert will suggest the perfect items for you.
+                <h2 className="text-3xl md:text-5xl font-black tracking-tighter leading-none">Get AI-Powered Suggestions</h2>
+                <p className="text-muted-foreground max-w-xl text-sm font-medium">
+                  Struggling to choose? Describe your mood (Spicy? Jain? Extra Cheese?) and our AI will find the perfect fix for your craving instantly.
                 </p>
               </div>
             </div>
             
-            <CardContent className="p-8 md:p-12 space-y-10">
+            <CardContent className="p-10 space-y-10">
               <div className="space-y-6">
                 <div className="space-y-2">
-                  <label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Tell us what you're in the mood for</label>
+                  <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">What's on your mind?</label>
                   <Textarea 
-                    placeholder="e.g., I want something very spicy, crunchy, and it must be Jain..." 
-                    className="min-h-[120px] text-lg p-6 bg-muted/30 focus-visible:ring-primary border-none rounded-2xl placeholder:text-muted-foreground/50"
+                    placeholder="e.g., I want something super crunchy, spicy, and purely Jain..." 
+                    className="min-h-[120px] text-base p-6 bg-muted/20 focus-visible:ring-primary border-none rounded-2xl placeholder:text-muted-foreground/40"
                     value={businessNeeds}
                     onChange={(e) => setBusinessNeeds(e.target.value)}
                   />
@@ -152,48 +152,48 @@ export function AiRecommender() {
                 <Button 
                   onClick={handleRecommend} 
                   disabled={loading || !businessNeeds.trim()} 
-                  className="w-full h-16 text-xl font-black bg-primary hover:bg-primary/90 shadow-xl shadow-primary/20 rounded-2xl transition-all active:scale-[0.98]"
+                  className="w-full h-16 text-lg font-black bg-primary hover:bg-primary/90 shadow-xl shadow-primary/20 rounded-2xl transition-all active:scale-[0.98]"
                 >
                   {loading ? (
                     <>
-                      <Loader2 className="mr-2 h-6 w-6 animate-spin" /> Cooking suggestions...
+                      <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Analyzing Cravings...
                     </>
                   ) : (
-                    "Find My Perfect Momo"
+                    "Get My Recommendation"
                   )}
                 </Button>
               </div>
 
               {recommendations && (
-                <div className="pt-10 border-t border-border/50 animate-in fade-in slide-in-from-top-4 duration-500">
-                  <h3 className="text-2xl font-black mb-8 flex items-center gap-2 text-primary tracking-tight">
-                    <CheckCircle2 className="text-accent w-7 h-7" /> 
-                    Our Expert Picks for You
+                <div className="pt-10 border-t border-dashed border-muted animate-in fade-in slide-in-from-top-4 duration-500">
+                  <h3 className="text-xl font-black mb-8 flex items-center justify-center gap-2 text-primary tracking-tight">
+                    <CheckCircle2 className="text-accent w-6 h-6" /> 
+                    Perfect Matches for You
                   </h3>
-                  <div className="grid gap-6">
+                  <div className="grid gap-4">
                     {recommendations.recommendations.map((rec, idx) => {
                       return (
-                        <div key={idx} className="group p-8 rounded-[1.5rem] bg-muted/30 border-2 border-transparent hover:border-primary/10 hover:bg-white hover:shadow-xl transition-all">
-                          <div className="flex flex-col md:flex-row md:items-start gap-8">
-                            <div className="bg-white p-4 rounded-2xl shadow-sm self-start group-hover:scale-110 transition-transform duration-500">
+                        <div key={idx} className="group p-6 rounded-2xl bg-muted/20 border border-transparent hover:border-primary/10 hover:bg-white hover:shadow-lg transition-all">
+                          <div className="flex flex-col md:flex-row md:items-center gap-6">
+                            <div className="bg-white p-3 rounded-xl shadow-sm self-start md:self-center">
                               {rec.explanation.toLowerCase().includes('spicy') || rec.explanation.toLowerCase().includes('peri') ? (
-                                <Flame className="w-8 h-8 text-primary" />
+                                <Flame className="w-6 h-6 text-primary" />
                               ) : rec.explanation.toLowerCase().includes('cheese') ? (
-                                <Heart className="w-8 h-8 text-primary" />
+                                <Heart className="w-6 h-6 text-primary" />
                               ) : (
-                                <Utensils className="w-8 h-8 text-primary" />
+                                <Utensils className="w-6 h-6 text-primary" />
                               )}
                             </div>
-                            <div className="flex-grow space-y-4">
-                              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                                <h4 className="text-2xl font-black text-foreground tracking-tight">{rec.serviceName}</h4>
+                            <div className="flex-grow space-y-2">
+                              <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+                                <h4 className="text-lg font-black text-foreground tracking-tight">{rec.serviceName}</h4>
                                 <AddButton name={rec.serviceName} />
                               </div>
-                              <p className="text-muted-foreground text-lg leading-relaxed">{rec.explanation}</p>
-                              <div className="flex flex-wrap gap-2 pt-2">
+                              <p className="text-muted-foreground text-xs font-medium leading-relaxed">{rec.explanation}</p>
+                              <div className="flex flex-wrap gap-1.5 pt-1">
                                 {rec.benefits.map((benefit, bIdx) => (
-                                  <span key={bIdx} className="inline-flex items-center gap-1.5 text-xs font-bold bg-white px-4 py-2 rounded-full border shadow-sm text-foreground/70">
-                                    <Sparkles className="w-3.5 h-3.5 text-accent" /> {benefit}
+                                  <span key={bIdx} className="inline-flex items-center gap-1 text-[9px] font-black bg-white px-3 py-1 rounded-full border border-primary/5 text-muted-foreground uppercase tracking-widest">
+                                    {benefit}
                                   </span>
                                 ))}
                               </div>
@@ -202,12 +202,6 @@ export function AiRecommender() {
                         </div>
                       );
                     })}
-                  </div>
-                  <div className="mt-12 text-center p-8 bg-secondary/30 rounded-[1.5rem] border border-secondary/50">
-                    <p className="font-bold text-secondary-foreground mb-4 italic">Satisfied with these picks?</p>
-                    <Button size="lg" className="bg-primary hover:bg-primary/90 font-black h-14 px-10 rounded-xl shadow-lg" asChild>
-                      <a href="#menu">Continue to Checkout</a>
-                    </Button>
                   </div>
                 </div>
               )}
