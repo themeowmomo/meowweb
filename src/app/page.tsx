@@ -1,4 +1,3 @@
-
 import { Navbar } from "@/components/navbar";
 import { Hero } from "@/components/hero";
 import { Products } from "@/components/products";
@@ -19,11 +18,11 @@ export default function Home() {
       <div id="pricing">
         <Products />
       </div>
+
+      <AiRecommender />
       
       {/* Testimonials now includes the AI Review Generator joined inside it */}
       <Testimonials />
-      
-      <AiRecommender />
 
       {/* Final CTA Section */}
       <section className="py-24 relative overflow-hidden">

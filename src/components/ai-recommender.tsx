@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -121,19 +120,19 @@ export function AiRecommender() {
   };
 
   return (
-    <section id="ai-tool" className="py-24 bg-background">
+    <section id="ai-tool" className="py-24 bg-[#FDFBF7]">
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto">
-          <Card className="border-none shadow-2xl overflow-hidden rounded-[2.5rem] bg-white">
+          <Card className="border-none shadow-2xl overflow-hidden rounded-[3rem] bg-white">
             <div className="bg-primary/5 px-10 py-16 text-foreground relative overflow-hidden border-b border-primary/10">
               <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl" />
               <div className="relative z-10 space-y-3 text-center md:text-left">
                 <div className="inline-flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-[0.2em] mb-2">
-                  <Sparkles className="w-3.5 h-3.5" /> Momo Intelligence
+                  <Sparkles className="w-3.5 h-3.5" /> AI Powered Suggester
                 </div>
-                <h2 className="text-3xl md:text-5xl font-black tracking-tighter leading-none">Get AI-Powered Suggestions</h2>
+                <h2 className="text-3xl md:text-5xl font-black tracking-tighter leading-none">Get Food Help by AI</h2>
                 <p className="text-muted-foreground max-w-xl text-sm font-medium">
-                  Struggling to choose? Describe your mood (Spicy? Jain? Extra Cheese?) and our AI will find the perfect fix for your craving instantly.
+                  Not sure what to order? Describe your taste preferences, and our AI Momo Expert will suggest the perfect fix for your craving instantly.
                 </p>
               </div>
             </div>
@@ -156,7 +155,7 @@ export function AiRecommender() {
                 >
                   {loading ? (
                     <>
-                      <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Analyzing Cravings...
+                      <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Finding the perfect bite...
                     </>
                   ) : (
                     "Get My Recommendation"
@@ -168,7 +167,7 @@ export function AiRecommender() {
                 <div className="pt-10 border-t border-dashed border-muted animate-in fade-in slide-in-from-top-4 duration-500">
                   <h3 className="text-xl font-black mb-8 flex items-center justify-center gap-2 text-primary tracking-tight">
                     <CheckCircle2 className="text-accent w-6 h-6" /> 
-                    Perfect Matches for You
+                    AI Handpicked for You
                   </h3>
                   <div className="grid gap-4">
                     {recommendations.recommendations.map((rec, idx) => {
