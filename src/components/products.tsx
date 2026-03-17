@@ -1,86 +1,35 @@
+
 "use client";
 
-import { useState } from "react";
-import { Star, Plus, Minus, Leaf, Utensils, Zap, Package, Info } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState, useEffect } from "react";
+import { Star, Plus, Minus, Leaf, Utensils, Zap, Package, Info, ChevronRight, Check } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useCart } from "@/context/cart-context";
 import { useToast } from "@/hooks/use-toast";
+import { useFirestore, useCollection, useMemoFirebase } from "@/firebase";
+import { collection, query, orderBy } from "firebase/firestore";
 import { cn } from "@/lib/utils";
 
-// Static Menu Data based on user request
-const MENU_DATA = {
-  momos: [
-    {
-      category: "Classic Veg (Pure)",
-      items: [
-        { name: "Classic Steam", p5: 50, p11: 100, isJain: false },
-        { name: "Classic Fried", p5: 60, p11: 120, isJain: false },
-        { name: "Cheese Steam", p5: 70, p11: 140, isJain: false },
-        { name: "Cheese Fried", p5: 80, p11: 160, isJain: false },
-        { name: "Peri Peri Steam", p5: 70, p11: 140, isJain: false },
-        { name: "Peri Peri Fried", p5: 80, p11: 160, isJain: false },
-      ]
-    },
-    {
-      category: "Paneer Special",
-      items: [
-        { name: "Paneer Steam", p5: 60, p11: 120, isJain: false },
-        { name: "Paneer Fried", p5: 70, p11: 140, isJain: false },
-        { name: "Paneer Cheese Steam", p5: 80, p11: 160, isJain: false },
-        { name: "Paneer Cheese Fried", p5: 90, p11: 180, isJain: false },
-        { name: "Paneer Peri Peri Steam", p5: 90, p11: 180, isJain: false },
-        { name: "Paneer Peri Peri Fried", p5: 99, p11: 199, isJain: false },
-      ]
-    },
-    {
-      category: "Kurkure Crunch (Fried)",
-      items: [
-        { name: "Kurkure Veg Fried", p5: 70, p11: 140, isJain: false },
-        { name: "Kurkure Cheese Fried", p5: 90, p11: 180, isJain: false },
-        { name: "Kurkure Peri Peri Fried", p5: 90, p11: 180, isJain: false },
-        { name: "Kurkure Paneer Fried", p5: 99, p11: 199, isJain: false },
-        { name: "Kurkure Paneer Cheese", p5: 110, p11: 200, isJain: false },
-        { name: "Kurkure Paneer Peri Peri", p5: 110, p11: 200, isJain: false },
-      ]
-    },
-    {
-      category: "Jain Specialized",
-      items: [
-        { name: "Jain Steam", p5: 80, p11: 150, isJain: true },
-        { name: "Jain Fried", p5: 90, p11: 170, isJain: true },
-        { name: "Jain Cheese Steam", p5: 90, p11: 180, isJain: true },
-        { name: "Jain Cheese Fried", p5: 99, p11: 190, isJain: true },
-        { name: "Jain Peri Peri Steam", p5: 90, p11: 180, isJain: true },
-        { name: "Jain Peri Peri Fried", p5: 99, p11: 190, isJain: true },
-      ]
-    }
-  ],
-  fries: [
-    { name: "Salted Fries", half: 40, full: 70 },
-    { name: "Cheese Fries", half: 60, full: 110 },
-    { name: "Peri Peri Fries", half: 50, full: 90 },
-    { name: "Masala Fries", half: 50, full: 90 },
-  ],
-  meals: [
-    { name: "Classic Steam Meal", price: 110, inclusions: ["5 pcs Classic Steam", "Half Masala Fries", "Soft Drink (250ml)"] },
-    { name: "Classic Fried Meal", price: 120, inclusions: ["5 pcs Classic Fried", "Half Masala Fries", "Soft Drink (250ml)"] },
-    { name: "Cheese Meal", price: 140, inclusions: ["5 pcs Cheese Fried", "Half Cheese Fries", "Soft Drink (250ml)"] },
-    { name: "Peri Peri Meal", price: 140, inclusions: ["5 pcs Peri Peri Fried", "Half Peri Peri Fries", "Soft Drink (250ml)"] },
-    { name: "Paneer Steam Meal", price: 120, inclusions: ["5 pcs Paneer Steam", "Half Masala Fries", "Soft Drink (250ml)"] },
-    { name: "Paneer Fried Meal", price: 130, inclusions: ["5 pcs Paneer Fried", "Half Masala Fries", "Soft Drink (250ml)"] },
-  ]
-};
+const RESTAURANT_ID = 'meow-momo';
 
 export function Products() {
   const { addToCart, cart, updateQuantity } = useCart();
   const { toast } = useToast();
+  const db = useFirestore();
+  const [activeTab, setActiveTab] = useState("momos");
 
-  const handleAddToCart = (name: string, price: number, variant: string) => {
+  // Fetch Categories
+  const categoriesQuery = useMemoFirebase(() => {
+    if (!db) return null;
+    return query(collection(db, 'restaurants', RESTAURANT_ID, 'menuCategories'), orderBy('name', 'asc'));
+  }, [db]);
+  const { data: categories, isLoading: isCatsLoading } = useCollection(categoriesQuery);
+
+  const handleAddToCart = (name: string, price: number, variant: string, id: string) => {
     addToCart({
-      id: `${name}-${variant}`,
+      id: `${id}-${variant}`,
       name: name,
       price: price,
       variant: variant
@@ -92,30 +41,30 @@ export function Products() {
     });
   };
 
-  const QuantityControl = ({ name, variant, price }: { name: string, variant: string, price: number }) => {
-    const itemId = `${name}-${variant}`;
+  const QuantityControl = ({ name, variant, price, id }: { name: string, variant: string, price: number, id: string }) => {
+    const itemId = `${id}-${variant}`;
     const cartItem = cart.find(item => item.id === itemId);
     const quantity = cartItem ? cartItem.quantity : 0;
 
     if (quantity > 0) {
       return (
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <Button 
             size="icon" 
             variant="outline"
-            className="h-8 w-8 rounded-full border-primary/40 text-primary"
+            className="h-10 w-10 rounded-full border-primary/30 text-primary hover:bg-primary hover:text-white transition-all"
             onClick={() => updateQuantity(itemId, quantity - 1, variant)}
           >
-            <Minus className="h-3 w-3" />
+            <Minus className="h-4 w-4" />
           </Button>
-          <span className="text-sm font-black w-4 text-center">{quantity}</span>
+          <span className="text-lg font-black w-6 text-center">{quantity}</span>
           <Button 
             size="icon" 
             variant="outline"
-            className="h-8 w-8 rounded-full border-primary/40 text-primary"
+            className="h-10 w-10 rounded-full border-primary/30 text-primary hover:bg-primary hover:text-white transition-all"
             onClick={() => updateQuantity(itemId, quantity + 1, variant)}
           >
-            <Plus className="h-3 w-3" />
+            <Plus className="h-4 w-4" />
           </Button>
         </div>
       );
@@ -123,152 +72,157 @@ export function Products() {
 
     return (
       <Button 
-        size="sm" 
+        size="lg" 
         variant="outline"
-        className="h-8 px-3 text-[10px] font-black uppercase tracking-widest rounded-lg border-primary/20 text-primary hover:bg-primary hover:text-white"
-        onClick={() => handleAddToCart(name, price, variant)}
+        className="h-12 px-8 text-xs font-black uppercase tracking-widest rounded-xl border-primary/20 text-primary hover:bg-primary hover:text-white shadow-sm transition-all"
+        onClick={() => handleAddToCart(name, price, variant, id)}
       >
-        <Plus className="w-3 h-3 mr-1" /> Add
+        <Plus className="w-4 h-4 mr-2" /> Add
       </Button>
     );
   };
 
+  const filteredCategories = categories?.filter(cat => {
+    if (activeTab === 'momos') return cat.name.toLowerCase().includes('momo');
+    if (activeTab === 'fries') return cat.name.toLowerCase().includes('fry') || cat.name.toLowerCase().includes('fries');
+    if (activeTab === 'combos') return cat.name.toLowerCase().includes('meal') || cat.name.toLowerCase().includes('combo');
+    return true;
+  });
+
   return (
-    <section id="menu" className="py-24 bg-white">
+    <section id="menu" className="py-24 bg-white relative">
       <div className="container mx-auto px-4">
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
           <Badge className="bg-primary/10 text-primary border-none mb-2 px-5 py-2 font-black tracking-widest text-[10px] rounded-full">
             <Leaf className="w-3.5 h-3.5 mr-2" /> 100% PURE VEG & JAIN
           </Badge>
-          <h2 className="text-4xl md:text-6xl font-black font-headline tracking-tighter">Meow Menu</h2>
+          <h2 className="text-4xl md:text-6xl font-black font-headline tracking-tighter">Our Menu</h2>
           <p className="text-muted-foreground text-lg font-medium">
-            Authentic Mumbai street food with a tech-driven passion for quality.
+            Professional quality Street Food. Pure Veg & Jain Specialty.
           </p>
         </div>
 
-        <Tabs defaultValue="momos" className="w-full">
-          <div className="flex justify-center mb-12">
-            <TabsList className="bg-muted/30 p-2 h-auto rounded-3xl border shadow-sm grid grid-cols-3 w-full max-w-lg">
-              <TabsTrigger value="momos" className="flex items-center gap-2 py-4 rounded-2xl text-xs font-black uppercase tracking-widest">
-                <Utensils className="w-4 h-4" /> Momos
-              </TabsTrigger>
-              <TabsTrigger value="fries" className="flex items-center gap-2 py-4 rounded-2xl text-xs font-black uppercase tracking-widest">
-                <Zap className="w-4 h-4" /> Fries
-              </TabsTrigger>
-              <TabsTrigger value="meal" className="flex items-center gap-2 py-4 rounded-2xl text-xs font-black uppercase tracking-widest">
-                <Package className="w-4 h-4" /> Combos
-              </TabsTrigger>
-            </TabsList>
-          </div>
-
-          <TabsContent value="momos" className="space-y-12">
-            {MENU_DATA.momos.map((cat, i) => (
-              <div key={i} className="space-y-6">
-                <div className="flex items-center gap-4">
-                  <h3 className="text-2xl font-black text-foreground tracking-tight uppercase">{cat.category}</h3>
-                  <div className="flex-grow border-t border-dashed" />
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {cat.items.map((item, j) => (
-                    <Card key={j} className="rounded-[2rem] border-none shadow-sm bg-muted/20 hover:shadow-xl hover:bg-white transition-all overflow-hidden group">
-                      <CardContent className="p-8 space-y-6">
-                        <div className="flex justify-between items-start">
-                          <div className="space-y-1">
-                            <h4 className="text-xl font-black leading-tight">{item.name}</h4>
-                            <div className="flex gap-2">
-                              {item.isJain && <Badge className="bg-accent/20 text-accent-foreground border-none text-[8px] font-black">JAIN</Badge>}
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-4">
-                          <div className="bg-white/50 p-4 rounded-2xl border border-transparent hover:border-primary/10 transition-colors">
-                            <p className="text-[10px] font-black uppercase text-muted-foreground mb-1">5 PCS</p>
-                            <div className="flex items-center justify-between">
-                              <span className="font-black text-lg">₹{item.p5}</span>
-                              <QuantityControl name={item.name} variant="5 PCS" price={item.p5} />
-                            </div>
-                          </div>
-                          <div className="bg-white/50 p-4 rounded-2xl border border-transparent hover:border-primary/10 transition-colors">
-                            <p className="text-[10px] font-black uppercase text-muted-foreground mb-1">11 PCS</p>
-                            <div className="flex items-center justify-between">
-                              <span className="font-black text-lg">₹{item.p11}</span>
-                              <QuantityControl name={item.name} variant="11 PCS" price={item.p11} />
-                            </div>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </div>
+        {/* Professional Sticky Nav Bar */}
+        <div className="sticky top-20 z-40 mb-12 flex justify-center">
+          <div className="bg-white/80 backdrop-blur-xl border-2 border-primary/10 p-2 rounded-[2rem] shadow-2xl flex items-center gap-2 max-w-md w-full">
+            {[
+              { id: 'momos', name: 'Momos', icon: Utensils },
+              { id: 'fries', name: 'Fries', icon: Zap },
+              { id: 'combos', name: 'Combos', icon: Package }
+            ].map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={cn(
+                  "flex-1 flex items-center justify-center gap-2 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all",
+                  activeTab === tab.id 
+                    ? "bg-primary text-white shadow-lg shadow-primary/20 scale-[1.05]" 
+                    : "hover:bg-muted text-muted-foreground"
+                )}
+              >
+                <tab.icon className="w-4 h-4" /> {tab.name}
+              </button>
             ))}
-          </TabsContent>
+          </div>
+        </div>
 
-          <TabsContent value="fries">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {MENU_DATA.fries.map((item, i) => (
-                <Card key={i} className="rounded-[2rem] border-none shadow-sm bg-muted/20 hover:shadow-xl hover:bg-white transition-all">
-                  <CardContent className="p-8 space-y-6">
-                    <h4 className="text-xl font-black">{item.name}</h4>
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between bg-white/50 p-4 rounded-2xl">
-                        <div>
-                          <p className="text-[9px] font-black text-muted-foreground">HALF</p>
-                          <p className="text-lg font-black">₹{item.half}</p>
-                        </div>
-                        <QuantityControl name={item.name} variant="Half" price={item.half} />
-                      </div>
-                      <div className="flex items-center justify-between bg-white/50 p-4 rounded-2xl">
-                        <div>
-                          <p className="text-[9px] font-black text-muted-foreground">FULL</p>
-                          <p className="text-lg font-black">₹{item.full}</p>
-                        </div>
-                        <QuantityControl name={item.name} variant="Full" price={item.full} />
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </TabsContent>
+        <div className="space-y-16">
+          {isCatsLoading ? (
+            <div className="p-20 text-center"><Info className="w-10 h-10 animate-pulse mx-auto opacity-20" /></div>
+          ) : filteredCategories?.map((cat) => (
+            <div key={cat.id} className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
+              <div className="flex flex-col items-center gap-2">
+                <h3 className="text-3xl font-black text-foreground tracking-tighter uppercase">{cat.name}</h3>
+                <p className="text-muted-foreground text-sm font-medium">{cat.description}</p>
+                <div className="w-24 h-1 bg-primary rounded-full mt-2" />
+              </div>
 
-          <TabsContent value="meal">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {MENU_DATA.meals.map((item, i) => (
-                <Card key={i} className="rounded-[2.5rem] border-none shadow-sm bg-muted/20 hover:shadow-xl hover:bg-white transition-all relative overflow-hidden group">
-                  <div className="absolute top-0 right-0 p-6">
-                    <Package className="w-12 h-12 text-primary opacity-5 group-hover:opacity-20 transition-opacity" />
-                  </div>
-                  <CardContent className="p-10 space-y-6">
-                    <h4 className="text-2xl font-black tracking-tight">{item.name}</h4>
-                    <ul className="space-y-2">
-                      {item.inclusions.map((inc, j) => (
-                        <li key={j} className="text-sm text-muted-foreground flex items-center gap-2">
-                          <div className="w-1.5 h-1.5 rounded-full bg-primary" /> {inc}
-                        </li>
-                      ))}
-                    </ul>
-                    <div className="pt-4 flex items-center justify-between">
-                      <div>
-                        <p className="text-[10px] font-black uppercase text-muted-foreground">Meal Price</p>
-                        <p className="text-3xl font-black text-primary">₹{item.price}</p>
-                      </div>
-                      <Button 
-                        size="lg" 
-                        className="rounded-2xl h-14 px-8 font-black text-sm uppercase shadow-xl shadow-primary/20"
-                        onClick={() => handleAddToCart(item.name, item.price, "Combo")}
-                      >
-                        Order Meal
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <MenuItemsList catId={cat.id} QuantityControl={QuantityControl} />
+              </div>
             </div>
-          </TabsContent>
-        </Tabs>
+          ))}
+
+          {!isCatsLoading && filteredCategories?.length === 0 && (
+            <div className="p-32 text-center bg-muted/10 rounded-[3rem] border-2 border-dashed border-muted">
+              <Utensils className="w-12 h-12 text-muted-foreground/20 mx-auto mb-4" />
+              <p className="font-bold text-muted-foreground">No items found in this category.</p>
+            </div>
+          )}
+        </div>
       </div>
     </section>
+  );
+}
+
+function MenuItemsList({ catId, QuantityControl }: { catId: string, QuantityControl: any }) {
+  const db = useFirestore();
+  const itemsQuery = useMemoFirebase(() => {
+    if (!db) return null;
+    return query(collection(db, 'restaurants', RESTAURANT_ID, 'menuCategories', catId, 'menuItems'), orderBy('name', 'asc'));
+  }, [db, catId]);
+  const { data: items } = useCollection(itemsQuery);
+
+  return (
+    <>
+      {items?.map((item) => (
+        <Card key={item.id} className="rounded-[2.5rem] border-none shadow-xl bg-white hover:shadow-2xl transition-all duration-500 overflow-hidden group border-2 border-transparent hover:border-primary/5">
+          <CardContent className="p-10 space-y-8">
+            <div className="flex justify-between items-start gap-4">
+              <div className="space-y-2">
+                <h4 className="text-2xl font-black leading-none tracking-tight">{item.name}</h4>
+                <p className="text-sm text-muted-foreground font-medium leading-relaxed">{item.description}</p>
+              </div>
+              {item.isJain && (
+                <Badge className="bg-accent/10 text-accent-foreground border-none text-[8px] font-black px-3 py-1 rounded-full uppercase tracking-widest shrink-0">
+                  Jain Special
+                </Badge>
+              )}
+            </div>
+
+            {/* Price Selection Grid - Improved Margins & Spacing */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              {/* Option 1 (5 PCS or Half) */}
+              <div className="bg-[#FDFBF7] p-8 rounded-[1.5rem] border border-muted/50 flex items-center justify-between group/box hover:border-primary/20 hover:bg-white transition-all duration-300">
+                <div className="space-y-1">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                    {item.categoryId.toLowerCase().includes('fry') ? 'Half' : '5 PCS'}
+                  </p>
+                  <p className="text-2xl font-black text-foreground">₹{item.price}</p>
+                </div>
+                <div className="ml-4">
+                  <QuantityControl 
+                    name={item.name} 
+                    variant={item.categoryId.toLowerCase().includes('fry') ? 'Half' : '5 PCS'} 
+                    price={item.price} 
+                    id={item.id} 
+                  />
+                </div>
+              </div>
+
+              {/* Option 2 (11 PCS or Full) - Only for non-meals */}
+              {!item.categoryId.toLowerCase().includes('meal') && (
+                <div className="bg-[#FDFBF7] p-8 rounded-[1.5rem] border border-muted/50 flex items-center justify-between group/box hover:border-primary/20 hover:bg-white transition-all duration-300">
+                  <div className="space-y-1">
+                    <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                      {item.categoryId.toLowerCase().includes('fry') ? 'Full' : '11 PCS'}
+                    </p>
+                    <p className="text-2xl font-black text-foreground">₹{item.price === 50 ? 100 : item.price === 60 ? 120 : item.price === 70 ? 140 : item.price === 80 ? 160 : item.price === 90 ? 180 : Math.round(item.price * 1.8)}</p>
+                  </div>
+                  <div className="ml-4">
+                    <QuantityControl 
+                      name={item.name} 
+                      variant={item.categoryId.toLowerCase().includes('fry') ? 'Full' : '11 PCS'} 
+                      price={item.price === 50 ? 100 : item.price === 60 ? 120 : item.price === 70 ? 140 : item.price === 80 ? 160 : item.price === 90 ? 180 : Math.round(item.price * 1.8)} 
+                      id={item.id} 
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      ))}
+    </>
   );
 }

@@ -51,17 +51,16 @@ export function Hero() {
               { icon: Star, title: "4.9 Google Rating", desc: "Loved by the community for taste and quality." },
               { icon: Clock, title: "Quick Evening Bites", desc: "Open 4:00 PM – 10:30 PM for your daily cravings." }
             ].map((feature, idx) => (
-              <div key={idx} className="flex flex-col items-center text-center p-6 rounded-2xl bg-white/50 backdrop-blur-sm border hover:border-primary/50 hover:shadow-xl transition-all group">
-                <feature.icon className="w-10 h-10 text-primary mb-4 group-hover:scale-110 transition-transform" />
-                <h3 className="font-bold text-lg mb-2">{feature.title}</h3>
-                <p className="text-sm text-muted-foreground">{feature.desc}</p>
+              <div key={idx} className="flex flex-col items-center justify-center text-center p-8 rounded-[2.5rem] bg-white/50 backdrop-blur-sm border-2 border-transparent hover:border-primary/20 hover:shadow-2xl transition-all group duration-500">
+                <feature.icon className="w-12 h-12 text-primary mb-6 group-hover:scale-110 transition-transform mx-auto" />
+                <h3 className="font-black text-xl mb-3 tracking-tight">{feature.title}</h3>
+                <p className="text-sm text-muted-foreground font-medium leading-relaxed">{feature.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </div>
 
-      {/* Background decoration - Dynamic from Admin */}
       <div className="absolute top-0 right-0 -z-10 w-full h-full opacity-10 pointer-events-none overflow-hidden">
         {isLoading ? (
           <div className="w-full h-full flex items-center justify-center"><Loader2 className="animate-spin opacity-10" /></div>
