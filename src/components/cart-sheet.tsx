@@ -31,13 +31,22 @@ export function CartSheet() {
       .replace(/Cheese/gi, 'Ch')
       .replace(/Kurkure/gi, 'Kk')
       .replace(/Jain/gi, 'Jn')
-      .replace(/Steam/gi, 'St')
-      .replace(/Fried/gi, 'Fr')
       .replace(/Fries/gi, 'Fs')
       .replace(/Meal/gi, 'Ml')
       .replace(/\s+/g, '');
     
-    const vCode = variant ? `-${variant.replace(/PCS/gi, '').trim()}` : '';
+    let vCode = '';
+    if (variant) {
+      vCode = '-' + variant
+        .replace(/Steam/gi, 'St')
+        .replace(/Fried/gi, 'Fr')
+        .replace(/PCS/gi, '')
+        .replace(/Half/gi, 'H')
+        .replace(/Full/gi, 'F')
+        .replace(/Combo/gi, 'Cb')
+        .trim();
+    }
+    
     return shortName + vCode;
   };
 
@@ -74,9 +83,9 @@ export function CartSheet() {
     const fullMessage = header + separator + customerSection + itemsSection + summarySection + footer;
 
     if (customerInfo.paymentMethod === 'upi') {
-      // Create a short summary for the UPI transaction note
+      // Create a short summary for the UPI transaction note: e.g. "1xCV-St,2xPn-Fr"
       const shortItems = cart.map(item => `${item.quantity}x${getShortItemName(item.name, item.variant)}`).join(',');
-      const upiNote = encodeURIComponent(`${orderId || 'Order'}: ${shortItems}`.slice(0, 50));
+      const upiNote = encodeURIComponent(shortItems.slice(0, 50));
       
       const upiUrl = `upi://pay?pa=amitjaisawal0123-2@okhdfcbank&pn=Meow%20Momo&am=${totalPrice}&cu=INR&tn=${upiNote}`;
       
