@@ -97,17 +97,6 @@ export function Testimonials() {
           {/* Bottom: AI Review Assistant */}
           <div className="w-full">
             <Card className="border-none shadow-2xl bg-white rounded-[3rem] overflow-hidden border border-primary/10">
-              <div className="bg-primary/5 p-12 text-foreground relative overflow-hidden border-b border-primary/10">
-                <div className="absolute top-0 right-0 w-48 h-48 bg-primary/10 rounded-full blur-3xl -z-10" />
-                <div className="relative z-10 text-center space-y-2">
-                  <div className="inline-flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-widest mb-2">
-                    <Sparkles className="w-3.5 h-3.5" /> Powered by GenAI
-                  </div>
-                  <h3 className="text-3xl font-black tracking-tight text-foreground">AI Review Assistant</h3>
-                  <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest">Generate professional feedback in seconds</p>
-                </div>
-              </div>
-              
               <CardContent className="p-12 space-y-10">
                 <div className="text-center space-y-8">
                   <p className="text-xs font-black uppercase tracking-[0.2em] text-primary">How was your Meow Momo experience?</p>
