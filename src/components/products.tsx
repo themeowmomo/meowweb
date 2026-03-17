@@ -1,31 +1,91 @@
-
 "use client";
 
-import { useState, useEffect } from "react";
-import { Star, Plus, Minus, Leaf, Utensils, Zap, Package, Info, ChevronRight, Check } from "lucide-react";
+import { useState } from "react";
+import { Plus, Minus, Leaf, Utensils, Zap, Package } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useCart } from "@/context/cart-context";
 import { useToast } from "@/hooks/use-toast";
-import { useFirestore, useCollection, useMemoFirebase } from "@/firebase";
-import { collection, query, orderBy } from "firebase/firestore";
 import { cn } from "@/lib/utils";
 
-const RESTAURANT_ID = 'meow-momo';
+const MENU_DATA = {
+  momos: [
+    {
+      category: "Classic Veg (Pure)",
+      items: [
+        { id: "cv-steam", name: "Steam", price5: 50, price11: 100 },
+        { id: "cv-fried", name: "Fried", price5: 60, price11: 120 },
+        { id: "cv-cheese-steam", name: "Cheese Steam", price5: 70, price11: 140 },
+        { id: "cv-cheese-fried", name: "Cheese Fried", price5: 80, price11: 160 },
+        { id: "cv-peri-steam", name: "Peri Peri Steam", price5: 70, price11: 140 },
+        { id: "cv-peri-fried", name: "Peri Peri Fried", price5: 80, price11: 160 },
+      ]
+    },
+    {
+      category: "Paneer Momos",
+      items: [
+        { id: "pn-steam", name: "Paneer Steam", price5: 60, price11: 120 },
+        { id: "pn-fried", name: "Paneer Fried", price5: 70, price11: 140 },
+        { id: "pn-cheese-steam", name: "Paneer Cheese Steam", price5: 80, price11: 160 },
+        { id: "pn-cheese-fried", name: "Paneer Cheese Fried", price5: 90, price11: 180 },
+        { id: "pn-peri-steam", name: "Paneer Peri Peri Steam", price5: 90, price11: 180 },
+        { id: "pn-peri-fried", name: "Paneer Peri Peri Fried", price5: 99, price11: 199 },
+      ]
+    },
+    {
+      category: "Kurkure Momos (Only Fried)",
+      items: [
+        { id: "kk-fried", name: "Kurkure Fried", price5: 70, price11: 140 },
+        { id: "kk-cheese", name: "Kurkure Cheese Fried", price5: 90, price11: 180 },
+        { id: "kk-peri", name: "Kurkure Peri Peri Fried", price5: 90, price11: 180 },
+        { id: "kk-paneer", name: "Kurkure Paneer Fried", price5: 99, price11: 199 },
+        { id: "kk-paneer-cheese", name: "Kurkure Paneer Cheese Fried", price5: 110, price11: 200 },
+        { id: "kk-paneer-peri", name: "Kurkure Paneer Peri Peri Fried", price5: 110, price11: 200 },
+      ]
+    },
+    {
+      category: "Jain Momos",
+      items: [
+        { id: "jn-steam", name: "Jain Steam", price5: 80, price11: 150, isJain: true },
+        { id: "jn-fried", name: "Jain Fried", price5: 90, price11: 170, isJain: true },
+        { id: "jn-cheese-steam", name: "Jain Cheese Steam", price5: 90, price11: 180, isJain: true },
+        { id: "jn-cheese-fried", name: "Jain Cheese Fried", price5: 99, price11: 190, isJain: true },
+        { id: "jn-peri-steam", name: "Jain Peri Peri Steam", price5: 90, price11: 180, isJain: true },
+        { id: "jn-peri-fried", name: "Jain Peri Peri Fried", price5: 99, price11: 190, isJain: true },
+      ]
+    }
+  ],
+  fries: [
+    {
+      category: "Fries",
+      items: [
+        { id: "fr-salted", name: "Salted Fries", priceHalf: 40, priceFull: 70 },
+        { id: "fr-cheese", name: "Cheese Fries", priceHalf: 60, priceFull: 110 },
+        { id: "fr-peri", name: "Peri Peri Fries", priceHalf: 50, priceFull: 90 },
+        { id: "fr-masala", name: "Masala Fries", priceHalf: 50, priceFull: 90 },
+      ]
+    }
+  ],
+  combos: [
+    {
+      category: "Meal Combos",
+      items: [
+        { id: "ml-classic-steam", name: "Classic Steam Meal", price: 110, desc: "Classic Steam Momos (5 pcs) + Masala Fries (Half) + Soft Drink (250 ml)" },
+        { id: "ml-classic-fried", name: "Classic Fried Meal", price: 120, desc: "Classic Fried Momos (5 pcs) + Masala Fries (Half) + Soft Drink (250 ml)" },
+        { id: "ml-cheese", name: "Cheese Meal", price: 140, desc: "Cheese Fried Momos (5 pcs) + Cheese Fries (Half) + Soft Drink (250 ml)" },
+        { id: "ml-peri", name: "Peri Peri Meal", price: 140, desc: "Peri Peri Fried Momos (5 pcs) + Peri Peri Fries (Half) + Soft Drink (250 ml)" },
+        { id: "ml-paneer-steam", name: "Paneer Steam Meal", price: 120, desc: "Paneer Steam Momos (5 pcs) + Masala Fries (Half) + Soft Drink (250 ml)" },
+        { id: "ml-paneer-fried", name: "Paneer Fried Meal", price: 130, desc: "Paneer Fried Momos (5 pcs) + Masala Fries (Half) + Soft Drink (250 ml)" },
+      ]
+    }
+  ]
+};
 
 export function Products() {
   const { addToCart, cart, updateQuantity } = useCart();
   const { toast } = useToast();
-  const db = useFirestore();
   const [activeTab, setActiveTab] = useState("momos");
-
-  // Fetch Categories
-  const categoriesQuery = useMemoFirebase(() => {
-    if (!db) return null;
-    return query(collection(db, 'restaurants', RESTAURANT_ID, 'menuCategories'), orderBy('name', 'asc'));
-  }, [db]);
-  const { data: categories, isLoading: isCatsLoading } = useCollection(categoriesQuery);
 
   const handleAddToCart = (name: string, price: number, variant: string, id: string) => {
     addToCart({
@@ -82,12 +142,7 @@ export function Products() {
     );
   };
 
-  const filteredCategories = categories?.filter(cat => {
-    if (activeTab === 'momos') return cat.name.toLowerCase().includes('momo');
-    if (activeTab === 'fries') return cat.name.toLowerCase().includes('fry') || cat.name.toLowerCase().includes('fries');
-    if (activeTab === 'combos') return cat.name.toLowerCase().includes('meal') || cat.name.toLowerCase().includes('combo');
-    return true;
-  });
+  const activeCategories = MENU_DATA[activeTab as keyof typeof MENU_DATA];
 
   return (
     <section id="menu" className="py-24 bg-white relative">
@@ -102,7 +157,7 @@ export function Products() {
           </p>
         </div>
 
-        {/* Professional Sticky Nav Bar */}
+        {/* Sticky Nav Bar */}
         <div className="sticky top-20 z-40 mb-12 flex justify-center">
           <div className="bg-white/80 backdrop-blur-xl border-2 border-primary/10 p-2 rounded-[2rem] shadow-2xl flex items-center gap-2 max-w-md w-full">
             {[
@@ -126,103 +181,86 @@ export function Products() {
           </div>
         </div>
 
-        <div className="space-y-16">
-          {isCatsLoading ? (
-            <div className="p-20 text-center"><Info className="w-10 h-10 animate-pulse mx-auto opacity-20" /></div>
-          ) : filteredCategories?.map((cat) => (
-            <div key={cat.id} className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <div className="space-y-24">
+          {activeCategories.map((group, gIdx) => (
+            <div key={gIdx} className="space-y-12">
               <div className="flex flex-col items-center gap-2">
-                <h3 className="text-3xl font-black text-foreground tracking-tighter uppercase">{cat.name}</h3>
-                <p className="text-muted-foreground text-sm font-medium">{cat.description}</p>
+                <h3 className="text-3xl font-black text-foreground tracking-tighter uppercase">{group.category}</h3>
                 <div className="w-24 h-1 bg-primary rounded-full mt-2" />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <MenuItemsList catId={cat.id} QuantityControl={QuantityControl} />
+                {group.items.map((item: any) => (
+                  <Card key={item.id} className="rounded-[2.5rem] border-none shadow-xl bg-white hover:shadow-2xl transition-all duration-500 overflow-hidden group border-2 border-transparent hover:border-primary/5">
+                    <CardContent className="p-10 space-y-8">
+                      <div className="flex justify-between items-start gap-4">
+                        <div className="space-y-2">
+                          <h4 className="text-2xl font-black leading-none tracking-tight">{item.name}</h4>
+                          {item.desc && <p className="text-sm text-muted-foreground font-medium leading-relaxed">{item.desc}</p>}
+                        </div>
+                        {item.isJain && (
+                          <Badge className="bg-accent/10 text-accent-foreground border-none text-[8px] font-black px-3 py-1 rounded-full uppercase tracking-widest shrink-0">
+                            Jain Special
+                          </Badge>
+                        )}
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        {/* Option 1 */}
+                        {'price5' in item && (
+                          <div className="bg-[#FDFBF7] p-8 rounded-[1.5rem] border border-muted/50 flex flex-col items-center justify-center gap-4 group/box hover:border-primary/20 hover:bg-white transition-all duration-300">
+                            <div className="text-center">
+                              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">5 PCS</p>
+                              <p className="text-2xl font-black text-foreground">₹{item.price5}</p>
+                            </div>
+                            <QuantityControl name={item.name} variant="5 PCS" price={item.price5} id={item.id} />
+                          </div>
+                        )}
+                        {'price11' in item && (
+                          <div className="bg-[#FDFBF7] p-8 rounded-[1.5rem] border border-muted/50 flex flex-col items-center justify-center gap-4 group/box hover:border-primary/20 hover:bg-white transition-all duration-300">
+                            <div className="text-center">
+                              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">11 PCS</p>
+                              <p className="text-2xl font-black text-foreground">₹{item.price11}</p>
+                            </div>
+                            <QuantityControl name={item.name} variant="11 PCS" price={item.price11} id={item.id} />
+                          </div>
+                        )}
+                        {'priceHalf' in item && (
+                          <div className="bg-[#FDFBF7] p-8 rounded-[1.5rem] border border-muted/50 flex flex-col items-center justify-center gap-4 group/box hover:border-primary/20 hover:bg-white transition-all duration-300">
+                            <div className="text-center">
+                              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Half</p>
+                              <p className="text-2xl font-black text-foreground">₹{item.priceHalf}</p>
+                            </div>
+                            <QuantityControl name={item.name} variant="Half" price={item.priceHalf} id={item.id} />
+                          </div>
+                        )}
+                        {'priceFull' in item && (
+                          <div className="bg-[#FDFBF7] p-8 rounded-[1.5rem] border border-muted/50 flex flex-col items-center justify-center gap-4 group/box hover:border-primary/20 hover:bg-white transition-all duration-300">
+                            <div className="text-center">
+                              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Full</p>
+                              <p className="text-2xl font-black text-foreground">₹{item.priceFull}</p>
+                            </div>
+                            <QuantityControl name={item.name} variant="Full" price={item.priceFull} id={item.id} />
+                          </div>
+                        )}
+                        {'price' in item && !('price5' in item) && (
+                          <div className="col-span-full bg-[#FDFBF7] p-8 rounded-[1.5rem] border border-muted/50 flex items-center justify-between group/box hover:border-primary/20 hover:bg-white transition-all duration-300">
+                            <div className="space-y-1">
+                              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Combo Price</p>
+                              <p className="text-2xl font-black text-foreground">₹{item.price}</p>
+                            </div>
+                            <QuantityControl name={item.name} variant="Combo" price={item.price} id={item.id} />
+                          </div>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
               </div>
             </div>
           ))}
-
-          {!isCatsLoading && filteredCategories?.length === 0 && (
-            <div className="p-32 text-center bg-muted/10 rounded-[3rem] border-2 border-dashed border-muted">
-              <Utensils className="w-12 h-12 text-muted-foreground/20 mx-auto mb-4" />
-              <p className="font-bold text-muted-foreground">No items found in this category.</p>
-            </div>
-          )}
         </div>
       </div>
     </section>
-  );
-}
-
-function MenuItemsList({ catId, QuantityControl }: { catId: string, QuantityControl: any }) {
-  const db = useFirestore();
-  const itemsQuery = useMemoFirebase(() => {
-    if (!db) return null;
-    return query(collection(db, 'restaurants', RESTAURANT_ID, 'menuCategories', catId, 'menuItems'), orderBy('name', 'asc'));
-  }, [db, catId]);
-  const { data: items } = useCollection(itemsQuery);
-
-  return (
-    <>
-      {items?.map((item) => (
-        <Card key={item.id} className="rounded-[2.5rem] border-none shadow-xl bg-white hover:shadow-2xl transition-all duration-500 overflow-hidden group border-2 border-transparent hover:border-primary/5">
-          <CardContent className="p-10 space-y-8">
-            <div className="flex justify-between items-start gap-4">
-              <div className="space-y-2">
-                <h4 className="text-2xl font-black leading-none tracking-tight">{item.name}</h4>
-                <p className="text-sm text-muted-foreground font-medium leading-relaxed">{item.description}</p>
-              </div>
-              {item.isJain && (
-                <Badge className="bg-accent/10 text-accent-foreground border-none text-[8px] font-black px-3 py-1 rounded-full uppercase tracking-widest shrink-0">
-                  Jain Special
-                </Badge>
-              )}
-            </div>
-
-            {/* Price Selection Grid - Improved Margins & Spacing */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {/* Option 1 (5 PCS or Half) */}
-              <div className="bg-[#FDFBF7] p-8 rounded-[1.5rem] border border-muted/50 flex items-center justify-between group/box hover:border-primary/20 hover:bg-white transition-all duration-300">
-                <div className="space-y-1">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                    {item.categoryId.toLowerCase().includes('fry') ? 'Half' : '5 PCS'}
-                  </p>
-                  <p className="text-2xl font-black text-foreground">₹{item.price}</p>
-                </div>
-                <div className="ml-4">
-                  <QuantityControl 
-                    name={item.name} 
-                    variant={item.categoryId.toLowerCase().includes('fry') ? 'Half' : '5 PCS'} 
-                    price={item.price} 
-                    id={item.id} 
-                  />
-                </div>
-              </div>
-
-              {/* Option 2 (11 PCS or Full) - Only for non-meals */}
-              {!item.categoryId.toLowerCase().includes('meal') && (
-                <div className="bg-[#FDFBF7] p-8 rounded-[1.5rem] border border-muted/50 flex items-center justify-between group/box hover:border-primary/20 hover:bg-white transition-all duration-300">
-                  <div className="space-y-1">
-                    <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                      {item.categoryId.toLowerCase().includes('fry') ? 'Full' : '11 PCS'}
-                    </p>
-                    <p className="text-2xl font-black text-foreground">₹{item.price === 50 ? 100 : item.price === 60 ? 120 : item.price === 70 ? 140 : item.price === 80 ? 160 : item.price === 90 ? 180 : Math.round(item.price * 1.8)}</p>
-                  </div>
-                  <div className="ml-4">
-                    <QuantityControl 
-                      name={item.name} 
-                      variant={item.categoryId.toLowerCase().includes('fry') ? 'Full' : '11 PCS'} 
-                      price={item.price === 50 ? 100 : item.price === 60 ? 120 : item.price === 70 ? 140 : item.price === 80 ? 160 : item.price === 90 ? 180 : Math.round(item.price * 1.8)} 
-                      id={item.id} 
-                    />
-                  </div>
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-      ))}
-    </>
   );
 }

@@ -1,9 +1,8 @@
 'use client';
 
-import { useState, useRef } from 'react';
-import { useUser, useFirestore, useCollection, useMemoFirebase, useAuth, useDoc, useStorage } from '@/firebase';
-import { collection, query, orderBy, doc, serverTimestamp } from 'firebase/firestore';
-import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import { useState } from 'react';
+import { useUser, useFirestore, useCollection, useMemoFirebase, useAuth, useDoc } from '@/firebase';
+import { collection, query, orderBy, doc } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -12,12 +11,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Loader2, ShoppingCart, Image as ImageIcon, ShieldAlert, Copy, Check, Lock, LogOut, Users, Store, DollarSign, Activity, Utensils, Info, Plus, Upload, Trash2 } from 'lucide-react';
+import { Loader2, ShoppingCart, ShieldAlert, Copy, Check, Lock, LogOut, Users, DollarSign, Activity, Info } from 'lucide-react';
 import { Navbar } from '@/components/navbar';
 import { useToast } from '@/hooks/use-toast';
-import { setDocumentNonBlocking, updateDocumentNonBlocking, addDocumentNonBlocking } from '@/firebase/non-blocking-updates';
+import { setDocumentNonBlocking } from '@/firebase/non-blocking-updates';
 import { cn } from '@/lib/utils';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 
@@ -39,11 +36,6 @@ export default function AdminPage() {
   // Management state
   const [newAdminUid, setNewAdminUid] = useState('');
 
-  // Category Creation State
-  const [isAddingCategory, setIsAddingCategory] = useState(false);
-  const [newCatName, setNewCatName] = useState('');
-  const [newCatDesc, setNewCatDesc] = useState('');
-
   // 1. Check if the user exists in the app_admins collection
   const adminDocRef = useMemoFirebase(() => {
     if (!db || !user) return null;
@@ -52,14 +44,7 @@ export default function AdminPage() {
   
   const { data: adminDoc, isLoading: isAdminDocLoading } = useDoc(adminDocRef);
 
-  // 2. Fetch Restaurant Profile
-  const profileRef = useMemoFirebase(() => {
-    if (!db || !user || !adminDoc) return null;
-    return doc(db, 'restaurants', RESTAURANT_ID);
-  }, [db, user, adminDoc]);
-  const { data: profile } = useDoc(profileRef);
-
-  // 3. Fetch orders (Only if authorized)
+  // 2. Fetch orders (Only if authorized)
   const ordersQuery = useMemoFirebase(() => {
     if (!db || !user || !adminDoc) return null;
     return query(
@@ -69,19 +54,12 @@ export default function AdminPage() {
   }, [db, user, adminDoc]);
   const { data: orders, isLoading: isOrdersLoading } = useCollection(ordersQuery);
 
-  // 4. Fetch all admins (Only if authorized)
+  // 3. Fetch all admins (Only if authorized)
   const adminsQuery = useMemoFirebase(() => {
     if (!db || !user || !adminDoc) return null;
     return collection(db, 'app_admins');
   }, [db, user, adminDoc]);
   const { data: allAdmins, isLoading: isAdminsLoading } = useCollection(adminsQuery);
-
-  // 5. Fetch Menu Categories
-  const categoriesQuery = useMemoFirebase(() => {
-    if (!db || !user || !adminDoc) return null;
-    return collection(db, 'restaurants', RESTAURANT_ID, 'menuCategories');
-  }, [db, user, adminDoc]);
-  const { data: categories, isLoading: isCategoriesLoading } = useCollection(categoriesQuery);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -112,40 +90,6 @@ export default function AdminPage() {
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  const handleAddCategory = () => {
-    if (!db || !newCatName.trim()) return;
-    const catId = `cat-${Date.now()}`;
-    const catRef = doc(db, 'restaurants', RESTAURANT_ID, 'menuCategories', catId);
-    
-    setDocumentNonBlocking(catRef, {
-      id: catId,
-      restaurantId: RESTAURANT_ID,
-      ownerId: user?.uid,
-      name: newCatName,
-      description: newCatDesc,
-      imageUrl: 'https://picsum.photos/seed/cat/400/300'
-    }, { merge: true });
-
-    toast({ title: "Category Created", description: `${newCatName} added to menu.` });
-    setIsAddingCategory(false);
-    setNewCatName('');
-    setNewCatDesc('');
-  };
-
-  const handleUpdateCategoryPhoto = (catId: string, newUrl: string) => {
-    if (!db || !newUrl.trim()) return;
-    const catRef = doc(db, 'restaurants', RESTAURANT_ID, 'menuCategories', catId);
-    updateDocumentNonBlocking(catRef, { imageUrl: newUrl });
-    toast({ title: "Updated", description: "Category icon has been updated." });
-  };
-
-  const handleUpdateProfilePhoto = (newUrl: string) => {
-    if (!db || !newUrl.trim()) return;
-    const profileRef = doc(db, 'restaurants', RESTAURANT_ID);
-    updateDocumentNonBlocking(profileRef, { imageUrl: newUrl });
-    toast({ title: "Updated", description: "Hero background has been updated." });
   };
 
   const handleAddTeamMember = () => {
@@ -291,11 +235,10 @@ export default function AdminPage() {
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
           {[
             { label: "Total Revenue", value: isOrdersLoading ? "..." : `Rs.${totalRevenue}`, icon: DollarSign, color: "text-green-600" },
             { label: "Active Orders", value: isOrdersLoading ? "..." : pendingOrders, icon: ShoppingCart, color: "text-blue-600" },
-            { label: "Categories", value: isCategoriesLoading ? "..." : categories?.length || 0, icon: Utensils, color: "text-orange-600" },
             { label: "Team Size", value: isAdminsLoading ? "..." : allAdmins?.length || 0, icon: Users, color: "text-purple-600" },
           ].map((stat, i) => (
             <Card key={i} className="rounded-3xl border-none shadow-sm bg-white p-6 hover:shadow-md transition-all">
@@ -313,10 +256,8 @@ export default function AdminPage() {
         </div>
 
         <Tabs defaultValue="orders" className="space-y-8">
-          <TabsList className="bg-white p-2 h-20 rounded-[1.5rem] border shadow-sm grid grid-cols-4 w-full max-w-4xl">
+          <TabsList className="bg-white p-2 h-20 rounded-[1.5rem] border shadow-sm grid grid-cols-2 w-full max-w-2xl">
             <TabsTrigger value="orders" className="rounded-xl font-black text-xs uppercase tracking-widest">Orders</TabsTrigger>
-            <TabsTrigger value="menu" className="rounded-xl font-black text-xs uppercase tracking-widest">Menu</TabsTrigger>
-            <TabsTrigger value="store" className="rounded-xl font-black text-xs uppercase tracking-widest">Design</TabsTrigger>
             <TabsTrigger value="team" className="rounded-xl font-black text-xs uppercase tracking-widest">Team</TabsTrigger>
           </TabsList>
 
@@ -360,121 +301,6 @@ export default function AdminPage() {
             </Card>
           </TabsContent>
 
-          <TabsContent value="menu">
-            <div className="flex justify-between items-center mb-8">
-              <h2 className="text-2xl font-black tracking-tight">Menu Management</h2>
-              <Dialog open={isAddingCategory} onOpenChange={setIsAddingCategory}>
-                <DialogTrigger asChild>
-                  <Button className="h-12 px-6 rounded-xl font-black bg-primary">
-                    <Plus className="mr-2 w-5 h-5" /> Add Category
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="rounded-3xl">
-                  <DialogHeader>
-                    <DialogTitle className="font-black">Create Menu Category</DialogTitle>
-                  </DialogHeader>
-                  <div className="space-y-4 py-4">
-                    <div className="space-y-2">
-                      <Label className="font-bold">Category Name</Label>
-                      <Input placeholder="e.g. Steam Momos" value={newCatName} onChange={(e) => setNewCatName(e.target.value)} />
-                    </div>
-                    <div className="space-y-2">
-                      <Label className="font-bold">Short Description</Label>
-                      <Input placeholder="e.g. Authentic steamed perfection" value={newCatDesc} onChange={(e) => setNewCatDesc(e.target.value)} />
-                    </div>
-                  </div>
-                  <DialogFooter>
-                    <Button onClick={handleAddCategory} className="font-black">Create Category</Button>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
-            </div>
-
-            <div className="space-y-12">
-              {isCategoriesLoading ? (
-                <div className="p-20 text-center"><Loader2 className="animate-spin mx-auto opacity-20" /></div>
-              ) : categories && categories.length > 0 ? (
-                categories.map((cat: any) => (
-                  <div key={cat.id} className="space-y-6">
-                    <div className="flex items-center gap-4">
-                      <h2 className="text-2xl font-black text-primary uppercase tracking-tight">{cat.name}</h2>
-                      <div className="flex-grow border-t border-dashed" />
-                      <AddItemDialog catId={cat.id} />
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                      <MenuItemList catId={cat.id} />
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div className="p-32 text-center bg-white rounded-[3rem] border border-dashed">
-                  <Utensils className="w-12 h-12 text-muted-foreground/20 mx-auto mb-4" />
-                  <p className="font-bold text-muted-foreground">No menu categories found. Click "Add Category" above to start.</p>
-                </div>
-              )}
-            </div>
-          </TabsContent>
-
-          <TabsContent value="store">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <Card className="rounded-[2.5rem] p-10 border-none bg-white shadow-sm">
-                <Store className="w-10 h-10 text-primary mb-6" />
-                <h3 className="text-2xl font-black mb-4">Hero Background</h3>
-                <div className="space-y-4">
-                  <div className="aspect-video relative rounded-[2rem] overflow-hidden bg-muted group">
-                    {profile?.imageUrl && <img src={profile.imageUrl} className="object-cover w-full h-full group-hover:scale-105 transition-transform" alt="Store hero" />}
-                  </div>
-                  <div className="flex gap-2">
-                    <div className="flex-grow">
-                      <Label className="text-[10px] font-black uppercase text-muted-foreground ml-1">Unsplash URL</Label>
-                      <Input 
-                        placeholder="Paste image link..." 
-                        className="h-14 rounded-2xl bg-muted/30 border-none"
-                        defaultValue={profile?.imageUrl}
-                        onBlur={(e) => handleUpdateProfilePhoto(e.target.value)}
-                      />
-                    </div>
-                    <div className="self-end pb-1">
-                      <ImageUploadButton onUploadComplete={handleUpdateProfilePhoto} path={`hero/${RESTAURANT_ID}`} />
-                    </div>
-                  </div>
-                  <p className="text-[10px] text-muted-foreground font-bold uppercase text-center opacity-40 italic flex items-center justify-center gap-2">
-                    <Info className="w-3 h-3" /> Live Update Enabled
-                  </p>
-                </div>
-              </Card>
-
-              <Card className="rounded-[2.5rem] p-10 border-none bg-white shadow-sm">
-                <ImageIcon className="w-10 h-10 text-primary mb-6" />
-                <h3 className="text-2xl font-black mb-4">Category Icons</h3>
-                <div className="space-y-6">
-                  {categories?.map((cat: any) => (
-                    <div key={cat.id} className="flex items-center gap-6 p-6 bg-muted/20 rounded-3xl border border-transparent hover:border-primary/10 transition-all">
-                      <div className="w-16 h-16 rounded-2xl overflow-hidden bg-white shadow-sm">
-                        <img src={cat.imageUrl} className="w-full h-full object-cover" alt={cat.name} />
-                      </div>
-                      <div className="flex-grow space-y-2">
-                        <Label className="text-[10px] font-black uppercase tracking-widest text-primary">{cat.name}</Label>
-                        <div className="flex gap-2">
-                          <Input 
-                            placeholder="Icon URL..." 
-                            className="h-12 text-sm rounded-xl"
-                            defaultValue={cat.imageUrl}
-                            onBlur={(e) => handleUpdateCategoryPhoto(cat.id, e.target.value)}
-                          />
-                          <ImageUploadButton onUploadComplete={(url) => handleUpdateCategoryPhoto(cat.id, url)} path={`categories/${cat.id}`} />
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                  {(!categories || categories.length === 0) && (
-                    <p className="text-sm text-center text-muted-foreground py-8 italic">No categories to display.</p>
-                  )}
-                </div>
-              </Card>
-            </div>
-          </TabsContent>
-
           <TabsContent value="team">
             <Card className="rounded-[3rem] border-none shadow-2xl bg-white p-12">
               <div className="flex flex-col md:flex-row justify-between gap-8 mb-16">
@@ -512,198 +338,5 @@ export default function AdminPage() {
         </Tabs>
       </div>
     </div>
-  );
-}
-
-function ImageUploadButton({ onUploadComplete, path }: { onUploadComplete: (url: string) => void, path: string }) {
-  const [isUploading, setIsUploading] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const storage = useStorage();
-  const { toast } = useToast();
-
-  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setIsUploading(true);
-    const storageRef = ref(storage, `${path}/${Date.now()}_${file.name}`);
-    
-    try {
-      const uploadTask = uploadBytesResumable(storageRef, file);
-      
-      uploadTask.on('state_changed', 
-        (snapshot) => {
-          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log('Upload is ' + progress + '% done');
-        }, 
-        (error) => {
-          toast({ variant: "destructive", title: "Upload Failed", description: error.message });
-          setIsUploading(false);
-        }, 
-        async () => {
-          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-          onUploadComplete(downloadURL);
-          setIsUploading(false);
-          toast({ title: "Image Uploaded", description: "Storage updated successfully." });
-        }
-      );
-    } catch (err: any) {
-      toast({ variant: "destructive", title: "Error", description: err.message });
-      setIsUploading(false);
-    }
-  };
-
-  return (
-    <div className="flex-shrink-0">
-      <input 
-        type="file" 
-        accept="image/*" 
-        className="hidden" 
-        ref={fileInputRef} 
-        onChange={handleUpload} 
-      />
-      <Button 
-        variant="outline" 
-        size="icon" 
-        className="h-12 w-12 rounded-xl border-primary text-primary" 
-        onClick={() => fileInputRef.current?.click()}
-        disabled={isUploading}
-      >
-        {isUploading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Upload className="w-5 h-5" />}
-      </Button>
-    </div>
-  );
-}
-
-function AddItemDialog({ catId }: { catId: string }) {
-  const [open, setOpen] = useState(false);
-  const [name, setName] = useState('');
-  const [desc, setDesc] = useState('');
-  const [price, setPrice] = useState('');
-  const [isJain, setIsJain] = useState(false);
-  const db = useFirestore();
-  const { user } = useUser();
-  const { toast } = useToast();
-
-  const handleCreate = () => {
-    if (!name || !price) return;
-    const itemId = `item-${Date.now()}`;
-    const itemRef = doc(db, 'restaurants', RESTAURANT_ID, 'menuCategories', catId, 'menuItems', itemId);
-    
-    setDocumentNonBlocking(itemRef, {
-      id: itemId,
-      categoryId: catId,
-      restaurantId: RESTAURANT_ID,
-      ownerId: user?.uid,
-      name,
-      description: desc,
-      price: parseFloat(price),
-      isPureVeg: true,
-      isJain,
-      imageUrl: 'https://picsum.photos/seed/item/400/300'
-    }, { merge: true });
-
-    toast({ title: "Item Added" });
-    setOpen(false);
-    setName('');
-    setDesc('');
-    setPrice('');
-    setIsJain(false);
-  };
-
-  return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="ghost" size="sm" className="font-black text-[10px] uppercase tracking-widest text-primary">
-          <Plus className="w-3 h-3 mr-1" /> Add Item
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="rounded-3xl">
-        <DialogHeader>
-          <DialogTitle className="font-black">Add New Menu Item</DialogTitle>
-        </DialogHeader>
-        <div className="space-y-4 py-4">
-          <div className="space-y-2">
-            <Label className="font-bold">Item Name</Label>
-            <Input placeholder="Classic Steam Momos" value={name} onChange={(e) => setName(e.target.value)} />
-          </div>
-          <div className="space-y-2">
-            <Label className="font-bold">Description</Label>
-            <Input placeholder="Authentic veg fillings" value={desc} onChange={(e) => setDesc(e.target.value)} />
-          </div>
-          <div className="space-y-2">
-            <Label className="font-bold">Price (Rs.)</Label>
-            <Input type="number" placeholder="50" value={price} onChange={(e) => setPrice(e.target.value)} />
-          </div>
-          <div className="flex items-center space-x-2 pt-2">
-            <Checkbox id="jain" checked={isJain} onCheckedChange={(val) => setIsJain(val as boolean)} />
-            <label htmlFor="jain" className="text-sm font-bold leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-              Is Jain Specialty?
-            </label>
-          </div>
-        </div>
-        <DialogFooter>
-          <Button onClick={handleCreate} className="font-black">Add to Menu</Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
-}
-
-function MenuItemList({ catId }: { catId: string }) {
-  const db = useFirestore();
-  const { toast } = useToast();
-  const itemsQuery = useMemoFirebase(() => {
-    if (!db) return null;
-    return collection(db, 'restaurants', RESTAURANT_ID, 'menuCategories', catId, 'menuItems');
-  }, [db, catId]);
-  
-  const { data: items, isLoading } = useCollection(itemsQuery);
-
-  const updatePhoto = (itemId: string, newUrl: string) => {
-    if (!db || !newUrl.trim()) return;
-    const itemRef = doc(db, 'restaurants', RESTAURANT_ID, 'menuCategories', catId, 'menuItems', itemId);
-    updateDocumentNonBlocking(itemRef, { imageUrl: newUrl });
-    toast({ title: "Updated" });
-  };
-
-  if (isLoading) return <div className="p-4 text-center"><Loader2 className="animate-spin opacity-20 mx-auto" /></div>;
-
-  if (!items || items.length === 0) {
-    return (
-      <div className="col-span-full p-12 bg-muted/10 border-2 border-dashed rounded-[2rem] text-center">
-        <p className="text-sm font-bold text-muted-foreground italic">No items found. Click "Add Item" to start.</p>
-      </div>
-    );
-  }
-
-  return (
-    <>
-      {items.map((item: any) => (
-        <Card key={item.id} className="rounded-[2.5rem] shadow-sm hover:shadow-xl transition-all border-none bg-white overflow-hidden group">
-          <div className="h-48 relative bg-muted overflow-hidden">
-            {item.imageUrl && <img src={item.imageUrl} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt={item.name} />}
-            <div className="absolute bottom-4 right-4">
-              <Badge className="bg-white/90 text-primary font-black text-[10px] border-none shadow-sm">{item.isJain ? 'JAIN' : 'VEG'}</Badge>
-            </div>
-          </div>
-          <CardContent className="p-8 space-y-6">
-            <h3 className="font-black text-xl truncate">{item.name}</h3>
-            <div className="space-y-2">
-              <Label className="text-[10px] font-black uppercase text-muted-foreground ml-1">Item Photo URL</Label>
-              <div className="flex gap-2">
-                <Input 
-                  defaultValue={item.imageUrl}
-                  placeholder="Paste Unsplash Link..." 
-                  className="h-12 rounded-xl bg-muted/30 border-none px-4 text-sm"
-                  onBlur={(e) => updatePhoto(item.id, e.target.value)}
-                />
-                <ImageUploadButton onUploadComplete={(url) => updatePhoto(item.id, url)} path={`items/${item.id}`} />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      ))}
-    </>
   );
 }
