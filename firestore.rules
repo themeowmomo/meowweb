@@ -1,101 +1,40 @@
+
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    /**
-     * RESTAURANT APP SECURITY RULES
-     * 
-     * Core Philosophy:
-     * This ruleset implements a dual-layered authorization model:
-     * 1. Ownership-Based: Individual restaurant owners manage their own profiles, menus, and orders
-     *    using denormalized 'ownerId' fields to avoid costly get() lookups.
-     * 2. Role-Based (DBAC): A dedicated 'app_admins' collection defines global administrators
-     *    who have full platform-wide read/write access to facilitate support and moderation.
-     * 
-     * Data Structure:
-     * All data is organized hierarchically under /restaurants/{restaurantId} to support
-     * clean URL routing and efficient public querying.
-     */
-
-    // --- Global Helper Functions ---
-
-    /** Checks if the user is authenticated with any provider. */
     function isSignedIn() {
       return request.auth != null;
     }
 
-    /** Checks if the provided UID matches the authenticated user's UID. */
     function isOwner(userId) {
       return isSignedIn() && request.auth.uid == userId;
     }
 
-    /** Checks if the existing document belongs to the authenticated user. */
-    function isExistingOwner(ownerId) {
-      return resource != null && isOwner(ownerId);
-    }
-
-    /** 
-     * Verifies if the authenticated user is a global application administrator.
-     * This uses a Database-Backed Access Control (DBAC) pattern.
-     */
     function isGlobalAdmin() {
       return isSignedIn() && exists(/databases/$(database)/documents/app_admins/$(request.auth.uid));
     }
 
-    // --- Admin Collection ---
-
-    /**
-     * @description Collection for global application administrators.
-     * @path /app_admins/{userId}
-     * @allow get: if isOwner(userId) || isGlobalAdmin();
-     * @allow list, create, update: if isGlobalAdmin();
-     * @deny delete: if false; (Restricted for safety)
-     */
     match /app_admins/{userId} {
       allow get: if isOwner(userId) || isGlobalAdmin();
       allow list, create, update: if isGlobalAdmin();
       allow delete: if false;
     }
 
-    // --- Restaurant Collections ---
-
     match /restaurants/{restaurantId} {
       allow get, list: if true;
-      allow create: if isSignedIn() && (request.resource.data.ownerId == request.auth.uid || isGlobalAdmin());
-      allow update, delete: if isExistingOwner(resource.data.ownerId) || isGlobalAdmin();
-
-      match /openingHours/{openingHourId} {
-        allow get, list: if true;
-        allow create: if isSignedIn() && (request.resource.data.ownerId == request.auth.uid || isGlobalAdmin());
-        allow update, delete: if isExistingOwner(resource.data.ownerId) || isGlobalAdmin();
-      }
-
-      match /menuCategories/{menuCategoryId} {
-        allow get, list: if true;
-        allow create: if isSignedIn() && (request.resource.data.ownerId == request.auth.uid || isGlobalAdmin());
-        allow update, delete: if isExistingOwner(resource.data.ownerId) || isGlobalAdmin();
-
-        match /menuItems/{menuItemId} {
-          allow get, list: if true;
-          allow create: if isSignedIn() && (request.resource.data.ownerId == request.auth.uid || isGlobalAdmin());
-          allow update, delete: if isExistingOwner(resource.data.ownerId) || isGlobalAdmin();
-        }
-      }
-
-      match /customerReviews/{customerReviewId} {
-        allow get, list: if true;
-        allow create: if isSignedIn();
-        allow update, delete: if isGlobalAdmin();
-      }
+      allow create: if isGlobalAdmin();
+      allow update, delete: if isGlobalAdmin();
 
       match /orders/{orderId} {
-        allow get, list: if isExistingOwner(resource.data.ownerId) || isGlobalAdmin();
+        // Customers can read their own orders. Admins can read all.
+        allow get, list: if isGlobalAdmin() || (isSignedIn() && (resource == null || resource.data.customerId == request.auth.uid));
         allow create: if isSignedIn();
-        allow update: if isExistingOwner(resource.data.ownerId) || isGlobalAdmin();
+        allow update: if isGlobalAdmin();
         allow delete: if isGlobalAdmin();
 
         match /orderItems/{orderItemId} {
-          allow get, list: if isExistingOwner(resource.data.ownerId) || isGlobalAdmin();
+          allow get, list: if isGlobalAdmin() || isSignedIn();
           allow create: if isSignedIn();
           allow update, delete: if isGlobalAdmin();
         }
