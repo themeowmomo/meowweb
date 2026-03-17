@@ -43,7 +43,7 @@ export function Navbar() {
             </Link>
           ))}
           <div className="flex items-center gap-3 ml-2 border-l pl-6">
-            <Button variant="ghost" size="icon" asChild className="text-muted-foreground hover:text-primary" aria-label="Admin Dashboard Settings">
+            <Button variant="ghost" size="icon" asChild className="text-muted-foreground hover:text-primary">
               <Link href="/admin"><Settings className="w-5 h-5" /></Link>
             </Button>
             <CartSheet />
@@ -72,29 +72,15 @@ export function Navbar() {
                   </Link>
                 ))}
                 <Link 
-                  href="/about" 
-                  onClick={() => setIsOpen(false)}
-                  className="text-lg font-medium py-4 border-b hover:text-primary transition-colors"
-                >
-                  About Us
-                </Link>
-                <Link 
-                  href="/contact" 
-                  onClick={() => setIsOpen(false)}
-                  className="text-lg font-medium py-4 border-b hover:text-primary transition-colors"
-                >
-                  Contact
-                </Link>
-                <Link 
                   href="/admin" 
                   onClick={() => setIsOpen(false)}
                   className="text-lg font-medium py-4 border-b hover:text-primary transition-colors flex items-center gap-2"
                 >
-                  <Settings className="w-5 h-5" /> Admin Dashboard
+                  <Settings className="w-5 h-5" /> Staff Dashboard
                 </Link>
                 <div className="mt-8">
                   <Button className="w-full h-12 bg-primary" asChild>
-                    <Link href="/#menu" onClick={() => setIsOpen(false)}>Browse Menu</Link>
+                    <Link href="/#menu" onClick={() => setIsOpen(false)}>Order Now</Link>
                   </Button>
                 </div>
               </SheetContent>

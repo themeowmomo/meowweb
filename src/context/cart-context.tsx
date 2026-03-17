@@ -31,7 +31,7 @@ type CartContextType = {
   totalPrice: number;
   customerInfo: CustomerInfo;
   updateCustomerInfo: (info: Partial<CustomerInfo>) => void;
-  saveOrderToFirestore: (userId: string) => Promise<string | null>;
+  saveOrderToFirestore: () => Promise<string | null>;
 };
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -55,7 +55,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         const parsed = JSON.parse(savedCart);
         if (Array.isArray(parsed)) setCart(parsed);
       } catch (e) {
-        console.error("Failed to load cart", e);
+        console.error("Cart recovery failed", e);
       }
     }
 
@@ -70,7 +70,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
           paymentMethod: parsed.paymentMethod || 'cod'
         });
       } catch (e) {
-        console.error("Failed to load customer info", e);
+        console.error("Profile recovery failed", e);
       }
     }
   }, []);
@@ -121,25 +121,24 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setCustomerInfo(prev => ({ ...prev, ...info }));
   };
 
-  const saveOrderToFirestore = async (userId: string) => {
-    if (cart.length === 0 || !userId || !db) return null;
+  const saveOrderToFirestore = async () => {
+    if (cart.length === 0 || !db) return null;
     
     try {
-      const orderId = `ORDER-${Date.now()}`;
+      const orderId = `MM-${Date.now().toString().slice(-6)}`;
       const orderRef = doc(db, 'restaurants', RESTAURANT_ID, 'orders', orderId);
       
       const orderData = {
         id: orderId,
         restaurantId: RESTAURANT_ID,
-        customerId: userId,
+        customerId: 'GUEST',
         orderDate: serverTimestamp(),
         customerName: customerInfo.name,
-        customerContact: customerInfo.mobile || 'User',
+        customerContact: customerInfo.mobile || 'Guest',
         deliveryAddress: customerInfo.address,
         totalAmount: totalPrice,
         paymentMethod: customerInfo.paymentMethod === 'upi' ? 'UPI' : 'Cash on Delivery',
-        status: 'Pending',
-        notes: ''
+        status: 'Pending'
       };
 
       await setDoc(orderRef, orderData);
@@ -158,7 +157,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       
       return orderId;
     } catch (error) {
-      console.error("Error saving order:", error);
+      console.error("Cloud logging failed", error);
       return null;
     }
   };
