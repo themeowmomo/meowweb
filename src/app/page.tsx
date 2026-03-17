@@ -21,16 +21,18 @@ export default function Home() {
 
       <AiRecommender />
       
-      <Testimonials />
+      <div id="testimonials">
+        <Testimonials />
+      </div>
 
       {/* Final CTA Section */}
-      <section className="py-16 relative overflow-hidden">
+      <section className="py-12 relative overflow-hidden">
         <div className="absolute inset-0 bg-primary -z-10" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,_rgba(255,255,255,0.2)_0%,_transparent_50%)] -z-10" />
         
         <div className="container mx-auto px-4 text-center text-white space-y-6">
-          <h2 className="text-4xl md:text-5xl font-black font-headline tracking-tight">Ready for a Delicious Snack?</h2>
-          <p className="text-primary-foreground/90 max-w-2xl mx-auto text-lg md:text-xl">
+          <h2 className="text-3xl md:text-5xl font-black font-headline tracking-tight">Ready for a Delicious Snack?</h2>
+          <p className="text-primary-foreground/90 max-w-2xl mx-auto text-lg leading-relaxed">
             Order your favorite Pure Veg and Jain momos today. Freshly prepared and delivered with care.
           </p>
           <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -44,7 +46,7 @@ export default function Home() {
       </section>
 
       {/* Loyalty Reward Section */}
-      <section className="py-16 bg-white">
+      <section className="py-12 bg-white">
         <div className="container mx-auto px-4">
           <div className="p-8 md:p-10 bg-foreground text-white rounded-[2rem] relative overflow-hidden group shadow-2xl">
             <div className="absolute top-0 right-0 w-96 h-96 bg-primary/20 rounded-full -translate-y-1/2 translate-x-1/2 blur-[100px]" />

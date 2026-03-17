@@ -17,7 +17,7 @@ export function Hero() {
   const { data: profile, isLoading } = useDoc(profileRef);
 
   return (
-    <section className="relative pt-24 pb-12 md:pt-36 md:pb-20 overflow-hidden">
+    <section className="relative pt-24 pb-12 md:pt-32 md:pb-16 overflow-hidden">
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-4xl mx-auto text-center space-y-6 md:space-y-8">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary text-primary text-xs font-bold uppercase tracking-wider animate-in fade-in slide-in-from-bottom-2 duration-500">

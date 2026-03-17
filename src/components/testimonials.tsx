@@ -56,22 +56,22 @@ export function Testimonials() {
   };
 
   return (
-    <section id="testimonials" className="py-16 bg-background overflow-hidden relative">
+    <section id="testimonials" className="py-12 bg-background overflow-hidden relative">
       <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-[100px] -z-10" />
       
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-10">
           <div className="inline-flex items-center gap-2 bg-accent/20 text-accent px-4 py-1.5 rounded-full text-[10px] font-black tracking-widest uppercase mb-3 border border-accent/20">
-            <Sparkles className="w-3 h-3" /> Community Feedback
+            <Sparkles className="w-3 h-3" /> Excellence Recognized by the Community
           </div>
-          <h2 className="text-4xl md:text-6xl font-black font-headline tracking-tighter mb-3">Loved by Malad East</h2>
+          <h2 className="text-3xl md:text-5xl font-black font-headline tracking-tighter mb-3">Customer Appreciation</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto text-lg font-medium">
-            See what our customers are saying and use our <span className="text-primary font-bold">AI Review Assistant</span> to share your own experience in seconds.
+            Discover verified experiences from our community and utilize our <span className="text-primary font-bold">AI-Powered Feedback Assistant</span> to compose your own review with professional precision.
           </p>
         </div>
 
-        <div className="flex flex-col gap-10 max-w-4xl mx-auto">
+        <div className="flex flex-col gap-8 max-w-4xl mx-auto">
           {/* Top: Google Reviews Widget */}
           <div className="space-y-4 w-full">
             <div className="flex items-center justify-center gap-3 mb-2">
@@ -79,8 +79,8 @@ export function Testimonials() {
                 <MessageSquare className="w-6 h-6 text-primary" />
               </div>
               <div className="text-center md:text-left">
-                <h3 className="text-2xl font-black tracking-tight">Verified Reviews</h3>
-                <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Live from Google Maps</p>
+                <h3 className="text-xl font-black tracking-tight">Verified Testimonials</h3>
+                <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Live Integration via Google Maps</p>
               </div>
             </div>
             
@@ -95,10 +95,10 @@ export function Testimonials() {
 
           {/* Bottom: AI Review Assistant */}
           <div className="w-full">
-            <Card className="border-none shadow-2xl bg-white rounded-[3rem] overflow-hidden border border-primary/10">
+            <Card className="border-none shadow-xl bg-white rounded-[3rem] overflow-hidden border border-primary/10">
               <CardContent className="p-8 md:p-12 space-y-8">
                 <div className="text-center space-y-6">
-                  <p className="text-xs font-black uppercase tracking-[0.2em] text-primary">How was your Meow Momo experience?</p>
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Provide a Rating to Initiate Assistance</p>
                   <div className="flex justify-center gap-3">
                     {[1, 2, 3, 4, 5].map((star) => {
                       const isSelected = rating >= star;
@@ -136,7 +136,7 @@ export function Testimonials() {
                   {loading && (
                     <div className="flex flex-col items-center gap-4 animate-in fade-in py-6">
                       <Loader2 className="w-10 h-10 animate-spin text-primary" />
-                      <p className="font-black text-primary uppercase tracking-widest text-xs">AI is writing your review...</p>
+                      <p className="font-black text-primary uppercase tracking-widest text-[10px]">Processing Professional Feedback...</p>
                     </div>
                   )}
 
@@ -158,13 +158,13 @@ export function Testimonials() {
                           )}
                         >
                           {copied ? (
-                            <><Check className="mr-2 h-6 w-6" /> Copied! Opening Google Reviews...</>
+                            <><Check className="mr-2 h-6 w-6" /> Copied. Redirecting to Google...</>
                           ) : (
-                            <><Copy className="mr-2 h-5 w-5" /> Copy & Post on Google</>
+                            <><Copy className="mr-2 h-5 w-5" /> Copy Content & Post to Google</>
                           )}
                         </Button>
                         <p className="text-[10px] text-center text-muted-foreground font-black uppercase tracking-widest">
-                          Paste the text on the Google Review page that opens!
+                          Please paste the copied content into the review field on the following page.
                         </p>
                       </div>
                     </div>
@@ -173,7 +173,7 @@ export function Testimonials() {
                   {!generatedReview && !loading && rating === 0 && (
                     <div className="flex flex-col items-center justify-center gap-3 text-muted-foreground/30 font-black uppercase text-[10px] tracking-widest py-8">
                       <Sparkles className="w-6 h-6 mb-1 opacity-20" />
-                      <span>Select stars above to start generating</span>
+                      <span>Select a star rating to begin generating content</span>
                     </div>
                   )}
                 </div>
