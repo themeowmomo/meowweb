@@ -171,11 +171,11 @@ export function Products() {
 
     if (quantity > 0) {
       return (
-        <div className="flex items-center gap-2 bg-primary/5 rounded-lg p-0.5 px-1.5 border border-primary/10">
+        <div className="flex items-center gap-1.5 bg-primary/5 rounded-lg p-0.5 px-1 border border-primary/20">
           <Button 
             size="icon" 
             variant="ghost"
-            className="h-6 w-6 rounded text-primary hover:bg-primary/10"
+            className="h-6 w-6 rounded text-primary hover:bg-primary/10 p-0"
             onClick={() => updateQuantity(itemId, quantity - 1, variant)}
           >
             <Minus className="h-3 w-3" />
@@ -184,7 +184,7 @@ export function Products() {
           <Button 
             size="icon" 
             variant="ghost"
-            className="h-6 w-6 rounded text-primary hover:bg-primary/10"
+            className="h-6 w-6 rounded text-primary hover:bg-primary/10 p-0"
             onClick={() => updateQuantity(itemId, quantity + 1, variant)}
           >
             <Plus className="h-3 w-3" />
@@ -196,7 +196,7 @@ export function Products() {
     return (
       <Button 
         size="sm"
-        className="h-8 px-4 text-[10px] font-black rounded-lg bg-primary hover:bg-primary/90 shadow-sm"
+        className="h-7 px-3 text-[10px] font-black rounded-lg bg-primary hover:bg-primary/90 shadow-sm transition-all"
         onClick={() => handleAddToCart(name, price, variant, id)}
       >
         Add
@@ -218,7 +218,7 @@ export function Products() {
 
         {/* Tab Switcher */}
         <div className="sticky top-20 z-40 mb-12 flex justify-center px-4">
-          <div className="bg-white/90 backdrop-blur-md border border-primary/10 p-1 rounded-2xl shadow-xl flex items-center gap-1 w-full max-w-md">
+          <div className="bg-white/95 backdrop-blur-md border border-primary/10 p-1 rounded-2xl shadow-xl flex items-center gap-1 w-full max-w-md">
             {[
               { id: 'momos', name: 'Momos', icon: Utensils },
               { id: 'fries', name: 'Fries', icon: Zap },
@@ -243,7 +243,7 @@ export function Products() {
         <Accordion type="multiple" defaultValue={activeCategories.map((_, i) => `category-${i}`)} className="space-y-4">
           {activeCategories.map((category, catIdx) => (
             <AccordionItem key={catIdx} value={`category-${catIdx}`} className="border-none">
-              <AccordionTrigger className="hover:no-underline bg-white px-6 py-4 rounded-2xl shadow-sm border border-primary/5 mb-2 group">
+              <AccordionTrigger className="hover:no-underline bg-white px-6 py-4 rounded-2xl shadow-sm border border-primary/5 mb-2 group transition-all data-[state=open]:shadow-md">
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-full bg-primary/5 flex items-center justify-center text-primary group-data-[state=open]:bg-primary group-data-[state=open]:text-white transition-colors">
                     <Utensils className="w-4 h-4" />
@@ -251,13 +251,13 @@ export function Products() {
                   <h3 className="text-sm font-black text-foreground uppercase tracking-widest">{category.category}</h3>
                 </div>
               </AccordionTrigger>
-              <AccordionContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-2">
+              <AccordionContent className="pt-2">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {category.items.map((item: any, itemIdx: number) => (
                     <Card key={item.id || itemIdx} className="rounded-2xl border-none shadow-sm bg-white overflow-hidden hover:shadow-md transition-all duration-300">
                       <CardContent className="p-4 space-y-4">
-                        <div className="flex justify-between items-start">
-                          <h4 className="text-sm font-black tracking-tight flex items-center gap-2">
+                        <div className="flex justify-between items-start border-b border-muted/30 pb-3">
+                          <h4 className="text-sm font-black tracking-tight flex items-center gap-2 uppercase">
                             {item.name.toLowerCase().includes('peri') ? <Flame className="w-3.5 h-3.5 text-primary" /> : 
                              item.name.toLowerCase().includes('cheese') ? <Heart className="w-3.5 h-3.5 text-primary" /> :
                              <Utensils className="w-3.5 h-3.5 text-primary" />}
@@ -265,21 +265,22 @@ export function Products() {
                           </h4>
                         </div>
 
-                        {item.desc && <p className="text-[10px] text-muted-foreground font-medium leading-relaxed">{item.desc}</p>}
+                        {item.desc && <p className="text-[10px] text-muted-foreground font-medium leading-relaxed italic">{item.desc}</p>}
 
-                        <div className="space-y-2 pt-2 border-t border-muted/30">
+                        <div className="space-y-3">
                           {/* Variant rows for Momos */}
                           {item.variants ? (
                             item.variants.map((variant: any, vIdx: number) => (
-                              <div key={vIdx} className="space-y-2">
-                                <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">
-                                  <span>{variant.label} Variant</span>
+                              <div key={vIdx} className="space-y-2 last:mb-0">
+                                <div className="flex items-center gap-2">
+                                  <span className="text-[9px] font-black text-primary/70 uppercase tracking-widest bg-primary/5 px-2 py-0.5 rounded-md">{variant.label}</span>
+                                  <div className="h-px bg-muted/30 flex-grow"></div>
                                 </div>
-                                <div className="grid grid-cols-2 gap-3">
-                                  <div className="flex items-center justify-between bg-muted/20 p-2 rounded-xl border border-transparent hover:border-primary/10 transition-all">
-                                    <div className="space-y-0.5">
-                                      <span className="text-[9px] font-black text-muted-foreground/50">5 PCS</span>
-                                      <p className="text-xs font-black text-primary">₹{variant.price5}</p>
+                                <div className="grid grid-cols-2 gap-2">
+                                  <div className="flex items-center justify-between bg-muted/20 p-2 px-3 rounded-xl">
+                                    <div className="flex flex-col">
+                                      <span className="text-[8px] font-black text-muted-foreground/50 uppercase">5 PCS</span>
+                                      <span className="text-xs font-black text-foreground">₹{variant.price5}</span>
                                     </div>
                                     <QuantityControl 
                                       name={`${item.name} ${variant.label}`} 
@@ -288,10 +289,10 @@ export function Products() {
                                       id={`${variant.id}-5`} 
                                     />
                                   </div>
-                                  <div className="flex items-center justify-between bg-muted/20 p-2 rounded-xl border border-transparent hover:border-primary/10 transition-all">
-                                    <div className="space-y-0.5">
-                                      <span className="text-[9px] font-black text-muted-foreground/50">11 PCS</span>
-                                      <p className="text-xs font-black text-primary">₹{variant.price11}</p>
+                                  <div className="flex items-center justify-between bg-muted/20 p-2 px-3 rounded-xl">
+                                    <div className="flex flex-col">
+                                      <span className="text-[8px] font-black text-muted-foreground/50 uppercase">11 PCS</span>
+                                      <span className="text-xs font-black text-foreground">₹{variant.price11}</span>
                                     </div>
                                     <QuantityControl 
                                       name={`${item.name} ${variant.label}`} 
@@ -305,29 +306,29 @@ export function Products() {
                             ))
                           ) : (
                             /* Layout for Fries and Combos */
-                            <div className="grid grid-cols-2 gap-3">
+                            <div className="grid grid-cols-2 gap-2 pt-1">
                               {('priceHalf' in item) ? (
                                 <>
-                                  <div className="flex items-center justify-between bg-muted/20 p-2 rounded-xl border border-transparent hover:border-primary/10 transition-all">
-                                    <div className="space-y-0.5">
-                                      <span className="text-[9px] font-black text-muted-foreground/50">Half</span>
-                                      <p className="text-xs font-black text-primary">₹{item.priceHalf}</p>
+                                  <div className="flex items-center justify-between bg-muted/20 p-2 px-3 rounded-xl">
+                                    <div className="flex flex-col">
+                                      <span className="text-[8px] font-black text-muted-foreground/50 uppercase">Half</span>
+                                      <span className="text-xs font-black text-foreground">₹{item.priceHalf}</span>
                                     </div>
                                     <QuantityControl name={item.name} variant="Half" price={item.priceHalf} id={`${item.id}-half`} />
                                   </div>
-                                  <div className="flex items-center justify-between bg-muted/20 p-2 rounded-xl border border-transparent hover:border-primary/10 transition-all">
-                                    <div className="space-y-0.5">
-                                      <span className="text-[9px] font-black text-muted-foreground/50">Full</span>
-                                      <p className="text-xs font-black text-primary">₹{item.priceFull}</p>
+                                  <div className="flex items-center justify-between bg-muted/20 p-2 px-3 rounded-xl">
+                                    <div className="flex flex-col">
+                                      <span className="text-[8px] font-black text-muted-foreground/50 uppercase">Full</span>
+                                      <span className="text-xs font-black text-foreground">₹{item.priceFull}</span>
                                     </div>
                                     <QuantityControl name={item.name} variant="Full" price={item.priceFull} id={`${item.id}-full`} />
                                   </div>
                                 </>
                               ) : (
                                 <div className="col-span-2 flex items-center justify-between bg-muted/20 p-3 rounded-xl border border-primary/5">
-                                  <div className="space-y-0.5">
-                                    <span className="text-[9px] font-black text-muted-foreground/50">Full Meal</span>
-                                    <p className="text-sm font-black text-primary">₹{item.price}</p>
+                                  <div className="flex flex-col">
+                                    <span className="text-[8px] font-black text-muted-foreground/50 uppercase tracking-widest">Full Meal</span>
+                                    <span className="text-sm font-black text-primary">₹{item.price}</span>
                                   </div>
                                   <QuantityControl name={item.name} variant="Combo" price={item.price} id={item.id} />
                                 </div>
@@ -347,4 +348,3 @@ export function Products() {
     </section>
   );
 }
-
