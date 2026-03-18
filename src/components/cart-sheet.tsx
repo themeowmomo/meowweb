@@ -102,12 +102,12 @@ export function CartSheet() {
             <Button className="w-full sm:w-[320px] h-14 bg-foreground text-white rounded-full shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] flex items-center justify-between pl-6 pr-2 group hover:bg-foreground/95 transition-all border-none ring-1 ring-white/10 overflow-hidden">
               <div className="flex items-center gap-3">
                 <div className="flex flex-col text-left">
-                  <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-40 leading-none mb-1">View Order</p>
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-40 leading-none mb-1">Your Basket</p>
                   <p className="text-sm font-black tracking-tight">Rs. {totalPrice}</p>
                 </div>
               </div>
               <div className="flex items-center gap-2 bg-primary px-5 h-10 rounded-full group-hover:px-6 transition-all duration-300">
-                <span className="text-[10px] font-black uppercase tracking-widest">Checkout</span>
+                <span className="text-[10px] font-black uppercase tracking-widest">View Cart</span>
                 <ChevronRight className="w-4 h-4" />
               </div>
             </Button>
