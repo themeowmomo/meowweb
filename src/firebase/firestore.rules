@@ -16,7 +16,7 @@ service cloud.firestore {
         // Anyone can create an order
         allow create: if true;
         
-        // Orders are private once created
+        // Orders are private once created (not accessible to public reads)
         allow read: if false;
         
         allow update, delete: if false;
