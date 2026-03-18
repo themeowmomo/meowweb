@@ -29,11 +29,11 @@ export function Navbar() {
   return (
     <nav className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 group">
-          <div className="bg-primary p-1.5 rounded-lg group-hover:bg-accent transition-colors">
+        <Link href="/" className="flex items-center gap-3 group">
+          <div className="bg-primary p-2 rounded-xl group-hover:bg-accent transition-all duration-300 shadow-sm shadow-primary/20 group-hover:shadow-accent/20">
             <UtensilsCrossed className="w-6 h-6 text-white" />
           </div>
-          <span className="font-headline font-bold text-xl tracking-tight text-primary">Meow Momo</span>
+          <span className="font-headline font-black text-xl tracking-tight text-primary transition-colors group-hover:text-accent">Meow Momo</span>
         </Link>
 
         {/* Desktop Links */}
@@ -45,7 +45,7 @@ export function Navbar() {
             {mounted && user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                  <Button variant="ghost" className="relative h-10 w-10 rounded-full ring-offset-background transition-all hover:ring-2 hover:ring-primary hover:ring-offset-2">
                     <Avatar className="h-10 w-10">
                       <AvatarImage src={user.photoURL || undefined} alt={user.displayName || "User"} />
                       <AvatarFallback className="bg-primary/10 text-primary font-bold">
@@ -72,7 +72,7 @@ export function Navbar() {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <Button variant="ghost" size="icon" asChild className="text-muted-foreground hover:text-primary">
+              <Button variant="ghost" size="icon" asChild className="text-muted-foreground hover:text-primary rounded-full">
                 <Link href="/login"><UserIcon className="w-5 h-5" /></Link>
               </Button>
             )}
@@ -84,22 +84,22 @@ export function Navbar() {
           {mounted && (
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon"><MenuIcon className="w-6 h-6" /></Button>
+                <Button variant="ghost" size="icon" className="rounded-full"><MenuIcon className="w-6 h-6" /></Button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-[300px] flex flex-col pt-20">
+              <SheetContent side="right" className="w-[300px] flex flex-col pt-20 rounded-l-[2rem]">
                 {user && (
                   <div className="flex items-center gap-3 mb-8 pb-8 border-b">
-                    <Avatar className="h-12 w-12"><AvatarImage src={user.photoURL || undefined} /><AvatarFallback>{user.displayName?.charAt(0) || "U"}</AvatarFallback></Avatar>
+                    <Avatar className="h-12 w-12"><AvatarImage src={user.photoURL || undefined} /><AvatarFallback className="bg-primary/10 text-primary">{user.displayName?.charAt(0) || "U"}</AvatarFallback></Avatar>
                     <div className="flex flex-col"><span className="font-black text-sm">{user.displayName || "User"}</span><span className="text-xs text-muted-foreground">{user.email || user.phoneNumber}</span></div>
                   </div>
                 )}
                 {navLinks.map((link) => (
-                  <Link key={link.name} href={link.href} onClick={() => setIsOpen(false)} className="text-lg font-medium py-4 border-b hover:text-primary">{link.name}</Link>
+                  <Link key={link.name} href={link.href} onClick={() => setIsOpen(false)} className="text-lg font-bold py-4 border-b hover:text-primary transition-colors">{link.name}</Link>
                 ))}
                 {!user ? (
-                  <Link href="/login" onClick={() => setIsOpen(false)} className="text-lg font-medium py-4 border-b">Login</Link>
+                  <Link href="/login" onClick={() => setIsOpen(false)} className="text-lg font-bold py-4 border-b">Login</Link>
                 ) : (
-                  <button onClick={() => { auth.signOut(); setIsOpen(false); }} className="text-lg font-medium py-4 border-b text-destructive text-left">Logout</button>
+                  <button onClick={() => { auth.signOut(); setIsOpen(false); }} className="text-lg font-bold py-4 border-b text-destructive text-left">Logout</button>
                 )}
               </SheetContent>
             </Sheet>

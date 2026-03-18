@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { useCart } from "@/context/cart-context";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, Plus, Minus, Trash2, Send, User, MapPin, CreditCard, Wallet, Loader2, Package, ArrowRight, ChevronRight } from "lucide-react";
+import { ShoppingCart, Plus, Minus, Trash2, Send, User, MapPin, CreditCard, Wallet, Loader2, Package, ArrowRight, ChevronRight, ArrowLeft } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
@@ -24,6 +24,21 @@ export function CartSheet() {
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Handle hardware back button to close the sheet instead of exiting the page
+  useEffect(() => {
+    if (isOpen) {
+      // Push a dummy state to history so back button triggers popstate
+      window.history.pushState({ sheetOpen: true }, '');
+      
+      const handlePopState = () => {
+        setIsOpen(false);
+      };
+
+      window.addEventListener('popstate', handlePopState);
+      return () => window.removeEventListener('popstate', handlePopState);
+    }
+  }, [isOpen]);
 
   const getShortItemName = (name: string, variant?: string) => {
     const shortName = name
@@ -121,7 +136,18 @@ export function CartSheet() {
         className="w-full sm:max-w-md flex flex-col p-0 border-l-0 sm:border-l rounded-t-[2.5rem] sm:rounded-l-[2.5rem] overflow-hidden"
       >
         <div className="px-8 pt-10 pb-6 border-b bg-muted/5">
-          <SheetHeader>
+          <SheetHeader className="relative">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={() => {
+                if (window.history.state?.sheetOpen) window.history.back();
+                setIsOpen(false);
+              }}
+              className="absolute -left-2 -top-2 rounded-full h-10 w-10 md:hidden"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </Button>
             <SheetTitle className="flex items-center gap-3 font-black tracking-tighter text-3xl text-foreground">
               <div className="bg-primary/10 p-2 rounded-xl"><Package className="w-7 h-7 text-primary" /></div>
               Finalize Order
@@ -202,6 +228,16 @@ export function CartSheet() {
           </div>
           <Button onClick={handleWhatsAppOrder} disabled={isProcessing} className="w-full h-16 bg-primary text-lg font-black rounded-2xl shadow-xl shadow-primary/20 transition-all active:scale-[0.97] hover:bg-primary/95">
             {isProcessing ? <Loader2 className="w-6 h-6 animate-spin" /> : <>Order on WhatsApp <Send className="ml-2 w-5 h-5" /></>}
+          </Button>
+          <Button 
+            variant="ghost" 
+            onClick={() => {
+              if (window.history.state?.sheetOpen) window.history.back();
+              setIsOpen(false);
+            }} 
+            className="w-full h-10 font-black uppercase text-[10px] tracking-[0.2em] text-muted-foreground"
+          >
+            Back to Menu
           </Button>
         </div>
       </SheetContent>

@@ -13,11 +13,11 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
           {/* Brand Column */}
           <div className="space-y-6">
-            <Link href="/" className="flex items-center gap-2">
-              <div className="bg-primary p-1.5 rounded-lg">
+            <Link href="/" className="flex items-center gap-3 group">
+              <div className="bg-primary p-2 rounded-xl group-hover:bg-accent transition-all duration-300">
                 <UtensilsCrossed className="w-6 h-6 text-white" />
               </div>
-              <p className="font-headline font-bold text-2xl tracking-tight">Meow Momo</p>
+              <p className="font-headline font-black text-2xl tracking-tight group-hover:text-primary transition-colors">Meow Momo</p>
             </Link>
             <p className="text-muted-foreground text-sm leading-relaxed">
               Serving the freshest Pure Veg and Jain Momos in Malad East. Tech-powered street food experience founded by Amit Jaiswal & Karan Sawant.
