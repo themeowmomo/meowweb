@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { useCart } from "@/context/cart-context";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, Plus, Minus, Trash2, Send, User, MapPin, CreditCard, Wallet, Loader2, Package, ArrowRight } from "lucide-react";
+import { ShoppingCart, Plus, Minus, Trash2, Send, User, MapPin, CreditCard, Wallet, Loader2, Package, ArrowRight, ChevronRight } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
@@ -24,7 +24,6 @@ export function CartSheet() {
     setMounted(true);
   }, []);
 
-  // Professional short-codes for UPI transaction notes
   const getShortItemName = (name: string, variant?: string) => {
     const shortName = name
       .replace(/Classic/gi, 'C')
@@ -79,7 +78,6 @@ export function CartSheet() {
     const fullMessage = header + separator + customerSection + itemsSection + summarySection + footer;
 
     if (customerInfo.paymentMethod === 'upi') {
-      // Strictly item codes for transaction note: 1xCV-St, 2xPn-Fr
       const upiNote = cart.map(item => `${item.quantity}x${getShortItemName(item.name, item.variant)}`).join(',').slice(0, 50);
       const upiUrl = `upi://pay?pa=amitjaisawal0123-2@okhdfcbank&pn=Meow%20Momo&am=${totalPrice}&cu=INR&tn=${encodeURIComponent(upiNote)}`;
       
@@ -92,39 +90,32 @@ export function CartSheet() {
     }
 
     setIsProcessing(false);
-    toast({ title: "Order Ready", description: "Opening WhatsApp to finalize your snack!" });
   };
 
   if (!mounted) return null;
 
   return (
     <Sheet>
-      <SheetTrigger asChild>
-        {totalItems > 0 ? (
-          <div className="fixed bottom-6 left-4 right-4 z-[60] animate-in fade-in slide-in-from-bottom-8 duration-700">
-            <Button className="w-full max-w-2xl mx-auto h-16 bg-foreground text-white rounded-[1.5rem] shadow-[0_20px_40px_-10px_rgba(0,0,0,0.4)] flex items-center justify-between px-8 group hover:bg-foreground/95 transition-all border-none ring-1 ring-white/10">
-              <div className="flex items-center gap-5">
-                <div className="bg-primary p-2.5 rounded-xl text-white shadow-lg">
-                  <ShoppingCart className="w-5 h-5" />
-                </div>
-                <div className="text-left">
-                  <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-50">Cart Total</p>
-                  <p className="text-xl font-black tracking-tight">Rs.{totalPrice} <span className="text-xs opacity-40 ml-2 font-medium">({totalItems} Items)</span></p>
+      {totalItems > 0 && (
+        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[60] w-full px-4 sm:px-0 sm:w-auto animate-in fade-in slide-in-from-bottom-8 duration-700">
+          <SheetTrigger asChild>
+            <Button className="w-full sm:w-[320px] h-14 bg-foreground text-white rounded-full shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] flex items-center justify-between pl-6 pr-2 group hover:bg-foreground/95 transition-all border-none ring-1 ring-white/10 overflow-hidden">
+              <div className="flex items-center gap-3">
+                <div className="flex flex-col text-left">
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-40 leading-none mb-1">View Order</p>
+                  <p className="text-sm font-black tracking-tight">Rs. {totalPrice}</p>
                 </div>
               </div>
-              <div className="flex items-center gap-3 bg-white/10 px-5 py-2.5 rounded-xl group-hover:bg-white/20 transition-all">
+              <div className="flex items-center gap-2 bg-primary px-5 h-10 rounded-full group-hover:px-6 transition-all duration-300">
                 <span className="text-[10px] font-black uppercase tracking-widest">Checkout</span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                <ChevronRight className="w-4 h-4" />
               </div>
             </Button>
-          </div>
-        ) : (
-          <Button variant="outline" size="icon" className="fixed bottom-6 right-6 h-14 w-14 rounded-full bg-white border-primary/20 shadow-xl z-50 hover:bg-secondary">
-            <ShoppingCart className="w-6 h-6 text-primary" />
-          </Button>
-        )}
-      </SheetTrigger>
-      <SheetContent className="w-full sm:max-w-md flex flex-col p-0 border-l-0 sm:border-l rounded-t-[3rem] sm:rounded-l-[3rem] overflow-hidden">
+          </SheetTrigger>
+        </div>
+      )}
+
+      <SheetContent className="w-full sm:max-w-md flex flex-col p-0 border-l-0 sm:border-l rounded-t-[2.5rem] sm:rounded-l-[2.5rem] overflow-hidden">
         <div className="px-8 pt-10 pb-6 border-b bg-muted/5">
           <SheetHeader>
             <SheetTitle className="flex items-center gap-3 font-black tracking-tighter text-3xl text-foreground">
@@ -143,11 +134,11 @@ export function CartSheet() {
               <div className="grid gap-4">
                 <div className="space-y-2">
                   <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-2">Full Name</Label>
-                  <Input placeholder="E.g. Rohan Sawant" value={customerInfo.name} onChange={(e) => updateCustomerInfo({ name: e.target.value })} className="rounded-[1.25rem] h-14 border-muted/50 focus:border-primary px-5" />
+                  <Input placeholder="E.g. Rohan Sawant" value={customerInfo.name} onChange={(e) => updateCustomerInfo({ name: e.target.value })} className="rounded-2xl h-14 border-muted/50 focus:border-primary px-5" />
                 </div>
                 <div className="space-y-2">
                   <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-2">Delivery Landmark</Label>
-                  <Input placeholder="Building name, Floor, House number" value={customerInfo.address} onChange={(e) => updateCustomerInfo({ address: e.target.value })} className="rounded-[1.25rem] h-14 border-muted/50 focus:border-primary px-5" />
+                  <Input placeholder="Building name, Floor, House number" value={customerInfo.address} onChange={(e) => updateCustomerInfo({ address: e.target.value })} className="rounded-2xl h-14 border-muted/50 focus:border-primary px-5" />
                 </div>
               </div>
             </div>
@@ -179,17 +170,17 @@ export function CartSheet() {
               </div>
               <div className="space-y-4">
                 {cart.map((item) => (
-                  <div key={`${item.id}-${item.variant}`} className="flex gap-5 bg-muted/20 p-5 rounded-[1.5rem] border border-primary/5 group transition-all hover:bg-white hover:shadow-lg">
+                  <div key={`${item.id}-${item.variant}`} className="flex gap-5 bg-muted/20 p-5 rounded-2xl border border-primary/5 group transition-all hover:bg-white hover:shadow-lg">
                     <div className="flex-grow space-y-2">
-                      <h4 className="font-black text-sm tracking-tight uppercase text-foreground">{item.name} <span className="text-[10px] text-muted-foreground font-medium ml-1">({item.variant})</span></h4>
-                      <p className="text-sm text-primary font-black">Rs.{item.price * item.quantity}</p>
+                      <h4 className="font-black text-xs tracking-tight uppercase text-foreground">{item.name} <span className="text-[10px] text-muted-foreground font-medium ml-1">({item.variant})</span></h4>
+                      <p className="text-xs text-primary font-black">Rs. {item.price * item.quantity}</p>
                       <div className="flex items-center gap-3 mt-3">
-                        <Button variant="outline" size="icon" className="h-8 w-8 rounded-lg hover:bg-primary hover:text-white border-primary/20" onClick={() => updateQuantity(item.id, item.quantity - 1, item.variant)}><Minus className="h-3 w-3" /></Button>
+                        <Button variant="outline" size="icon" className="h-7 w-7 rounded-lg hover:bg-primary hover:text-white border-primary/20" onClick={() => updateQuantity(item.id, item.quantity - 1, item.variant)}><Minus className="h-3 w-3" /></Button>
                         <span className="text-xs font-black w-5 text-center">{item.quantity}</span>
-                        <Button variant="outline" size="icon" className="h-8 w-8 rounded-lg hover:bg-primary hover:text-white border-primary/20" onClick={() => updateQuantity(item.id, item.quantity + 1, item.variant)}><Plus className="h-3 w-3" /></Button>
+                        <Button variant="outline" size="icon" className="h-7 w-7 rounded-lg hover:bg-primary hover:text-white border-primary/20" onClick={() => updateQuantity(item.id, item.quantity + 1, item.variant)}><Plus className="h-3 w-3" /></Button>
                       </div>
                     </div>
-                    <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity" onClick={() => removeFromCart(item.id, item.variant)}><Trash2 className="h-5 w-5" /></Button>
+                    <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity" onClick={() => removeFromCart(item.id, item.variant)}><Trash2 className="h-4 h-4" /></Button>
                   </div>
                 ))}
               </div>
@@ -201,17 +192,13 @@ export function CartSheet() {
           <div className="flex justify-between items-end">
             <div>
               <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-1">Total Payable</p>
-              <span className="text-4xl font-black text-primary tracking-tighter">Rs.{totalPrice}</span>
+              <span className="text-4xl font-black text-primary tracking-tighter">Rs. {totalPrice}</span>
             </div>
             <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest mb-1 italic">Pure Veg Selection</p>
           </div>
-          <Button onClick={handleWhatsAppOrder} disabled={isProcessing} className="w-full h-20 bg-primary text-xl font-black rounded-2xl shadow-2xl shadow-primary/30 transition-all active:scale-[0.97] hover:bg-primary/95">
-            {isProcessing ? <Loader2 className="w-6 h-6 animate-spin" /> : <>Complete Order on WhatsApp <Send className="ml-3 w-6 h-6" /></>}
+          <Button onClick={handleWhatsAppOrder} disabled={isProcessing} className="w-full h-16 bg-primary text-lg font-black rounded-2xl shadow-xl shadow-primary/20 transition-all active:scale-[0.97] hover:bg-primary/95">
+            {isProcessing ? <Loader2 className="w-6 h-6 animate-spin" /> : <>Order on WhatsApp <Send className="ml-2 w-5 h-5" /></>}
           </Button>
-          <div className="flex items-center justify-center gap-2">
-             <div className="h-1 w-1 rounded-full bg-green-500 animate-pulse" />
-             <p className="text-[9px] text-center text-muted-foreground font-bold uppercase tracking-widest">Verified Kitchen Operations Live</p>
-          </div>
         </div>
       </SheetContent>
     </Sheet>
