@@ -166,14 +166,14 @@ export function Products() {
 
     if (quantity > 0) {
       return (
-        <div className="flex items-center gap-2 bg-primary text-white rounded-lg p-1 shadow-sm shrink-0">
+        <div className="flex items-center gap-1.5 bg-primary text-white rounded-lg p-1 shadow-sm shrink-0">
           <Button size="icon" variant="ghost" className="h-6 w-6 rounded-md hover:bg-white/20 text-white p-0" onClick={() => updateQuantity(itemId, quantity - 1, variant)}><Minus className="h-3 w-3" /></Button>
           <span className="text-xs font-black w-4 text-center">{quantity}</span>
           <Button size="icon" variant="ghost" className="h-6 w-6 rounded-md hover:bg-white/20 text-white p-0" onClick={() => updateQuantity(itemId, quantity + 1, variant)}><Plus className="h-3 w-3" /></Button>
         </div>
       );
     }
-    return <Button size="sm" variant="outline" className="h-8 px-2.5 min-w-[54px] text-[10px] font-black rounded-lg border-primary text-primary hover:bg-primary hover:text-white transition-all shrink-0" onClick={() => handleAddToCart(name, price, variant, id)}>Add</Button>;
+    return <Button size="sm" variant="outline" className="h-8 px-2 min-w-[50px] text-[10px] font-black rounded-lg border-primary text-primary hover:bg-primary hover:text-white transition-all shrink-0" onClick={() => handleAddToCart(name, price, variant, id)}>Add</Button>;
   };
 
   return (
@@ -225,17 +225,25 @@ export function Products() {
                               {item.name.toLowerCase().includes('peri') ? <Flame className="w-4 h-4 sm:w-5 sm:h-5 text-primary" /> : item.name.toLowerCase().includes('cheese') ? <Heart className="w-4 h-4 sm:w-5 sm:h-5 text-primary" /> : <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />}
                               {item.name}
                             </h5>
-                            <div className="space-y-6">
+                            <div className="grid grid-cols-2 gap-3 sm:gap-6">
                               {item.variants.map((v: any, vIdx: number) => (
-                                <div key={vIdx} className="space-y-2.5">
-                                  <p className="text-[10px] sm:text-[11px] font-black text-primary/70 uppercase tracking-[0.2em] ml-1 sm:ml-2">{v.label} Prep</p>
-                                  <div className="grid grid-cols-1 min-[380px]:grid-cols-2 gap-3 sm:gap-4">
-                                    <div className="flex items-center justify-between bg-white p-3 sm:p-4 rounded-xl border border-primary/5 shadow-sm group-hover/card:border-primary/20 transition-colors">
-                                      <div className="flex flex-col"><span className="text-[7px] sm:text-[8px] font-black text-muted-foreground uppercase tracking-widest">5 PCS</span><span className="text-sm sm:text-base font-black">₹{v.price5}</span></div>
+                                <div key={vIdx} className="space-y-3">
+                                  <div className="text-center">
+                                    <span className="text-[11px] sm:text-xs font-black text-primary uppercase tracking-[0.2em]">{v.label}</span>
+                                  </div>
+                                  <div className="space-y-2.5">
+                                    <div className="flex items-center justify-between bg-white p-2.5 rounded-xl border border-primary/5 shadow-sm group-hover/card:border-primary/20 transition-colors">
+                                      <div className="flex flex-col">
+                                        <span className="text-[7px] font-black text-muted-foreground uppercase tracking-widest">5 PCS</span>
+                                        <span className="text-xs sm:text-sm font-black text-foreground">₹{v.price5}</span>
+                                      </div>
                                       <QuantityControl name={`${item.name} ${v.label}`} variant="5 PCS" price={v.price5} id={`${v.id}-5`} />
                                     </div>
-                                    <div className="flex items-center justify-between bg-white p-3 sm:p-4 rounded-xl border border-primary/5 shadow-sm group-hover/card:border-primary/20 transition-colors">
-                                      <div className="flex flex-col"><span className="text-[7px] sm:text-[8px] font-black text-muted-foreground uppercase tracking-widest">11 PCS</span><span className="text-sm sm:text-base font-black">₹{v.price11}</span></div>
+                                    <div className="flex items-center justify-between bg-white p-2.5 rounded-xl border border-primary/5 shadow-sm group-hover/card:border-primary/20 transition-colors">
+                                      <div className="flex flex-col">
+                                        <span className="text-[7px] font-black text-muted-foreground uppercase tracking-widest">11 PCS</span>
+                                        <span className="text-xs sm:text-sm font-black text-foreground">₹{v.price11}</span>
+                                      </div>
                                       <QuantityControl name={`${item.name} ${v.label}`} variant="11 PCS" price={v.price11} id={`${v.id}-11`} />
                                     </div>
                                   </div>
@@ -260,13 +268,13 @@ export function Products() {
                     <h5 className="text-base sm:text-lg font-black uppercase tracking-widest flex items-center gap-3">
                       <Zap className="w-5 h-5 sm:w-6 sm:h-6 text-primary" /> {item.name}
                     </h5>
-                    <div className="grid grid-cols-1 min-[380px]:grid-cols-2 gap-3 sm:gap-4">
-                      <div className="bg-white p-4 rounded-xl flex items-center justify-between shadow-sm border border-primary/5">
-                        <div className="flex flex-col"><span className="text-[7px] sm:text-[8px] font-black text-muted-foreground uppercase tracking-widest">Half</span><span className="text-sm sm:text-base font-black">₹{item.priceHalf}</span></div>
+                    <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                      <div className="bg-white p-3 rounded-xl flex items-center justify-between shadow-sm border border-primary/5">
+                        <div className="flex flex-col"><span className="text-[7px] sm:text-[8px] font-black text-muted-foreground uppercase tracking-widest">Half</span><span className="text-xs sm:text-sm font-black">₹{item.priceHalf}</span></div>
                         <QuantityControl name={item.name} variant="Half" price={item.priceHalf} id={`${item.id}-half`} />
                       </div>
-                      <div className="bg-white p-4 rounded-xl flex items-center justify-between shadow-sm border border-primary/5">
-                        <div className="flex flex-col"><span className="text-[7px] sm:text-[8px] font-black text-muted-foreground uppercase tracking-widest">Full</span><span className="text-sm sm:text-base font-black">₹{item.priceFull}</span></div>
+                      <div className="bg-white p-3 rounded-xl flex items-center justify-between shadow-sm border border-primary/5">
+                        <div className="flex flex-col"><span className="text-[7px] sm:text-[8px] font-black text-muted-foreground uppercase tracking-widest">Full</span><span className="text-xs sm:text-sm font-black">₹{item.priceFull}</span></div>
                         <QuantityControl name={item.name} variant="Full" price={item.priceFull} id={`${item.id}-full`} />
                       </div>
                     </div>

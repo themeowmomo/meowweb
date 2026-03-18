@@ -30,7 +30,7 @@ export function Navbar() {
     <nav className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-3 group">
-          <div className="bg-primary p-2.5 rounded-xl group-hover:bg-accent transition-all duration-300 shadow-sm shadow-primary/20 group-hover:shadow-accent/20">
+          <div className="bg-primary p-3 rounded-2xl group-hover:bg-accent transition-all duration-300 shadow-sm shadow-primary/20 group-hover:shadow-accent/20">
             <UtensilsCrossed className="w-6 h-6 text-white" />
           </div>
           <span className="font-headline font-black text-xl tracking-tight text-primary transition-colors group-hover:text-accent">Meow Momo</span>
