@@ -116,7 +116,10 @@ export function CartSheet() {
         </div>
       )}
 
-      <SheetContent className="w-full sm:max-w-md flex flex-col p-0 border-l-0 sm:border-l rounded-t-[2.5rem] sm:rounded-l-[2.5rem] overflow-hidden">
+      <SheetContent 
+        onOpenAutoFocus={(e) => e.preventDefault()}
+        className="w-full sm:max-w-md flex flex-col p-0 border-l-0 sm:border-l rounded-t-[2.5rem] sm:rounded-l-[2.5rem] overflow-hidden"
+      >
         <div className="px-8 pt-10 pb-6 border-b bg-muted/5">
           <SheetHeader>
             <SheetTitle className="flex items-center gap-3 font-black tracking-tighter text-3xl text-foreground">
