@@ -177,56 +177,65 @@ export function Products() {
   };
 
   return (
-    <section id="menu" className="py-8 bg-[#FDFBF7]">
+    <section id="menu" className="py-12 bg-[#FDFBF7]">
       <div className="container mx-auto px-4 max-w-5xl space-y-12">
-        <div className="text-center space-y-2">
-          <Badge className="bg-primary/10 text-primary border-none px-4 py-1 font-black tracking-widest text-[10px] rounded-full uppercase">100% PURE VEG & JAIN SPECIALIST</Badge>
-          <h2 className="text-3xl md:text-5xl font-black font-headline tracking-tighter text-foreground leading-none">Our Special Menu</h2>
+        <div className="text-center space-y-3">
+          <Badge className="bg-primary/10 text-primary border-none px-4 py-1.5 font-black tracking-widest text-[10px] rounded-full uppercase">Verified Pure Veg & Jain Preparation</Badge>
+          <h2 className="text-4xl md:text-6xl font-black font-headline tracking-tighter text-foreground leading-none">The Momo Collection</h2>
+          <p className="text-muted-foreground text-sm font-medium">Handcrafted with premium ingredients, served with spicy chutney.</p>
         </div>
 
         <Tabs defaultValue="momos" className="w-full">
-          <TabsList className="grid w-full grid-cols-3 h-16 bg-white border rounded-[1.5rem] p-1 sticky top-20 z-40 shadow-sm">
-            <TabsTrigger value="momos" className="rounded-xl font-black text-[10px] uppercase tracking-widest flex items-center gap-2">
-              <Utensils className="w-3.5 h-3.5" /> Momos
-            </TabsTrigger>
-            <TabsTrigger value="fries" className="rounded-xl font-black text-[10px] uppercase tracking-widest flex items-center gap-2">
-              <Zap className="w-3.5 h-3.5" /> Fries
-            </TabsTrigger>
-            <TabsTrigger value="combos" className="rounded-xl font-black text-[10px] uppercase tracking-widest flex items-center gap-2">
-              <Package className="w-3.5 h-3.5" /> Combos
-            </TabsTrigger>
-          </TabsList>
+          <div className="sticky top-16 z-40 bg-[#FDFBF7]/90 backdrop-blur-md py-4">
+            <TabsList className="flex w-full max-w-md mx-auto h-14 bg-white border rounded-full p-1 shadow-lg ring-1 ring-black/5">
+              <TabsTrigger value="momos" className="flex-1 rounded-full font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 transition-all data-[state=active]:bg-primary data-[state=active]:text-white">
+                <Utensils className="w-3.5 h-3.5" /> Momos
+              </TabsTrigger>
+              <TabsTrigger value="fries" className="flex-1 rounded-full font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 transition-all data-[state=active]:bg-primary data-[state=active]:text-white">
+                <Zap className="w-3.5 h-3.5" /> Fries
+              </TabsTrigger>
+              <TabsTrigger value="combos" className="flex-1 rounded-full font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 transition-all data-[state=active]:bg-primary data-[state=active]:text-white">
+                <Package className="w-3.5 h-3.5" /> Combos
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
           <TabsContent value="momos" className="mt-8">
-            <Accordion type="multiple" defaultValue={["momos-0"]} className="space-y-6">
+            <Accordion type="multiple" defaultValue={["momos-0"]} className="space-y-8">
               {MENU_DATA.momos.map((category, catIdx) => (
-                <AccordionItem key={catIdx} value={`momos-${catIdx}`} className="border-none bg-white rounded-[2.5rem] shadow-sm border border-primary/5 overflow-hidden transition-all data-[state=open]:shadow-xl data-[state=open]:border-primary/10">
-                  <AccordionTrigger className="sticky top-[136px] z-30 bg-white hover:no-underline px-8 py-5 group transition-all data-[state=open]:border-b">
-                    <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 rounded-2xl bg-primary/5 flex items-center justify-center text-primary group-data-[state=open]:bg-primary group-data-[state=open]:text-white transition-all"><Utensils className="w-5 h-5" /></div>
-                      <h4 className="text-lg font-black text-foreground uppercase tracking-widest">{category.category}</h4>
+                <AccordionItem 
+                  key={catIdx} 
+                  value={`momos-${catIdx}`} 
+                  className="border-none bg-white rounded-[2.5rem] shadow-sm border border-primary/5 overflow-hidden transition-all data-[state=open]:shadow-xl data-[state=open]:ring-1 data-[state=open]:ring-primary/10"
+                >
+                  <AccordionTrigger className="sticky top-[134px] z-30 bg-white/95 backdrop-blur-sm hover:no-underline px-8 py-6 group transition-all data-[state=open]:border-b border-muted/50">
+                    <div className="flex items-center gap-5">
+                      <div className="w-12 h-12 rounded-2xl bg-primary/5 flex items-center justify-center text-primary group-data-[state=open]:bg-primary group-data-[state=open]:text-white transition-all shadow-sm">
+                        <Utensils className="w-6 h-6" />
+                      </div>
+                      <h4 className="text-xl font-black text-foreground uppercase tracking-[0.15em]">{category.category}</h4>
                     </div>
                   </AccordionTrigger>
-                  <AccordionContent className="px-6 py-8 sm:px-8">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <AccordionContent className="px-6 py-10 sm:px-10">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                       {category.items.map((item: any, itemIdx: number) => (
-                        <Card key={itemIdx} className="rounded-3xl border-none shadow-sm bg-muted/5 overflow-hidden hover:shadow-md transition-all">
-                          <CardContent className="p-6 space-y-4">
-                            <h5 className="text-lg font-black tracking-tight flex items-center gap-2 uppercase">
-                              {item.name.toLowerCase().includes('peri') ? <Flame className="w-4 h-4 text-primary" /> : item.name.toLowerCase().includes('cheese') ? <Heart className="w-4 h-4 text-primary" /> : <Sparkles className="w-4 h-4 text-primary" />}
+                        <Card key={itemIdx} className="rounded-[2rem] border-none shadow-sm bg-muted/10 overflow-hidden hover:shadow-md transition-all group/card">
+                          <CardContent className="p-8 space-y-6">
+                            <h5 className="text-xl font-black tracking-tight flex items-center gap-3 uppercase text-foreground">
+                              {item.name.toLowerCase().includes('peri') ? <Flame className="w-5 h-5 text-primary" /> : item.name.toLowerCase().includes('cheese') ? <Heart className="w-5 h-5 text-primary" /> : <Sparkles className="w-5 h-5 text-primary" />}
                               {item.name}
                             </h5>
-                            <div className="space-y-4">
+                            <div className="space-y-6">
                               {item.variants.map((v: any, vIdx: number) => (
-                                <div key={vIdx} className="space-y-2">
-                                  <p className="text-[9px] font-black text-primary/60 uppercase tracking-widest ml-1">{v.label}</p>
-                                  <div className="grid grid-cols-2 gap-2">
-                                    <div className="flex items-center justify-between bg-white p-3 rounded-2xl border border-primary/5">
-                                      <div className="flex flex-col"><span className="text-[8px] font-black text-muted-foreground uppercase">5 PCS</span><span className="text-sm font-black">₹{v.price5}</span></div>
+                                <div key={vIdx} className="space-y-3">
+                                  <p className="text-[10px] font-black text-primary/70 uppercase tracking-[0.2em] ml-2">{v.label} Preparation</p>
+                                  <div className="grid grid-cols-2 gap-3">
+                                    <div className="flex items-center justify-between bg-white p-4 rounded-2xl border border-primary/5 shadow-sm group-hover/card:border-primary/20 transition-colors">
+                                      <div className="flex flex-col"><span className="text-[9px] font-black text-muted-foreground uppercase">5 PCS</span><span className="text-lg font-black">₹{v.price5}</span></div>
                                       <QuantityControl name={`${item.name} ${v.label}`} variant="5 PCS" price={v.price5} id={`${v.id}-5`} />
                                     </div>
-                                    <div className="flex items-center justify-between bg-white p-3 rounded-2xl border border-primary/5">
-                                      <div className="flex flex-col"><span className="text-[8px] font-black text-muted-foreground uppercase">11 PCS</span><span className="text-sm font-black">₹{v.price11}</span></div>
+                                    <div className="flex items-center justify-between bg-white p-4 rounded-2xl border border-primary/5 shadow-sm group-hover/card:border-primary/20 transition-colors">
+                                      <div className="flex flex-col"><span className="text-[9px] font-black text-muted-foreground uppercase">11 PCS</span><span className="text-lg font-black">₹{v.price11}</span></div>
                                       <QuantityControl name={`${item.name} ${v.label}`} variant="11 PCS" price={v.price11} id={`${v.id}-11`} />
                                     </div>
                                   </div>
@@ -244,20 +253,20 @@ export function Products() {
           </TabsContent>
 
           <TabsContent value="fries" className="mt-8">
-            <Card className="rounded-[2.5rem] border-none shadow-xl bg-white p-8">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card className="rounded-[3rem] border-none shadow-xl bg-white p-10 ring-1 ring-primary/5">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {MENU_DATA.fries[0].items.map((item: any, idx: number) => (
-                  <div key={idx} className="bg-muted/5 p-6 rounded-[2rem] space-y-4 border border-primary/5">
-                    <h5 className="text-lg font-black uppercase tracking-tight flex items-center gap-2">
-                      <Zap className="w-4 h-4 text-primary" /> {item.name}
+                  <div key={idx} className="bg-muted/10 p-8 rounded-[2.5rem] space-y-6 border border-primary/5 hover:border-primary/20 transition-all">
+                    <h5 className="text-xl font-black uppercase tracking-widest flex items-center gap-3">
+                      <Zap className="w-6 h-6 text-primary" /> {item.name}
                     </h5>
-                    <div className="grid grid-cols-2 gap-3">
-                      <div className="bg-white p-4 rounded-2xl flex items-center justify-between shadow-sm">
-                        <div className="flex flex-col"><span className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">Half</span><span className="text-base font-black">₹{item.priceHalf}</span></div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="bg-white p-5 rounded-2xl flex items-center justify-between shadow-sm border border-primary/5">
+                        <div className="flex flex-col"><span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Half</span><span className="text-lg font-black">₹{item.priceHalf}</span></div>
                         <QuantityControl name={item.name} variant="Half" price={item.priceHalf} id={`${item.id}-half`} />
                       </div>
-                      <div className="bg-white p-4 rounded-2xl flex items-center justify-between shadow-sm">
-                        <div className="flex flex-col"><span className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">Full</span><span className="text-base font-black">₹{item.priceFull}</span></div>
+                      <div className="bg-white p-5 rounded-2xl flex items-center justify-between shadow-sm border border-primary/5">
+                        <div className="flex flex-col"><span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Full</span><span className="text-lg font-black">₹{item.priceFull}</span></div>
                         <QuantityControl name={item.name} variant="Full" price={item.priceFull} id={`${item.id}-full`} />
                       </div>
                     </div>
@@ -268,22 +277,22 @@ export function Products() {
           </TabsContent>
 
           <TabsContent value="combos" className="mt-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {MENU_DATA.combos[0].items.map((item: any, idx: number) => (
-                <Card key={idx} className="rounded-[2.5rem] border-none shadow-xl bg-white overflow-hidden group hover:scale-[1.02] transition-all">
-                  <CardContent className="p-8 space-y-4">
+                <Card key={idx} className="rounded-[3rem] border-none shadow-xl bg-white overflow-hidden group hover:scale-[1.02] transition-all ring-1 ring-primary/5">
+                  <CardContent className="p-10 space-y-6">
                     <div className="flex justify-between items-start">
-                      <div className="p-3 bg-primary/10 rounded-2xl text-primary"><Package className="w-6 h-6" /></div>
-                      <Badge className="bg-primary text-white border-none font-black text-[10px] uppercase">Special Offer</Badge>
+                      <div className="p-4 bg-primary/10 rounded-2xl text-primary shadow-inner"><Package className="w-7 h-7" /></div>
+                      <Badge className="bg-primary text-white border-none font-black text-[10px] uppercase px-4 py-1 tracking-widest">High Value Combo</Badge>
                     </div>
                     <div>
-                      <h5 className="text-xl font-black uppercase tracking-tight">{item.name}</h5>
-                      <p className="text-xs text-muted-foreground font-medium italic mt-1">{item.desc}</p>
+                      <h5 className="text-2xl font-black uppercase tracking-tight text-foreground">{item.name}</h5>
+                      <p className="text-sm text-muted-foreground font-medium italic mt-2 leading-relaxed">{item.desc}</p>
                     </div>
-                    <div className="flex items-center justify-between pt-4 border-t border-dashed">
+                    <div className="flex items-center justify-between pt-6 border-t border-dashed border-primary/10">
                       <div className="flex flex-col">
-                        <span className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em]">Meal Combo</span>
-                        <span className="text-2xl font-black text-primary">₹{item.price}</span>
+                        <span className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.25em]">Meal Combo</span>
+                        <span className="text-3xl font-black text-primary">₹{item.price}</span>
                       </div>
                       <QuantityControl name={item.name} variant="Combo" price={item.price} id={item.id} />
                     </div>
