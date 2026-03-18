@@ -5,205 +5,62 @@
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "RestaurantProfile",
       "type": "object",
-      "description": "Represents the profile and general information of a restaurant, including its identity, location, contact, and business specifics.",
+      "description": "Represents the profile and general information of a restaurant.",
       "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the RestaurantProfile entity."
-        },
-        "name": {
-          "type": "string",
-          "description": "The official name of the restaurant, e.g., 'Meow Momo'."
-        },
-        "category": {
-          "type": "string",
-          "description": "The category of the restaurant, e.g., 'Fast Food Restaurant'."
-        },
-        "imageUrl": {
-          "type": "string",
-          "description": "Hero image URL for the restaurant landing page.",
-          "format": "uri"
-        },
-        "googleRating": {
-          "type": "number",
-          "description": "The average Google rating of the restaurant on a scale, e.g., 4.9."
-        },
-        "priceRangeMin": {
-          "type": "number",
-          "description": "The minimum estimated price per person in local currency, e.g., 1."
-        },
-        "priceRangeMax": {
-          "type": "number",
-          "description": "The maximum estimated price per person in local currency, e.g., 200."
-        },
-        "address": {
-          "type": "string",
-          "description": "The complete physical address of the restaurant."
-        },
-        "latitude": {
-          "type": "number",
-          "description": "Geographic latitude coordinate of the restaurant's location."
-        },
-        "longitude": {
-          "type": "number",
-          "description": "Geographic longitude coordinate of the restaurant's location."
-        },
-        "ownerPhone": {
-          "type": "string",
-          "description": "The owner's contact phone number, often used for WhatsApp orders."
-        },
-        "businessPhone": {
-          "type": "string",
-          "description": "The general business contact phone number for the restaurant."
-        },
-        "googleMapsUrl": {
-          "type": "string",
-          "description": "URL to the restaurant's location on Google Maps.",
-          "format": "uri"
-        },
-        "whatsAppOrderUrl": {
-          "type": "string",
-          "description": "URL for placing orders directly via WhatsApp.",
-          "format": "uri"
-        },
-        "description": {
-          "type": "string",
-          "description": "A detailed textual description of the restaurant and its culinary offerings."
-        },
-        "businessHighlights": {
-          "type": "array",
-          "description": "A list of key selling points or unique features of the business.",
-          "items": {
-            "type": "string"
-          }
-        },
-        "paymentMethods": {
-          "type": "array",
-          "description": "A list of accepted payment methods at the restaurant.",
-          "items": {
-            "type": "string"
-          }
-        }
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "category": { "type": "string" },
+        "imageUrl": { "type": "string", "format": "uri" },
+        "googleRating": { "type": "number" },
+        "priceRangeMin": { "type": "number" },
+        "priceRangeMax": { "type": "number" },
+        "address": { "type": "string" },
+        "latitude": { "type": "number" },
+        "longitude": { "type": "number" },
+        "ownerPhone": { "type": "string" },
+        "businessPhone": { "type": "string" },
+        "googleMapsUrl": { "type": "string", "format": "uri" },
+        "whatsAppOrderUrl": { "type": "string", "format": "uri" },
+        "description": { "type": "string" },
+        "businessHighlights": { "type": "array", "items": { "type": "string" } },
+        "paymentMethods": { "type": "array", "items": { "type": "string" } }
       },
-      "required": [
-        "id",
-        "name",
-        "category",
-        "address",
-        "latitude",
-        "longitude",
-        "description",
-        "ownerPhone",
-        "businessPhone"
-      ]
+      "required": ["id", "name", "category", "address", "description"]
     },
     "Order": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "Order",
       "type": "object",
-      "description": "Represents a customer's complete order placed at the restaurant, including customer details, payment, and status.",
+      "description": "Represents a guest customer's complete order.",
       "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the Order entity."
-        },
-        "restaurantId": {
-          "type": "string",
-          "description": "Reference to the RestaurantProfile."
-        },
-        "customerId": {
-          "type": "string",
-          "description": "The UID of the customer who placed the order (defaults to 'GUEST')."
-        },
-        "orderDate": {
-          "type": "string",
-          "description": "The date and time when the order was initially placed.",
-          "format": "date-time"
-        },
-        "customerName": {
-          "type": "string",
-          "description": "The name of the customer who placed this order."
-        },
-        "customerContact": {
-          "type": "string",
-          "description": "The primary contact information (e.g., phone number or email) for the customer."
-        },
-        "deliveryAddress": {
-          "type": "string",
-          "description": "The full address for delivery, if the order is for delivery."
-        },
-        "totalAmount": {
-          "type": "number",
-          "description": "The total monetary value of the order."
-        },
-        "paymentMethod": {
-          "type": "string",
-          "description": "The chosen method of payment for the order."
-        },
-        "status": {
-          "type": "string",
-          "description": "The current processing status of the order."
-        },
-        "notes": {
-          "type": "string",
-          "description": "Any special instructions or general notes."
-        }
+        "id": { "type": "string" },
+        "restaurantId": { "type": "string" },
+        "customerId": { "type": "string" },
+        "orderDate": { "type": "string", "format": "date-time" },
+        "customerName": { "type": "string" },
+        "customerContact": { "type": "string" },
+        "deliveryAddress": { "type": "string" },
+        "totalAmount": { "type": "number" },
+        "paymentMethod": { "type": "string" },
+        "status": { "type": "string" },
+        "notes": { "type": "string" }
       },
-      "required": [
-        "id",
-        "restaurantId",
-        "customerId",
-        "orderDate",
-        "customerName",
-        "totalAmount",
-        "paymentMethod",
-        "status"
-      ]
+      "required": ["id", "restaurantId", "customerId", "orderDate", "customerName", "totalAmount", "paymentMethod", "status"]
     },
     "OrderItem": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "OrderItem",
       "type": "object",
-      "description": "Represents a specific menu item included as part of a larger customer order.",
       "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the OrderItem entity."
-        },
-        "orderId": {
-          "type": "string",
-          "description": "Reference to the parent Order."
-        },
-        "menuItemId": {
-          "type": "string",
-          "description": "Reference to the MenuItem."
-        },
-        "quantity": {
-          "type": "number",
-          "description": "The number of units ordered."
-        },
-        "priceAtOrder": {
-          "type": "number",
-          "description": "The price of the menu item at the exact moment the order was placed."
-        },
-        "name": {
-          "type": "string",
-          "description": "The name of the item at time of order."
-        }
+        "id": { "type": "string" },
+        "orderId": { "type": "string" },
+        "menuItemId": { "type": "string" },
+        "quantity": { "type": "number" },
+        "priceAtOrder": { "type": "number" },
+        "name": { "type": "string" }
       },
-      "required": [
-        "id",
-        "orderId",
-        "menuItemId",
-        "quantity",
-        "priceAtOrder"
-      ]
+      "required": ["id", "orderId", "menuItemId", "quantity", "priceAtOrder"]
     }
-  },
-  "auth": {
-    "providers": [
-      "anonymous"
-    ]
   },
   "firestore": {
     "structure": [
@@ -211,30 +68,21 @@
         "path": "/restaurants/{restaurantId}",
         "definition": {
           "entityName": "RestaurantProfile",
-          "schema": {
-            "$ref": "#/backend/entities/RestaurantProfile"
-          },
-          "description": "Main restaurant profile."
+          "schema": { "$ref": "#/backend/entities/RestaurantProfile" }
         }
       },
       {
         "path": "/restaurants/{restaurantId}/orders/{orderId}",
         "definition": {
           "entityName": "Order",
-          "schema": {
-            "$ref": "#/backend/entities/Order"
-          },
-          "description": "Customer orders."
+          "schema": { "$ref": "#/backend/entities/Order" }
         }
       },
       {
         "path": "/restaurants/{restaurantId}/orders/{orderId}/orderItems/{orderItemId}",
         "definition": {
           "entityName": "OrderItem",
-          "schema": {
-            "$ref": "#/backend/entities/OrderItem"
-          },
-          "description": "Specific items within an order."
+          "schema": { "$ref": "#/backend/entities/OrderItem" }
         }
       }
     ]
