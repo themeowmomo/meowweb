@@ -51,7 +51,6 @@ export default function LoginPage() {
   const handleGoogleSignIn = () => {
     try {
       initiateGoogleSignIn(auth);
-      // Auth listener in Provider will handle redirect/state
     } catch (err: any) {
       toast({ title: "Google Sign-In Failed", description: err.message, variant: "destructive" });
     }

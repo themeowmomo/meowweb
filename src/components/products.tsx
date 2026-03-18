@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -15,7 +16,6 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
-// Hardcoded menu data with grouped variants
 const MENU_DATA = {
   momos: [
     {
@@ -147,20 +147,10 @@ const MENU_DATA = {
 export function Products() {
   const { addToCart, cart, updateQuantity } = useCart();
   const { toast } = useToast();
-  const [activeTab, setActiveTab] = useState("momos");
 
   const handleAddToCart = (name: string, price: number, variant: string, id: string) => {
-    addToCart({
-      id: `${id}-${variant}`,
-      name: name,
-      price: price,
-      variant: variant
-    });
-    
-    toast({
-      title: "Added to Order",
-      description: `${name} (${variant}) - ₹${price}`,
-    });
+    addToCart({ id: `${id}-${variant}`, name, price, variant });
+    toast({ title: "Added to Order", description: `${name} (${variant}) - ₹${price}` });
   };
 
   const QuantityControl = ({ name, variant, price, id }: { name: string, variant: string, price: number, id: string }) => {
@@ -171,170 +161,92 @@ export function Products() {
     if (quantity > 0) {
       return (
         <div className="flex items-center gap-2 bg-primary text-white rounded-lg p-1 shadow-sm">
-          <Button 
-            size="icon" 
-            variant="ghost"
-            className="h-6 w-6 rounded-md hover:bg-white/20 text-white p-0"
-            onClick={() => updateQuantity(itemId, quantity - 1, variant)}
-          >
-            <Minus className="h-3 w-3" />
-          </Button>
+          <Button size="icon" variant="ghost" className="h-6 w-6 rounded-md hover:bg-white/20 text-white p-0" onClick={() => updateQuantity(itemId, quantity - 1, variant)}><Minus className="h-3 w-3" /></Button>
           <span className="text-xs font-black w-4 text-center">{quantity}</span>
-          <Button 
-            size="icon" 
-            variant="ghost"
-            className="h-6 w-6 rounded-md hover:bg-white/20 text-white p-0"
-            onClick={() => updateQuantity(itemId, quantity + 1, variant)}
-          >
-            <Plus className="h-3 w-3" />
-          </Button>
+          <Button size="icon" variant="ghost" className="h-6 w-6 rounded-md hover:bg-white/20 text-white p-0" onClick={() => updateQuantity(itemId, quantity + 1, variant)}><Plus className="h-3 w-3" /></Button>
         </div>
       );
     }
-
-    return (
-      <Button 
-        size="sm"
-        variant="outline"
-        className="h-8 px-4 text-[10px] font-black rounded-lg border-primary text-primary hover:bg-primary hover:text-white transition-all"
-        onClick={() => handleAddToCart(name, price, variant, id)}
-      >
-        Add
-      </Button>
-    );
+    return <Button size="sm" variant="outline" className="h-8 px-4 text-[10px] font-black rounded-lg border-primary text-primary hover:bg-primary hover:text-white transition-all" onClick={() => handleAddToCart(name, price, variant, id)}>Add</Button>;
   };
-
-  const activeCategories = MENU_DATA[activeTab as keyof typeof MENU_DATA];
 
   return (
     <section id="menu" className="py-8 bg-[#FDFBF7]">
-      <div className="container mx-auto px-4 max-w-5xl">
-        <div className="text-center mb-8 space-y-2">
-          <Badge className="bg-primary/10 text-primary border-none px-4 py-1 font-black tracking-widest text-[10px] rounded-full uppercase">
-            100% PURE VEG & JAIN SPECIALIST
-          </Badge>
+      <div className="container mx-auto px-4 max-w-5xl space-y-12">
+        <div className="text-center space-y-2">
+          <Badge className="bg-primary/10 text-primary border-none px-4 py-1 font-black tracking-widest text-[10px] rounded-full uppercase">100% PURE VEG & JAIN SPECIALIST</Badge>
           <h2 className="text-3xl md:text-5xl font-black font-headline tracking-tighter text-foreground">Our Special Menu</h2>
-          <p className="text-muted-foreground text-sm font-medium max-w-lg mx-auto">
-            Handcrafted with love. Select your favorites and order via WhatsApp.
-          </p>
         </div>
 
-        {/* Tab Switcher */}
-        <div className="sticky top-20 z-40 mb-8 flex justify-center">
-          <div className="bg-white/95 backdrop-blur-md border p-1 rounded-2xl shadow-xl flex items-center gap-1">
-            {[
-              { id: 'momos', name: 'Momos', icon: Utensils },
-              { id: 'fries', name: 'Fries', icon: Zap },
-              { id: 'combos', name: 'Combos', icon: Package }
-            ].map(tab => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={cn(
-                  "flex items-center gap-2 px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all",
-                  activeTab === tab.id 
-                    ? "bg-primary text-white shadow-lg" 
-                    : "hover:bg-muted text-muted-foreground/60"
-                )}
-              >
-                <tab.icon className="w-3.5 h-3.5" /> {tab.name}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <Accordion type="multiple" defaultValue={activeCategories.map((_, i) => `category-${i}`)} className="space-y-4">
-          {activeCategories.map((category, catIdx) => (
-            <AccordionItem 
-              key={catIdx} 
-              value={`category-${catIdx}`} 
-              className="border-none bg-white rounded-3xl shadow-sm border border-primary/5 overflow-hidden transition-all data-[state=open]:shadow-md data-[state=open]:border-primary/10 data-[state=open]:ring-1 data-[state=open]:ring-primary/5"
-            >
-              <AccordionTrigger className="sticky top-[136px] z-30 bg-white hover:no-underline px-8 py-5 group transition-all data-[state=open]:border-b">
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-2xl bg-primary/5 flex items-center justify-center text-primary group-data-[state=open]:bg-primary group-data-[state=open]:text-white transition-all">
-                    <Utensils className="w-5 h-5" />
-                  </div>
-                  <h3 className="text-lg font-black text-foreground uppercase tracking-widest">{category.category}</h3>
-                </div>
-              </AccordionTrigger>
-              <AccordionContent className="px-6 py-6 sm:px-8">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {category.items.map((item: any, itemIdx: number) => (
-                    <Card key={item.id || itemIdx} className="rounded-3xl border-none shadow-sm bg-muted/5 overflow-hidden hover:shadow-md transition-all">
-                      <CardContent className="p-6 space-y-4">
-                        <div className="flex justify-between items-start">
-                          <h4 className="text-lg font-black tracking-tight flex items-center gap-2 uppercase">
-                            {item.name.toLowerCase().includes('peri') ? <Flame className="w-4 h-4 text-primary" /> : 
-                             item.name.toLowerCase().includes('cheese') ? <Heart className="w-4 h-4 text-primary" /> :
-                             <Sparkles className="w-4 h-4 text-primary" />}
-                            {item.name}
-                          </h4>
-                        </div>
-                        {item.desc && <p className="text-[10px] text-muted-foreground font-medium italic">{item.desc}</p>}
-
-                        <div className="space-y-3">
-                          {item.variants ? (
-                            item.variants.map((variant: any, vIdx: number) => (
-                              <div key={vIdx} className="space-y-2">
-                                <p className="text-[9px] font-black text-primary/60 uppercase tracking-widest ml-1">{variant.label}</p>
-                                <div className="grid grid-cols-2 gap-2">
-                                  <div className="flex items-center justify-between bg-white p-3 rounded-2xl border border-primary/5">
-                                    <div className="flex flex-col">
-                                      <span className="text-[8px] font-black text-muted-foreground uppercase">5 PCS</span>
-                                      <span className="text-sm font-black">₹{variant.price5}</span>
+        {Object.entries(MENU_DATA).map(([sectionKey, categories]) => (
+          <div key={sectionKey} className="space-y-6">
+            <h3 className="sticky top-16 z-40 bg-[#FDFBF7]/80 backdrop-blur-md py-4 text-2xl font-black uppercase tracking-widest text-primary flex items-center gap-3 border-b-2 border-primary/10">
+              {sectionKey === 'momos' ? <Utensils className="w-6 h-6" /> : sectionKey === 'fries' ? <Zap className="w-6 h-6" /> : <Package className="w-6 h-6" />}
+              {sectionKey}
+            </h3>
+            
+            <Accordion type="multiple" defaultValue={categories.map((_, i) => `${sectionKey}-category-${i}`)} className="space-y-4">
+              {categories.map((category, catIdx) => (
+                <AccordionItem key={catIdx} value={`${sectionKey}-category-${catIdx}`} className="border-none bg-white rounded-3xl shadow-sm border border-primary/5 overflow-hidden transition-all data-[state=open]:shadow-md data-[state=open]:border-primary/10">
+                  <AccordionTrigger className="sticky top-32 z-30 bg-white hover:no-underline px-8 py-5 group transition-all data-[state=open]:border-b">
+                    <div className="flex items-center gap-4">
+                      <div className="w-10 h-10 rounded-2xl bg-primary/5 flex items-center justify-center text-primary group-data-[state=open]:bg-primary group-data-[state=open]:text-white transition-all"><Utensils className="w-5 h-5" /></div>
+                      <h4 className="text-lg font-black text-foreground uppercase tracking-widest">{category.category}</h4>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-6 py-6 sm:px-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {category.items.map((item: any, itemIdx: number) => (
+                        <Card key={item.id || itemIdx} className="rounded-3xl border-none shadow-sm bg-muted/5 overflow-hidden hover:shadow-md transition-all">
+                          <CardContent className="p-6 space-y-4">
+                            <h5 className="text-lg font-black tracking-tight flex items-center gap-2 uppercase">
+                              {item.name.toLowerCase().includes('peri') ? <Flame className="w-4 h-4 text-primary" /> : item.name.toLowerCase().includes('cheese') ? <Heart className="w-4 h-4 text-primary" /> : <Sparkles className="w-4 h-4 text-primary" />}
+                              {item.name}
+                            </h5>
+                            {item.desc && <p className="text-[10px] text-muted-foreground font-medium italic">{item.desc}</p>}
+                            <div className="space-y-3">
+                              {item.variants ? item.variants.map((v: any, vIdx: number) => (
+                                <div key={vIdx} className="space-y-2">
+                                  <p className="text-[9px] font-black text-primary/60 uppercase tracking-widest ml-1">{v.label}</p>
+                                  <div className="grid grid-cols-2 gap-2">
+                                    <div className="flex items-center justify-between bg-white p-3 rounded-2xl border border-primary/5">
+                                      <div className="flex flex-col"><span className="text-[8px] font-black text-muted-foreground uppercase">5 PCS</span><span className="text-sm font-black">₹{v.price5}</span></div>
+                                      <QuantityControl name={`${item.name} ${v.label}`} variant="5 PCS" price={v.price5} id={`${v.id}-5`} />
                                     </div>
-                                    <QuantityControl name={`${item.name} ${variant.label}`} variant="5 PCS" price={variant.price5} id={`${variant.id}-5`} />
-                                  </div>
-                                  <div className="flex items-center justify-between bg-white p-3 rounded-2xl border border-primary/5">
-                                    <div className="flex flex-col">
-                                      <span className="text-[8px] font-black text-muted-foreground uppercase">11 PCS</span>
-                                      <span className="text-sm font-black">₹{variant.price11}</span>
+                                    <div className="flex items-center justify-between bg-white p-3 rounded-2xl border border-primary/5">
+                                      <div className="flex flex-col"><span className="text-[8px] font-black text-muted-foreground uppercase">11 PCS</span><span className="text-sm font-black">₹{v.price11}</span></div>
+                                      <QuantityControl name={`${item.name} ${v.label}`} variant="11 PCS" price={v.price11} id={`${v.id}-11`} />
                                     </div>
-                                    <QuantityControl name={`${item.name} ${variant.label}`} variant="11 PCS" price={variant.price11} id={`${variant.id}-11`} />
                                   </div>
                                 </div>
-                              </div>
-                            ))
-                          ) : (
-                            <div className="grid grid-cols-2 gap-2">
-                              {('priceHalf' in item) ? (
-                                <>
+                              )) : (('priceHalf' in item) ? (
+                                <div className="grid grid-cols-2 gap-2">
                                   <div className="flex items-center justify-between bg-white p-3 rounded-2xl border border-primary/5">
-                                    <div className="flex flex-col">
-                                      <span className="text-[8px] font-black text-muted-foreground uppercase">Half</span>
-                                      <span className="text-sm font-black">₹{item.priceHalf}</span>
-                                    </div>
+                                    <div className="flex flex-col"><span className="text-[8px] font-black text-muted-foreground uppercase">Half</span><span className="text-sm font-black">₹{item.priceHalf}</span></div>
                                     <QuantityControl name={item.name} variant="Half" price={item.priceHalf} id={`${item.id}-half`} />
                                   </div>
                                   <div className="flex items-center justify-between bg-white p-3 rounded-2xl border border-primary/5">
-                                    <div className="flex flex-col">
-                                      <span className="text-[8px] font-black text-muted-foreground uppercase">Full</span>
-                                      <span className="text-sm font-black">₹{item.priceFull}</span>
-                                    </div>
+                                    <div className="flex flex-col"><span className="text-[8px] font-black text-muted-foreground uppercase">Full</span><span className="text-sm font-black">₹{item.priceFull}</span></div>
                                     <QuantityControl name={item.name} variant="Full" price={item.priceFull} id={`${item.id}-full`} />
                                   </div>
-                                </>
+                                </div>
                               ) : (
-                                <div className="col-span-2 flex items-center justify-between bg-white p-4 rounded-2xl border-2 border-primary/5">
-                                  <div className="flex flex-col">
-                                    <span className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">Combo Meal</span>
-                                    <span className="text-xl font-black text-primary">₹{item.price}</span>
-                                  </div>
+                                <div className="flex items-center justify-between bg-white p-4 rounded-2xl border-2 border-primary/5">
+                                  <div className="flex flex-col"><span className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">Combo Meal</span><span className="text-xl font-black text-primary">₹{item.price}</span></div>
                                   <QuantityControl name={item.name} variant="Combo" price={item.price} id={item.id} />
                                 </div>
-                              )}
+                              ))}
                             </div>
-                          )}
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </div>
+        ))}
       </div>
     </section>
   );

@@ -54,11 +54,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
       try {
         const parsed = JSON.parse(savedCart);
         if (Array.isArray(parsed)) setCart(parsed);
-      } catch (e) {
-        console.error("Cart recovery failed", e);
-      }
+      } catch (e) {}
     }
-
     const savedInfo = localStorage.getItem('meow_momo_customer');
     if (savedInfo) {
       try {
@@ -68,47 +65,33 @@ export function CartProvider({ children }: { children: ReactNode }) {
           address: parsed.address || '',
           paymentMethod: parsed.paymentMethod || 'cod'
         });
-      } catch (e) {
-        console.error("Profile recovery failed", e);
-      }
+      } catch (e) {}
     }
   }, []);
 
-  // Update customer name from user profile if not set
   useEffect(() => {
     if (user && !customerInfo.name) {
       setCustomerInfo(prev => ({ ...prev, name: user.displayName || '' }));
     }
-  }, [user, customerInfo.name]);
+  }, [user]);
 
-  useEffect(() => {
-    localStorage.setItem('meow_momo_cart', JSON.stringify(cart));
-  }, [cart]);
-
-  useEffect(() => {
-    localStorage.setItem('meow_momo_customer', JSON.stringify(customerInfo));
-  }, [customerInfo]);
+  useEffect(() => { localStorage.setItem('meow_momo_cart', JSON.stringify(cart)); }, [cart]);
+  useEffect(() => { localStorage.setItem('meow_momo_customer', JSON.stringify(customerInfo)); }, [customerInfo]);
 
   const addToCart = (newItem: Omit<CartItem, 'quantity'>) => {
-    setCart(prevCart => {
-      const existingItemIndex = prevCart.findIndex(
-        item => item.id === newItem.id && item.variant === newItem.variant
-      );
-
-      if (existingItemIndex > -1) {
-        const updatedCart = [...prevCart];
-        updatedCart[existingItemIndex].quantity += 1;
-        return updatedCart;
+    setCart(prev => {
+      const idx = prev.findIndex(i => i.id === newItem.id && i.variant === newItem.variant);
+      if (idx > -1) {
+        const updated = [...prev];
+        updated[idx].quantity += 1;
+        return updated;
       }
-
-      return [...prevCart, { ...newItem, quantity: 1 }];
+      return [...prev, { ...newItem, quantity: 1 }];
     });
   };
 
   const removeFromCart = (id: string, variant?: string) => {
-    setCart(prevCart => {
-      return prevCart.filter(item => !(item.id === id && item.variant === variant));
-    });
+    setCart(prev => prev.filter(i => !(i.id === id && i.variant === variant)));
   };
 
   const updateQuantity = (id: string, quantity: number, variant?: string) => {
@@ -116,11 +99,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       removeFromCart(id, variant);
       return;
     }
-    setCart(prevCart =>
-      prevCart.map(item =>
-        item.id === id && item.variant === variant ? { ...item, quantity } : item
-      )
-    );
+    setCart(prev => prev.map(i => i.id === id && i.variant === variant ? { ...i, quantity } : i));
   };
 
   const updateCustomerInfo = (info: Partial<CustomerInfo>) => {
@@ -129,11 +108,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const saveOrderToFirestore = async () => {
     if (cart.length === 0 || !db) return null;
-    
     try {
       const orderId = `MM-${Date.now().toString().slice(-6)}`;
       const orderRef = doc(db, 'restaurants', RESTAURANT_ID, 'orders', orderId);
-      
       const orderData = {
         id: orderId,
         restaurantId: RESTAURANT_ID,
@@ -146,9 +123,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         paymentMethod: customerInfo.paymentMethod === 'upi' ? 'UPI' : 'Cash on Delivery',
         status: 'Pending'
       };
-
       await setDoc(orderRef, orderData);
-      
       for (const item of cart) {
         const itemRef = doc(db, 'restaurants', RESTAURANT_ID, 'orders', orderId, 'orderItems', `${item.id}-${item.variant || 'default'}`);
         await setDoc(itemRef, {
@@ -160,44 +135,25 @@ export function CartProvider({ children }: { children: ReactNode }) {
           name: item.name
         });
       }
-      
       return orderId;
-    } catch (error) {
-      console.error("Cloud logging failed", error);
+    } catch (e) {
       return null;
     }
   };
 
-  const clearCart = () => {
-    setCart([]);
-    localStorage.removeItem('meow_momo_cart');
-  };
-
+  const clearCart = () => { setCart([]); localStorage.removeItem('meow_momo_cart'); };
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
   const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   return (
-    <CartContext.Provider value={{ 
-      cart, 
-      addToCart, 
-      removeFromCart, 
-      updateQuantity, 
-      clearCart, 
-      totalItems, 
-      totalPrice,
-      customerInfo,
-      updateCustomerInfo,
-      saveOrderToFirestore
-    }}>
+    <CartContext.Provider value={{ cart, addToCart, removeFromCart, updateQuantity, clearCart, totalItems, totalPrice, customerInfo, updateCustomerInfo, saveOrderToFirestore }}>
       {children}
     </CartContext.Provider>
   );
 }
 
-export function useCart() {
+export const useCart = () => {
   const context = useContext(CartContext);
-  if (context === undefined) {
-    throw new Error('useCart must be used within a CartProvider');
-  }
+  if (!context) throw new Error('useCart must be used within a CartProvider');
   return context;
-}
+};
