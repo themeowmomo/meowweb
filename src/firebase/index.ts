@@ -1,4 +1,3 @@
-
 'use client';
 
 import { firebaseConfig } from '@/firebase/config';
@@ -12,8 +11,7 @@ export function initializeFirebase() {
   if (!getApps().length) {
     // Important! initializeApp() is called without any arguments because Firebase App Hosting
     // integrates with the initializeApp() function to provide the environment variables needed to
-    // populate the FirebaseOptions in production. It is critical that we attempt to call initializeApp()
-    // without arguments.
+    // populate the FirebaseOptions in production.
     let firebaseApp;
     try {
       // Attempt to initialize via Firebase App Hosting environment variables
@@ -35,14 +33,18 @@ export function initializeFirebase() {
 }
 
 export function getSdks(firebaseApp: FirebaseApp) {
-  // Wrap SDK initialization in a try-catch to handle missing or invalid configuration
-  // (like missing API keys in local development) without crashing the entire app.
+  // Check if API Key is a placeholder or missing to avoid crashing Auth initialization
+  const isKeyValid = 
+    firebaseConfig.apiKey && 
+    firebaseConfig.apiKey !== 'your_actual_api_key_here' && 
+    firebaseConfig.apiKey.length > 10;
+
   try {
     return {
       firebaseApp,
-      auth: getAuth(firebaseApp),
-      firestore: getFirestore(firebaseApp),
-      storage: getStorage(firebaseApp)
+      auth: isKeyValid ? getAuth(firebaseApp) : null as any,
+      firestore: isKeyValid ? getFirestore(firebaseApp) : null as any,
+      storage: isKeyValid ? getStorage(firebaseApp) : null as any
     };
   } catch (error) {
     console.error("Firebase SDK initialization error:", error);
