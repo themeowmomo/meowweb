@@ -25,7 +25,6 @@ export function CartSheet() {
   }, []);
 
   const getShortItemName = (name: string, variant?: string) => {
-    // Pure item string logic as requested: 1xCV-St, 2xPn-Fr
     const shortName = name
       .replace(/Classic/gi, 'C')
       .replace(/Veg/gi, 'V')
@@ -79,7 +78,7 @@ export function CartSheet() {
     const fullMessage = header + separator + customerSection + itemsSection + summarySection + footer;
 
     if (customerInfo.paymentMethod === 'upi') {
-      // Strictly item codes for transaction note: 1xCV-St,2xPn-Fr
+      // Strictly item codes for transaction note: 1xCV-St, 2xPn-Fr
       const upiNote = encodeURIComponent(cart.map(item => `${item.quantity}x${getShortItemName(item.name, item.variant)}`).join(',').slice(0, 50));
       const upiUrl = `upi://pay?pa=amitjaisawal0123-2@okhdfcbank&pn=Meow%20Momo&am=${totalPrice}&cu=INR&tn=${upiNote}`;
       
