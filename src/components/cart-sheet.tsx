@@ -144,9 +144,9 @@ export function CartSheet() {
                 if (window.history.state?.sheetOpen) window.history.back();
                 setIsOpen(false);
               }}
-              className="absolute -left-2 -top-2 rounded-full h-10 w-10 md:hidden"
+              className="absolute -left-2 -top-2 rounded-full h-10 w-10 md:hidden bg-white shadow-sm border"
             >
-              <ArrowLeft className="w-5 h-5" />
+              <ArrowLeft className="w-5 h-5 text-primary" />
             </Button>
             <SheetTitle className="flex items-center gap-3 font-black tracking-tighter text-3xl text-foreground">
               <div className="bg-primary/10 p-2 rounded-xl"><Package className="w-7 h-7 text-primary" /></div>
@@ -230,14 +230,14 @@ export function CartSheet() {
             {isProcessing ? <Loader2 className="w-6 h-6 animate-spin" /> : <>Order on WhatsApp <Send className="ml-2 w-5 h-5" /></>}
           </Button>
           <Button 
-            variant="ghost" 
+            variant="outline" 
             onClick={() => {
               if (window.history.state?.sheetOpen) window.history.back();
               setIsOpen(false);
             }} 
-            className="w-full h-10 font-black uppercase text-[10px] tracking-[0.2em] text-muted-foreground"
+            className="w-full h-14 font-black uppercase text-[10px] tracking-[0.3em] text-muted-foreground rounded-2xl border-2 border-dashed border-muted hover:bg-muted/50 transition-all"
           >
-            Back to Menu
+            <ArrowLeft className="mr-2 w-4 h-4" /> Back to Menu
           </Button>
         </div>
       </SheetContent>

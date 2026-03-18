@@ -166,14 +166,14 @@ export function Products() {
 
     if (quantity > 0) {
       return (
-        <div className="flex items-center gap-2 bg-primary text-white rounded-lg p-1 shadow-sm">
+        <div className="flex items-center gap-2 bg-primary text-white rounded-lg p-1 shadow-sm shrink-0">
           <Button size="icon" variant="ghost" className="h-6 w-6 rounded-md hover:bg-white/20 text-white p-0" onClick={() => updateQuantity(itemId, quantity - 1, variant)}><Minus className="h-3 w-3" /></Button>
           <span className="text-xs font-black w-4 text-center">{quantity}</span>
           <Button size="icon" variant="ghost" className="h-6 w-6 rounded-md hover:bg-white/20 text-white p-0" onClick={() => updateQuantity(itemId, quantity + 1, variant)}><Plus className="h-3 w-3" /></Button>
         </div>
       );
     }
-    return <Button size="sm" variant="outline" className="h-8 px-4 text-[10px] font-black rounded-lg border-primary text-primary hover:bg-primary hover:text-white transition-all" onClick={() => handleAddToCart(name, price, variant, id)}>Add</Button>;
+    return <Button size="sm" variant="outline" className="h-8 px-2.5 min-w-[54px] text-[10px] font-black rounded-lg border-primary text-primary hover:bg-primary hover:text-white transition-all shrink-0" onClick={() => handleAddToCart(name, price, variant, id)}>Add</Button>;
   };
 
   return (
@@ -208,34 +208,34 @@ export function Products() {
                   value={`momos-${catIdx}`} 
                   className="border-none bg-white rounded-[2rem] shadow-sm border border-primary/5 overflow-hidden transition-all data-[state=open]:shadow-xl data-[state=open]:ring-1 data-[state=open]:ring-primary/10"
                 >
-                  <AccordionTrigger className="sticky top-[152px] z-30 bg-white/90 backdrop-blur-md hover:no-underline px-8 py-6 group transition-all data-[state=open]:border-b border-muted/50">
+                  <AccordionTrigger className="sticky top-[152px] z-30 bg-white/90 backdrop-blur-md hover:no-underline px-6 py-6 sm:px-8 group transition-all data-[state=open]:border-b border-muted/50">
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-xl bg-primary/5 flex items-center justify-center text-primary group-data-[state=open]:bg-primary group-data-[state=open]:text-white transition-all shadow-sm">
-                        <Utensils className="w-6 h-6" />
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-primary/5 flex items-center justify-center text-primary group-data-[state=open]:bg-primary group-data-[state=open]:text-white transition-all shadow-sm">
+                        <Utensils className="w-5 h-5 sm:w-6 sm:h-6" />
                       </div>
-                      <h4 className="text-lg font-black text-foreground uppercase tracking-[0.2em]">{category.category}</h4>
+                      <h4 className="text-base sm:text-lg font-black text-foreground uppercase tracking-[0.2em]">{category.category}</h4>
                     </div>
                   </AccordionTrigger>
-                  <AccordionContent className="px-6 py-10 sm:px-10">
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  <AccordionContent className="px-4 py-8 sm:px-10">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
                       {category.items.map((item: any, itemIdx: number) => (
                         <Card key={itemIdx} className="rounded-3xl border-none shadow-sm bg-muted/20 overflow-hidden hover:shadow-md transition-all group/card">
-                          <CardContent className="p-8 space-y-6">
-                            <h5 className="text-lg font-black tracking-tight flex items-center gap-2 uppercase text-foreground">
-                              {item.name.toLowerCase().includes('peri') ? <Flame className="w-5 h-5 text-primary" /> : item.name.toLowerCase().includes('cheese') ? <Heart className="w-5 h-5 text-primary" /> : <Sparkles className="w-5 h-5 text-primary" />}
+                          <CardContent className="p-6 sm:p-8 space-y-6">
+                            <h5 className="text-base sm:text-lg font-black tracking-tight flex items-center gap-2 uppercase text-foreground">
+                              {item.name.toLowerCase().includes('peri') ? <Flame className="w-4 h-4 sm:w-5 sm:h-5 text-primary" /> : item.name.toLowerCase().includes('cheese') ? <Heart className="w-4 h-4 sm:w-5 sm:h-5 text-primary" /> : <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />}
                               {item.name}
                             </h5>
                             <div className="space-y-6">
                               {item.variants.map((v: any, vIdx: number) => (
-                                <div key={vIdx} className="space-y-3">
-                                  <p className="text-[9px] font-black text-primary/70 uppercase tracking-[0.2em] ml-2">{v.label} Prep</p>
-                                  <div className="grid grid-cols-2 gap-4">
-                                    <div className="flex items-center justify-between bg-white p-4 rounded-xl border border-primary/5 shadow-sm group-hover/card:border-primary/20 transition-colors">
-                                      <div className="flex flex-col"><span className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">5 PCS</span><span className="text-base font-black">₹{v.price5}</span></div>
+                                <div key={vIdx} className="space-y-2.5">
+                                  <p className="text-[8px] sm:text-[9px] font-black text-primary/70 uppercase tracking-[0.2em] ml-1 sm:ml-2">{v.label} Prep</p>
+                                  <div className="grid grid-cols-1 min-[380px]:grid-cols-2 gap-3 sm:gap-4">
+                                    <div className="flex items-center justify-between bg-white p-3 sm:p-4 rounded-xl border border-primary/5 shadow-sm group-hover/card:border-primary/20 transition-colors">
+                                      <div className="flex flex-col"><span className="text-[7px] sm:text-[8px] font-black text-muted-foreground uppercase tracking-widest">5 PCS</span><span className="text-sm sm:text-base font-black">₹{v.price5}</span></div>
                                       <QuantityControl name={`${item.name} ${v.label}`} variant="5 PCS" price={v.price5} id={`${v.id}-5`} />
                                     </div>
-                                    <div className="flex items-center justify-between bg-white p-4 rounded-xl border border-primary/5 shadow-sm group-hover/card:border-primary/20 transition-colors">
-                                      <div className="flex flex-col"><span className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">11 PCS</span><span className="text-base font-black">₹{v.price11}</span></div>
+                                    <div className="flex items-center justify-between bg-white p-3 sm:p-4 rounded-xl border border-primary/5 shadow-sm group-hover/card:border-primary/20 transition-colors">
+                                      <div className="flex flex-col"><span className="text-[7px] sm:text-[8px] font-black text-muted-foreground uppercase tracking-widest">11 PCS</span><span className="text-sm sm:text-base font-black">₹{v.price11}</span></div>
                                       <QuantityControl name={`${item.name} ${v.label}`} variant="11 PCS" price={v.price11} id={`${v.id}-11`} />
                                     </div>
                                   </div>
@@ -253,20 +253,20 @@ export function Products() {
           </TabsContent>
 
           <TabsContent value="fries" className="mt-4">
-            <Card className="rounded-[2.5rem] border-none shadow-xl bg-white p-10 ring-1 ring-primary/5">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <Card className="rounded-[2.5rem] border-none shadow-xl bg-white p-6 sm:p-10 ring-1 ring-primary/5">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
                 {MENU_DATA.fries[0].items.map((item: any, idx: number) => (
-                  <div key={idx} className="bg-muted/20 p-8 rounded-3xl space-y-6 border border-primary/5 hover:border-primary/20 transition-all">
-                    <h5 className="text-lg font-black uppercase tracking-widest flex items-center gap-3">
-                      <Zap className="w-6 h-6 text-primary" /> {item.name}
+                  <div key={idx} className="bg-muted/20 p-6 sm:p-8 rounded-3xl space-y-6 border border-primary/5 hover:border-primary/20 transition-all">
+                    <h5 className="text-base sm:text-lg font-black uppercase tracking-widest flex items-center gap-3">
+                      <Zap className="w-5 h-5 sm:w-6 sm:h-6 text-primary" /> {item.name}
                     </h5>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="bg-white p-5 rounded-xl flex items-center justify-between shadow-sm border border-primary/5">
-                        <div className="flex flex-col"><span className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">Half</span><span className="text-base font-black">₹{item.priceHalf}</span></div>
+                    <div className="grid grid-cols-1 min-[380px]:grid-cols-2 gap-3 sm:gap-4">
+                      <div className="bg-white p-4 rounded-xl flex items-center justify-between shadow-sm border border-primary/5">
+                        <div className="flex flex-col"><span className="text-[7px] sm:text-[8px] font-black text-muted-foreground uppercase tracking-widest">Half</span><span className="text-sm sm:text-base font-black">₹{item.priceHalf}</span></div>
                         <QuantityControl name={item.name} variant="Half" price={item.priceHalf} id={`${item.id}-half`} />
                       </div>
-                      <div className="bg-white p-5 rounded-xl flex items-center justify-between shadow-sm border border-primary/5">
-                        <div className="flex flex-col"><span className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">Full</span><span className="text-base font-black">₹{item.priceFull}</span></div>
+                      <div className="bg-white p-4 rounded-xl flex items-center justify-between shadow-sm border border-primary/5">
+                        <div className="flex flex-col"><span className="text-[7px] sm:text-[8px] font-black text-muted-foreground uppercase tracking-widest">Full</span><span className="text-sm sm:text-base font-black">₹{item.priceFull}</span></div>
                         <QuantityControl name={item.name} variant="Full" price={item.priceFull} id={`${item.id}-full`} />
                       </div>
                     </div>
@@ -277,22 +277,22 @@ export function Products() {
           </TabsContent>
 
           <TabsContent value="combos" className="mt-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
               {MENU_DATA.combos[0].items.map((item: any, idx: number) => (
                 <Card key={idx} className="rounded-[2.5rem] border-none shadow-xl bg-white overflow-hidden group hover:scale-[1.01] transition-all ring-1 ring-primary/5">
-                  <CardContent className="p-10 space-y-6">
+                  <CardContent className="p-8 sm:p-10 space-y-6">
                     <div className="flex justify-between items-start">
-                      <div className="p-4 bg-primary/10 rounded-xl text-primary shadow-inner"><Package className="w-7 h-7" /></div>
+                      <div className="p-3 sm:p-4 bg-primary/10 rounded-xl text-primary shadow-inner"><Package className="w-6 h-6 sm:w-7 sm:h-7" /></div>
                       <Badge className="bg-primary text-white border-none font-black text-[9px] uppercase px-4 py-1.5 tracking-widest shadow-md">Best Value</Badge>
                     </div>
                     <div className="space-y-2">
-                      <h5 className="text-xl font-black uppercase tracking-tight text-foreground">{item.name}</h5>
-                      <p className="text-xs text-muted-foreground font-medium italic leading-relaxed">{item.desc}</p>
+                      <h5 className="text-lg sm:text-xl font-black uppercase tracking-tight text-foreground">{item.name}</h5>
+                      <p className="text-[10px] sm:text-xs text-muted-foreground font-medium italic leading-relaxed">{item.desc}</p>
                     </div>
                     <div className="flex items-center justify-between pt-6 border-t border-dashed border-primary/10">
                       <div className="flex flex-col">
-                        <span className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em]">Meal Combo</span>
-                        <span className="text-3xl font-black text-primary tracking-tighter">₹{item.price}</span>
+                        <span className="text-[8px] sm:text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em]">Meal Combo</span>
+                        <span className="text-2xl sm:text-3xl font-black text-primary tracking-tighter">₹{item.price}</span>
                       </div>
                       <QuantityControl name={item.name} variant="Combo" price={item.price} id={item.id} />
                     </div>
