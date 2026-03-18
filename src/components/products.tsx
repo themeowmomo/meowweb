@@ -228,7 +228,7 @@ export function Products() {
                             <div className="space-y-6">
                               {item.variants.map((v: any, vIdx: number) => (
                                 <div key={vIdx} className="space-y-2.5">
-                                  <p className="text-[8px] sm:text-[9px] font-black text-primary/70 uppercase tracking-[0.2em] ml-1 sm:ml-2">{v.label} Prep</p>
+                                  <p className="text-[10px] sm:text-[11px] font-black text-primary/70 uppercase tracking-[0.2em] ml-1 sm:ml-2">{v.label} Prep</p>
                                   <div className="grid grid-cols-1 min-[380px]:grid-cols-2 gap-3 sm:gap-4">
                                     <div className="flex items-center justify-between bg-white p-3 sm:p-4 rounded-xl border border-primary/5 shadow-sm group-hover/card:border-primary/20 transition-colors">
                                       <div className="flex flex-col"><span className="text-[7px] sm:text-[8px] font-black text-muted-foreground uppercase tracking-widest">5 PCS</span><span className="text-sm sm:text-base font-black">₹{v.price5}</span></div>
