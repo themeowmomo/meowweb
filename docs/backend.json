@@ -113,7 +113,7 @@
         },
         "customerId": {
           "type": "string",
-          "description": "The UID of the customer who placed the order (for history)."
+          "description": "The UID of the customer who placed the order (defaults to 'GUEST')."
         },
         "orderDate": {
           "type": "string",
@@ -202,9 +202,7 @@
   },
   "auth": {
     "providers": [
-      "password",
-      "anonymous",
-      "google.com"
+      "anonymous"
     ]
   },
   "firestore": {
@@ -237,13 +235,6 @@
             "$ref": "#/backend/entities/OrderItem"
           },
           "description": "Specific items within an order."
-        }
-      },
-      {
-        "path": "/app_admins/{userId}",
-        "definition": {
-          "entityName": "Admin",
-          "description": "Platform administrators."
         }
       }
     ]

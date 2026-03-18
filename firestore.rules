@@ -3,48 +3,29 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Helper functions
-    function isSignedIn() {
-      return request.auth != null;
-    }
-
-    function isOwner(userId) {
-      return isSignedIn() && request.auth.uid == userId;
-    }
-
-    // Check if a user is an admin
-    function isAdmin() {
-      return isSignedIn() && exists(/databases/$(database)/documents/app_admins/$(request.auth.uid));
-    }
-
-    // Admin collection rules
-    match /app_admins/{userId} {
-      allow get: if isOwner(userId);
-      allow list, write: if isAdmin();
-    }
-
     // Restaurant profile rules
     match /restaurants/{restaurantId} {
-      // Allow public read access to the restaurant profile to resolve permission errors
+      // Allow public read access to the restaurant profile
       allow get, list: if true;
-      allow write: if isAdmin();
+      
+      // Only internal system/admin (manual intervention) can write to profiles
+      allow write: if false;
 
       // Orders subcollection rules
       match /orders/{orderId} {
-        // Admins can read everything. 
-        // Users can read their own orders if customerId matches.
-        allow read: if isAdmin() || (isSignedIn() && resource.data.customerId == request.auth.uid);
-        
-        // Anyone can create an order (as a guest or signed in user)
+        // Anyone can create an order
         allow create: if true;
         
-        // Only admins can modify or delete orders
-        allow update, delete: if isAdmin();
+        // Orders are private once created (only readable by those with the direct link/ID if needed, 
+        // but generally restricted here for safety)
+        allow read: if false;
+        
+        allow update, delete: if false;
 
         match /orderItems/{orderItemId} {
-          allow read: if isAdmin() || (isSignedIn() && get(/databases/$(database)/documents/restaurants/$(restaurantId)/orders/$(orderId)).data.customerId == request.auth.uid);
           allow create: if true;
-          allow update, delete: if isAdmin();
+          allow read: if false;
+          allow update, delete: if false;
         }
       }
     }
