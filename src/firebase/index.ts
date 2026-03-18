@@ -1,3 +1,4 @@
+
 'use client';
 
 import { firebaseConfig } from '@/firebase/config';
@@ -34,12 +35,25 @@ export function initializeFirebase() {
 }
 
 export function getSdks(firebaseApp: FirebaseApp) {
-  return {
-    firebaseApp,
-    auth: getAuth(firebaseApp),
-    firestore: getFirestore(firebaseApp),
-    storage: getStorage(firebaseApp)
-  };
+  // Wrap SDK initialization in a try-catch to handle missing or invalid configuration
+  // (like missing API keys in local development) without crashing the entire app.
+  try {
+    return {
+      firebaseApp,
+      auth: getAuth(firebaseApp),
+      firestore: getFirestore(firebaseApp),
+      storage: getStorage(firebaseApp)
+    };
+  } catch (error) {
+    console.error("Firebase SDK initialization error:", error);
+    // Return nullified services so components can handle the "unavailable" state gracefully
+    return {
+      firebaseApp,
+      auth: null as any,
+      firestore: null as any,
+      storage: null as any
+    };
+  }
 }
 
 export * from './provider';
