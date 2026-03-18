@@ -19,6 +19,7 @@ export function CartSheet() {
   const { toast } = useToast();
   const [mounted, setMounted] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -95,8 +96,8 @@ export function CartSheet() {
   if (!mounted) return null;
 
   return (
-    <Sheet>
-      {totalItems > 0 && (
+    <Sheet open={isOpen} onOpenChange={setIsOpen}>
+      {totalItems > 0 && !isOpen && (
         <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[60] w-full px-4 sm:px-0 sm:w-auto animate-in fade-in slide-in-from-bottom-8 duration-700">
           <SheetTrigger asChild>
             <Button className="w-full sm:w-[320px] h-14 bg-foreground text-white rounded-full shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] flex items-center justify-between pl-6 pr-2 group hover:bg-foreground/95 transition-all border-none ring-1 ring-white/10 overflow-hidden">
