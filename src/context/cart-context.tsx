@@ -1,7 +1,8 @@
+
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { useFirestore } from '@/firebase';
+import { useFirestore, useUser } from '@/firebase';
 import { collection, doc, setDoc, serverTimestamp } from 'firebase/firestore';
 
 export type CartItem = {
@@ -45,6 +46,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     paymentMethod: 'cod'
   });
   const db = useFirestore();
+  const { user } = useUser();
 
   useEffect(() => {
     const savedCart = localStorage.getItem('meow_momo_cart');
@@ -71,6 +73,13 @@ export function CartProvider({ children }: { children: ReactNode }) {
       }
     }
   }, []);
+
+  // Update customer name from user profile if not set
+  useEffect(() => {
+    if (user && !customerInfo.name) {
+      setCustomerInfo(prev => ({ ...prev, name: user.displayName || '' }));
+    }
+  }, [user, customerInfo.name]);
 
   useEffect(() => {
     localStorage.setItem('meow_momo_cart', JSON.stringify(cart));
@@ -128,10 +137,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
       const orderData = {
         id: orderId,
         restaurantId: RESTAURANT_ID,
-        customerId: 'GUEST',
+        customerId: user?.uid || 'GUEST',
         orderDate: serverTimestamp(),
         customerName: customerInfo.name,
-        customerContact: 'Guest',
+        customerContact: user?.email || user?.phoneNumber || 'Guest',
         deliveryAddress: customerInfo.address,
         totalAmount: totalPrice,
         paymentMethod: customerInfo.paymentMethod === 'upi' ? 'UPI' : 'Cash on Delivery',

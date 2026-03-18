@@ -1,3 +1,4 @@
+
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
@@ -7,34 +8,43 @@ service cloud.firestore {
       return request.auth != null;
     }
 
-    // Check if user is in the app_admins collection
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    // Check if a user is an admin
     function isAdmin() {
       return isSignedIn() && exists(/databases/$(database)/documents/app_admins/$(request.auth.uid));
     }
 
     // Admin collection rules
     match /app_admins/{userId} {
-      // Allow users to check their own status for the isAdmin helper
-      allow get: if request.auth.uid == userId;
-      // Admins can manage the staff list
+      allow get: if isOwner(userId);
       allow list, write: if isAdmin();
     }
 
     // Restaurant profile rules
     match /restaurants/{restaurantId} {
-      allow read: if true;
+      // Allow public read access to the restaurant profile to resolve permission errors
+      allow get, list: if true;
       allow write: if isAdmin();
 
-      // Orders collection rules
+      // Orders subcollection rules
       match /orders/{orderId} {
-        // Public can place orders
+        // Admins can read everything. 
+        // Users can read their own orders if customerId matches.
+        allow read: if isAdmin() || (isSignedIn() && resource.data.customerId == request.auth.uid);
+        
+        // Anyone can create an order (as a guest or signed in user)
         allow create: if true;
-        // Only admins can view or manage orders
-        allow read, update, delete: if isAdmin();
+        
+        // Only admins can modify or delete orders
+        allow update, delete: if isAdmin();
 
         match /orderItems/{orderItemId} {
+          allow read: if isAdmin() || (isSignedIn() && get(/databases/$(database)/documents/restaurants/$(restaurantId)/orders/$(orderId)).data.customerId == request.auth.uid);
           allow create: if true;
-          allow read, update, delete: if isAdmin();
+          allow update, delete: if isAdmin();
         }
       }
     }

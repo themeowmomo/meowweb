@@ -1,15 +1,21 @@
+
 "use client";
 
 import Link from "next/link";
-import { UtensilsCrossed, Menu as MenuIcon, Settings } from "lucide-react";
+import { UtensilsCrossed, Menu as MenuIcon, Settings, User as UserIcon, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState, useEffect } from "react";
 import { CartSheet } from "./cart-sheet";
+import { useUser, useAuth } from "@/firebase";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const { user } = useUser();
+  const auth = useAuth();
 
   useEffect(() => {
     setMounted(true);
@@ -43,10 +49,41 @@ export function Navbar() {
             </Link>
           ))}
           <div className="flex items-center gap-3 ml-2 border-l pl-6">
-            <Button variant="ghost" size="icon" asChild className="text-muted-foreground hover:text-primary">
-              <Link href="/admin"><Settings className="w-5 h-5" /></Link>
-            </Button>
             <CartSheet />
+            {mounted && user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                    <Avatar className="h-10 w-10">
+                      <AvatarImage src={user.photoURL || undefined} alt={user.displayName || "User"} />
+                      <AvatarFallback className="bg-primary/10 text-primary font-bold">
+                        {user.displayName?.charAt(0) || user.email?.charAt(0) || "U"}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56" align="end" forceMount>
+                  <DropdownMenuLabel className="font-normal">
+                    <div className="flex flex-col space-y-1">
+                      <p className="text-sm font-medium leading-none">{user.displayName || "User"}</p>
+                      <p className="text-xs leading-none text-muted-foreground">{user.email || user.phoneNumber}</p>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link href="/admin" className="flex items-center"><Settings className="mr-2 h-4 w-4" /> <span>Staff Dashboard</span></Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => auth.signOut()} className="text-destructive focus:text-destructive">
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>Log out</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Button variant="ghost" size="icon" asChild className="text-muted-foreground hover:text-primary">
+                <Link href="/login"><UserIcon className="w-5 h-5" /></Link>
+              </Button>
+            )}
           </div>
         </div>
 
@@ -61,6 +98,18 @@ export function Navbar() {
                 </Button>
               </SheetTrigger>
               <SheetContent side="right" className="w-[300px] flex flex-col pt-20">
+                {user && (
+                  <div className="flex items-center gap-3 mb-8 pb-8 border-b">
+                    <Avatar className="h-12 w-12">
+                      <AvatarImage src={user.photoURL || undefined} alt={user.displayName || "User"} />
+                      <AvatarFallback>{user.displayName?.charAt(0) || "U"}</AvatarFallback>
+                    </Avatar>
+                    <div className="flex flex-col">
+                      <span className="font-black text-sm">{user.displayName || "User"}</span>
+                      <span className="text-xs text-muted-foreground">{user.email || user.phoneNumber}</span>
+                    </div>
+                  </div>
+                )}
                 {navLinks.map((link) => (
                   <Link
                     key={link.name}
@@ -71,13 +120,14 @@ export function Navbar() {
                     {link.name}
                   </Link>
                 ))}
-                <Link 
-                  href="/admin" 
-                  onClick={() => setIsOpen(false)}
-                  className="text-lg font-medium py-4 border-b hover:text-primary transition-colors flex items-center gap-2"
-                >
-                  <Settings className="w-5 h-5" /> Staff Dashboard
-                </Link>
+                {!user ? (
+                  <Link href="/login" onClick={() => setIsOpen(false)} className="text-lg font-medium py-4 border-b hover:text-primary transition-colors">Login / Sign Up</Link>
+                ) : (
+                  <>
+                    <Link href="/admin" onClick={() => setIsOpen(false)} className="text-lg font-medium py-4 border-b hover:text-primary transition-colors flex items-center gap-2"><Settings className="w-5 h-5" /> Staff Dashboard</Link>
+                    <button onClick={() => { auth.signOut(); setIsOpen(false); }} className="text-lg font-medium py-4 border-b text-destructive text-left">Logout</button>
+                  </>
+                )}
                 <div className="mt-8">
                   <Button className="w-full h-12 bg-primary" asChild>
                     <Link href="/#menu" onClick={() => setIsOpen(false)}>Order Now</Link>
