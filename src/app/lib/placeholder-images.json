@@ -82,13 +82,13 @@
     {
       "id": "founder-amit",
       "description": "Amit Jaiswal - Founder & Technology Lead",
-      "imageUrl": "https://picsum.photos/seed/amit-founder/400/400",
+      "imageUrl": "https://res.cloudinary.com/di4onfrel/image/upload/f_auto,q_auto/IMG-20250621-WA0004_tg03n4",
       "imageHint": "professional man"
     },
     {
       "id": "founder-karan",
       "description": "Karan Sawant - Founder & Data Analyst",
-      "imageUrl": "https://picsum.photos/seed/karan-founder/400/400",
+      "imageUrl": "https://res.cloudinary.com/di4onfrel/image/upload/f_auto,q_auto/IMG20251026150542_xy91ak",
       "imageHint": "professional man"
     },
     {
@@ -102,6 +102,12 @@
       "description": "Happy customer Akash",
       "imageUrl": "https://picsum.photos/seed/akash/100/100",
       "imageHint": "person eating"
+    },
+    {
+      "id": "testimonial-user-1",
+      "description": "Verified customer testimonial",
+      "imageUrl": "https://picsum.photos/seed/exec1/100/100",
+      "imageHint": "business person"
     }
   ]
 }
