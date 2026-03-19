@@ -1,13 +1,38 @@
 "use client";
 
 import { useState } from "react";
-import Script from "next/script";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Star, Loader2, Copy, ExternalLink, Sparkles, Check, MessageSquare } from "lucide-react";
 import { generateReview } from "@/ai/flows/generate-review-flow";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import { PlaceHolderImages } from "@/lib/placeholder-images";
+
+const STATIC_REVIEWS = [
+  {
+    name: "Rohan Sawant",
+    role: "Local Guide",
+    content: "The best momos in Malad East! Their Cheese Fried Momos are addictive. Highly recommend the Jain options too.",
+    rating: 5,
+    avatar: "user-1"
+  },
+  {
+    name: "Akash Gupta",
+    role: "Food Blogger",
+    content: "Clean, hygienic, and extremely tasty. The Kurkure Momos have a perfect crunch. A hidden gem in Kurar Village.",
+    rating: 5,
+    avatar: "user-2"
+  },
+  {
+    name: "Sneha Mehta",
+    role: "Verified Customer",
+    content: "Finally found a place that serves authentic Jain Momos. The staff is friendly and the service is quick!",
+    rating: 5,
+    avatar: "testimonial-user-1"
+  }
+];
 
 export function Testimonials() {
   const [rating, setRating] = useState(0);
@@ -56,49 +81,56 @@ export function Testimonials() {
   };
 
   return (
-    <section id="testimonials" className="py-8 bg-background overflow-hidden relative">
+    <section id="testimonials" className="py-16 bg-background overflow-hidden relative">
       <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-[100px] -z-10" />
       
       <div className="container mx-auto px-4">
         {/* Header */}
-        <div className="text-center mb-10">
-          <div className="inline-flex items-center gap-2 bg-accent/20 text-accent px-4 py-1.5 rounded-full text-[10px] font-black tracking-widest uppercase mb-3 border border-accent/20">
-            <Sparkles className="w-3 h-3" /> Excellence Recognized by the Community
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center gap-2 bg-accent/20 text-accent px-4 py-1.5 rounded-full text-[10px] font-black tracking-widest uppercase mb-4 border border-accent/20">
+            <Sparkles className="w-3 h-3" /> Community Favorites
           </div>
-          <h2 className="text-3xl md:text-5xl font-black font-headline tracking-tighter mb-3">Customer Appreciation</h2>
+          <h2 className="text-3xl md:text-5xl font-black font-headline tracking-tighter mb-4">Customer Appreciation</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto text-lg font-medium">
-            Discover verified experiences from our community and utilize our <span className="text-primary font-bold">AI-Powered Feedback Assistant</span> to compose your own review with professional precision.
+            Join hundreds of happy customers in Malad East. Use our <span className="text-primary font-bold">AI Assistant</span> to write your own review!
           </p>
         </div>
 
-        <div className="flex flex-col gap-8 max-w-4xl mx-auto">
-          {/* Top: Google Reviews Widget */}
-          <div className="space-y-4 w-full">
-            <div className="flex items-center justify-center gap-3 mb-2">
-              <div className="bg-primary/10 p-2 rounded-xl">
-                <MessageSquare className="w-6 h-6 text-primary" />
-              </div>
-              <div className="text-center md:text-left">
-                <h3 className="text-xl font-black tracking-tight">Verified Testimonials</h3>
-                <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Live Integration via Google Maps</p>
-              </div>
-            </div>
-            
-            <div className="bg-white rounded-[2rem] p-4 shadow-sm border border-muted/50 min-h-[450px]">
-              <Script src="https://elfsightcdn.com/platform.js" strategy="afterInteractive" />
-              <div 
-                className="elfsight-app-d527aaa3-322e-4e48-a283-f2618425bf9c" 
-                data-elfsight-app-lazy 
-              />
-            </div>
+        <div className="flex flex-col gap-12 max-w-5xl mx-auto">
+          {/* Top: Static Reviews Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {STATIC_REVIEWS.map((review, idx) => (
+              <Card key={idx} className="rounded-[2.5rem] border-none shadow-lg bg-white overflow-hidden group hover:scale-[1.02] transition-all duration-300">
+                <CardContent className="p-8 space-y-6">
+                  <div className="flex gap-1">
+                    {[...Array(review.rating)].map((_, i) => (
+                      <Star key={i} className="w-4 h-4 fill-accent text-accent" />
+                    ))}
+                  </div>
+                  <p className="text-muted-foreground italic text-sm leading-relaxed">
+                    "{review.content}"
+                  </p>
+                  <div className="flex items-center gap-4 pt-4 border-t border-dashed">
+                    <Avatar className="h-10 w-10 border-2 border-primary/20">
+                      <AvatarImage src={PlaceHolderImages.find(img => img.id === review.avatar)?.imageUrl} alt={review.name} />
+                      <AvatarFallback className="bg-primary/10 text-primary font-black text-xs">{review.name[0]}</AvatarFallback>
+                    </Avatar>
+                    <div className="text-left">
+                      <h4 className="text-sm font-black text-foreground">{review.name}</h4>
+                      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{review.role}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
           </div>
 
           {/* Bottom: AI Review Assistant */}
-          <div className="w-full">
+          <div className="w-full max-w-3xl mx-auto">
             <Card className="border-none shadow-xl bg-white rounded-[3rem] overflow-hidden border border-primary/10">
-              <CardContent className="p-8 md:p-12 space-y-8">
-                <div className="text-center space-y-6">
-                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Provide a Rating to Initiate Assistance</p>
+              <CardContent className="p-8 md:p-12 space-y-8 text-center">
+                <div className="space-y-6">
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Select a star rating to generate a professional review</p>
                   <div className="flex justify-center gap-3">
                     {[1, 2, 3, 4, 5].map((star) => {
                       const isSelected = rating >= star;
@@ -136,14 +168,14 @@ export function Testimonials() {
                   {loading && (
                     <div className="flex flex-col items-center gap-4 animate-in fade-in py-6">
                       <Loader2 className="w-10 h-10 animate-spin text-primary" />
-                      <p className="font-black text-primary uppercase tracking-widest text-[10px]">Processing Professional Feedback...</p>
+                      <p className="font-black text-primary uppercase tracking-widest text-[10px]">AI is crafting your feedback...</p>
                     </div>
                   )}
 
                   {generatedReview && !loading && (
                     <div className="space-y-6 animate-in fade-in slide-in-from-top-4">
                       <div className="p-6 bg-muted/30 rounded-[2rem] border-2 border-dashed border-primary/20 shadow-inner">
-                        <p className="text-lg italic text-foreground/80 leading-relaxed font-medium text-center">
+                        <p className="text-lg italic text-foreground/80 leading-relaxed font-medium">
                           "{generatedReview}"
                         </p>
                       </div>
@@ -158,13 +190,13 @@ export function Testimonials() {
                           )}
                         >
                           {copied ? (
-                            <><Check className="mr-2 h-6 w-6" /> Copied. Redirecting to Google...</>
+                            <><Check className="mr-2 h-6 w-6" /> Copied. Opening Google...</>
                           ) : (
-                            <><Copy className="mr-2 h-5 w-5" /> Copy Content & Post to Google</>
+                            <><Copy className="mr-2 h-5 w-5" /> Copy & Post to Google Maps</>
                           )}
                         </Button>
-                        <p className="text-[10px] text-center text-muted-foreground font-black uppercase tracking-widest">
-                          Please paste the copied content into the review field on the following page.
+                        <p className="text-[10px] text-muted-foreground font-black uppercase tracking-widest">
+                          Just paste the text on the Google page that opens!
                         </p>
                       </div>
                     </div>
@@ -172,8 +204,8 @@ export function Testimonials() {
                   
                   {!generatedReview && !loading && rating === 0 && (
                     <div className="flex flex-col items-center justify-center gap-3 text-muted-foreground/30 font-black uppercase text-[10px] tracking-widest py-8">
-                      <Sparkles className="w-6 h-6 mb-1 opacity-20" />
-                      <span>Select a star rating to begin generating content</span>
+                      <MessageSquare className="w-6 h-6 mb-1 opacity-20" />
+                      <span>Click the stars above to try it</span>
                     </div>
                   )}
                 </div>
