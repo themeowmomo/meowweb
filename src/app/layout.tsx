@@ -5,7 +5,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { FirebaseClientProvider } from '@/firebase';
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://meowmomo.netlify.app'),
+  metadataBase: new URL('https://meowmomo.com'),
   title: 'Meow Momo | Best Pure Veg & Jain Momos in Malad East, Mumbai',
   description: 'Experience the most hygienic and delicious Pure Veg and Jain Momos in Malad East. From Cheese Fried to Kurkure Momos, we offer tech-powered street food quality.',
   keywords: [
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Meow Momo | Best Pure Veg & Jain Momos in Mumbai',
     description: 'Serving the freshest Steam, Fried, and Kurkure Momos in Malad East. 100% Pure Veg and Jain specialist.',
-    url: 'https://meowmomo.netlify.app',
+    url: 'https://meowmomo.com',
     siteName: 'Meow Momo',
     locale: 'en_IN',
     type: 'website',
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     description: 'Delicious and hygienic momos in Malad East, Mumbai. Order now on WhatsApp!',
   },
   alternates: {
-    canonical: 'https://meowmomo.netlify.app',
+    canonical: 'https://meowmomo.com',
   },
 };
 

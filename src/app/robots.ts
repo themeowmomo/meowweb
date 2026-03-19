@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: ['/admin', '/login'],
     },
-    sitemap: 'https://meowmomo.netlify.app/sitemap.xml',
+    sitemap: 'https://meowmomo.com/sitemap.xml',
   }
 }
