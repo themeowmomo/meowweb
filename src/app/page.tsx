@@ -1,13 +1,26 @@
 
+"use client";
+
+import dynamic from 'next/dynamic';
 import { Navbar } from "@/components/navbar";
 import { Hero } from "@/components/hero";
 import { Products } from "@/components/products";
-import { Testimonials } from "@/components/testimonials";
-import { AiRecommender } from "@/components/ai-recommender";
 import { Footer } from "@/components/footer";
-import { CartSheet } from "@/components/cart-sheet";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, ShoppingBag, Star } from "lucide-react";
+import { ArrowRight, Star } from "lucide-react";
+
+// Dynamically import heavy/non-critical components to reduce initial JS
+const AiRecommender = dynamic(() => import("@/components/ai-recommender").then(mod => mod.AiRecommender), {
+  loading: () => <div className="h-64 flex items-center justify-center bg-muted/10">Loading Momo Finder...</div>
+});
+
+const Testimonials = dynamic(() => import("@/components/testimonials").then(mod => mod.Testimonials), {
+  ssr: false // testimonials often rely on browser-only state/randomization
+});
+
+const CartSheet = dynamic(() => import("@/components/cart-sheet").then(mod => mod.CartSheet), {
+  ssr: false
+});
 
 export default function Home() {
   const shopNumber = "918850859140";
@@ -27,7 +40,7 @@ export default function Home() {
         <Testimonials />
       </div>
 
-      <section className="py-8 relative overflow-hidden bg-primary text-white text-center">
+      <section className="py-16 relative overflow-hidden bg-primary text-white text-center">
         <div className="container mx-auto px-4 space-y-6">
           <h2 className="text-3xl md:text-5xl font-black font-headline tracking-tight">Ready for a Delicious Snack?</h2>
           <p className="text-primary-foreground/90 max-w-2xl mx-auto text-lg">Order your favorite Pure Veg and Jain momos today. Freshly prepared and delivered with care.</p>
@@ -37,7 +50,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-8 bg-white">
+      <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <div className="p-8 md:p-10 bg-foreground text-white rounded-[2rem] flex flex-col lg:flex-row items-center gap-8 shadow-2xl overflow-hidden group">
             <div className="lg:w-1/4 bg-white/10 backdrop-blur-xl p-8 rounded-[1.5rem] rotate-3 group-hover:rotate-0 transition-all"><Star className="w-16 h-16 text-accent" fill="currentColor" /></div>
