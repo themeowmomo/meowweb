@@ -16,7 +16,7 @@ export function Hero() {
     if (!db) return null;
     return doc(db, 'restaurants', RESTAURANT_ID);
   }, [db]);
-  const { data: profile, isLoading } = useDoc(profileRef);
+  const { data: profile } = useDoc(profileRef);
 
   // Use a reliable placeholder for immediate LCP while Firestore loads
   const heroImage = PlaceHolderImages.find(img => img.id === "hero-bg")!;
