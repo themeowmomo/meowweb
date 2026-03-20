@@ -11,6 +11,9 @@ const inter = Inter({
   variable: '--font-inter',
 });
 
+// Brand logo URL with a version query parameter to bust browser cache
+const BRAND_LOGO_URL = 'https://res.cloudinary.com/di4onfrel/image/upload/v1774028552/momomeow_logo.pdf_pnbic1.png?v=2';
+
 export const metadata: Metadata = {
   metadataBase: new URL('https://meowmomo.com'),
   title: 'Meow Momo | Best Pure Veg & Jain Momos in Malad East, Mumbai',
@@ -29,14 +32,9 @@ export const metadata: Metadata = {
   creator: 'Meow Momo Team',
   publisher: 'Meow Momo',
   icons: {
-    icon: [
-      {
-        url: 'https://res.cloudinary.com/di4onfrel/image/upload/v1774028552/momomeow_logo.pdf_pnbic1.png',
-        href: 'https://res.cloudinary.com/di4onfrel/image/upload/v1774028552/momomeow_logo.pdf_pnbic1.png',
-      }
-    ],
-    shortcut: 'https://res.cloudinary.com/di4onfrel/image/upload/v1774028552/momomeow_logo.pdf_pnbic1.png',
-    apple: 'https://res.cloudinary.com/di4onfrel/image/upload/v1774028552/momomeow_logo.pdf_pnbic1.png',
+    icon: BRAND_LOGO_URL,
+    shortcut: BRAND_LOGO_URL,
+    apple: BRAND_LOGO_URL,
   },
   openGraph: {
     title: 'Meow Momo | Best Pure Veg & Jain Momos in Mumbai',
@@ -47,7 +45,7 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: 'https://res.cloudinary.com/di4onfrel/image/upload/v1774028552/momomeow_logo.pdf_pnbic1.png',
+        url: BRAND_LOGO_URL,
         width: 800,
         height: 600,
         alt: 'Meow Momo Logo',
@@ -58,7 +56,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Meow Momo | Pure Veg & Jain Specialist',
     description: 'Delicious and hygienic momos in Malad East, Mumbai. Order now on WhatsApp!',
-    images: ['https://res.cloudinary.com/di4onfrel/image/upload/v1774028552/momomeow_logo.pdf_pnbic1.png'],
+    images: [BRAND_LOGO_URL],
   },
   alternates: {
     canonical: 'https://meowmomo.com',
