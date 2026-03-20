@@ -29,7 +29,13 @@ export const metadata: Metadata = {
   creator: 'Meow Momo Team',
   publisher: 'Meow Momo',
   icons: {
-    icon: 'https://res.cloudinary.com/di4onfrel/image/upload/v1774028552/momomeow_logo.pdf_pnbic1.png',
+    icon: [
+      {
+        url: 'https://res.cloudinary.com/di4onfrel/image/upload/v1774028552/momomeow_logo.pdf_pnbic1.png',
+        href: 'https://res.cloudinary.com/di4onfrel/image/upload/v1774028552/momomeow_logo.pdf_pnbic1.png',
+      }
+    ],
+    shortcut: 'https://res.cloudinary.com/di4onfrel/image/upload/v1774028552/momomeow_logo.pdf_pnbic1.png',
     apple: 'https://res.cloudinary.com/di4onfrel/image/upload/v1774028552/momomeow_logo.pdf_pnbic1.png',
   },
   openGraph: {
