@@ -1,34 +1,3 @@
 {
-  "placeholderImages": [
-    {
-      "id": "hero-bg",
-      "description": "Abstract blue cloud technology background",
-      "imageUrl": "https://picsum.photos/seed/aether-hero/1200/800",
-      "imageHint": "cloud computing"
-    },
-    {
-      "id": "logo-tech-1",
-      "description": "Tech company logo placeholder 1",
-      "imageUrl": "https://picsum.photos/seed/tech1/200/100",
-      "imageHint": "company logo"
-    },
-    {
-      "id": "logo-tech-2",
-      "description": "Tech company logo placeholder 2",
-      "imageUrl": "https://picsum.photos/seed/tech2/200/100",
-      "imageHint": "company logo"
-    },
-    {
-      "id": "logo-tech-3",
-      "description": "Tech company logo placeholder 3",
-      "imageUrl": "https://picsum.photos/seed/tech3/200/100",
-      "imageHint": "company logo"
-    },
-    {
-      "id": "testimonial-user-1",
-      "description": "Portrait of a professional executive",
-      "imageUrl": "https://picsum.photos/seed/exec1/100/100",
-      "imageHint": "business person"
-    }
-  ]
+  "placeholderImages": []
 }

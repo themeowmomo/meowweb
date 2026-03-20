@@ -16,8 +16,6 @@ export const metadata: Metadata = {
     'Kurkure Momos', 
     'Street Food Malad', 
     'Best Momos Mumbai', 
-    'Amit Jaiswal', 
-    'Karan Sawant',
     'Hygienic Momos Mumbai'
   ],
   authors: [{ name: 'Amit Jaiswal' }, { name: 'Karan Sawant' }],
