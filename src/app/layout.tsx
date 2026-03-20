@@ -1,4 +1,3 @@
-
 import type {Metadata} from 'next';
 import './globals.css';
 import { Inter } from 'next/font/google';
@@ -29,6 +28,10 @@ export const metadata: Metadata = {
   authors: [{ name: 'Amit Jaiswal' }, { name: 'Karan Sawant' }],
   creator: 'Meow Momo Team',
   publisher: 'Meow Momo',
+  icons: {
+    icon: 'https://res.cloudinary.com/di4onfrel/image/upload/v1774028552/momomeow_logo.pdf_pnbic1.png',
+    apple: 'https://res.cloudinary.com/di4onfrel/image/upload/v1774028552/momomeow_logo.pdf_pnbic1.png',
+  },
   openGraph: {
     title: 'Meow Momo | Best Pure Veg & Jain Momos in Mumbai',
     description: 'Serving the freshest Steam, Fried, and Kurkure Momos in Malad East. 100% Pure Veg and Jain specialist.',
@@ -36,11 +39,20 @@ export const metadata: Metadata = {
     siteName: 'Meow Momo',
     locale: 'en_IN',
     type: 'website',
+    images: [
+      {
+        url: 'https://res.cloudinary.com/di4onfrel/image/upload/v1774028552/momomeow_logo.pdf_pnbic1.png',
+        width: 800,
+        height: 600,
+        alt: 'Meow Momo Logo',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Meow Momo | Pure Veg & Jain Specialist',
     description: 'Delicious and hygienic momos in Malad East, Mumbai. Order now on WhatsApp!',
+    images: ['https://res.cloudinary.com/di4onfrel/image/upload/v1774028552/momomeow_logo.pdf_pnbic1.png'],
   },
   alternates: {
     canonical: 'https://meowmomo.com',

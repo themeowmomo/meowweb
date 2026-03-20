@@ -1,11 +1,13 @@
-
 "use client";
 
-import { UtensilsCrossed, Phone, MapPin, Clock, ExternalLink } from "lucide-react";
+import { Phone, MapPin, Clock, ExternalLink } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
+import { PlaceHolderImages } from "@/lib/placeholder-images";
 
 export function Footer() {
   const mapUrl = "https://maps.app.goo.gl/f2t4bVi6X3GNizrc8";
+  const brandLogo = PlaceHolderImages.find(img => img.id === "brand-logo")!;
   
   return (
     <footer id="footer" className="bg-foreground text-white pt-20 pb-10">
@@ -14,8 +16,13 @@ export function Footer() {
           {/* Brand Column */}
           <div className="space-y-6">
             <Link href="/" className="flex items-center gap-3 group">
-              <div className="bg-primary p-2 rounded-xl group-hover:bg-accent transition-all duration-300">
-                <UtensilsCrossed className="w-6 h-6 text-white" />
+              <div className="relative w-12 h-12 overflow-hidden rounded-xl bg-white p-1 group-hover:bg-accent transition-all duration-300">
+                <Image 
+                  src={brandLogo.imageUrl} 
+                  alt="Meow Momo Logo" 
+                  fill 
+                  className="object-contain"
+                />
               </div>
               <p className="font-headline font-black text-2xl tracking-tight group-hover:text-primary transition-colors">Meow Momo</p>
             </Link>

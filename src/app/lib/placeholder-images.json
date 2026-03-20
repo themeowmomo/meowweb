@@ -19,6 +19,12 @@
       "imageHint": "professional man"
     },
     {
+      "id": "brand-logo",
+      "description": "Meow Momo Official Brand Logo",
+      "imageUrl": "https://res.cloudinary.com/di4onfrel/image/upload/v1774028552/momomeow_logo.pdf_pnbic1.png",
+      "imageHint": "restaurant logo"
+    },
+    {
       "id": "user-1",
       "description": "Happy customer Rohan",
       "imageUrl": "https://picsum.photos/seed/rohan/100/100",

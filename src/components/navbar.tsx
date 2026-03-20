@@ -1,15 +1,18 @@
-
 "use client";
 
 import Link from "next/link";
-import { UtensilsCrossed, Menu as MenuIcon } from "lucide-react";
+import { Menu as MenuIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState, useEffect } from "react";
+import Image from "next/image";
+import { PlaceHolderImages } from "@/lib/placeholder-images";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+
+  const brandLogo = PlaceHolderImages.find(img => img.id === "brand-logo")!;
 
   useEffect(() => {
     setMounted(true);
@@ -25,8 +28,13 @@ export function Navbar() {
     <nav className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-3 group">
-          <div className="bg-primary p-3 rounded-2xl group-hover:bg-accent transition-all duration-300 shadow-sm shadow-primary/20 group-hover:shadow-accent/20">
-            <UtensilsCrossed className="w-6 h-6 text-white" />
+          <div className="relative w-12 h-12 overflow-hidden rounded-xl group-hover:scale-105 transition-all duration-300">
+            <Image 
+              src={brandLogo.imageUrl} 
+              alt="Meow Momo Logo" 
+              fill 
+              className="object-contain"
+            />
           </div>
           <span className="font-headline font-black text-xl tracking-tight text-primary transition-colors group-hover:text-accent">Meow Momo</span>
         </Link>
