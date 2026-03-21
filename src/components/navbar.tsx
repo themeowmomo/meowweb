@@ -43,10 +43,15 @@ export function Navbar() {
         </Link>
 
         {/* Desktop Links */}
-        <div className="hidden lg:flex items-center gap-6">
+        <div className="hidden lg:flex items-center gap-8">
           {navLinks.map((link) => (
-            <Link key={link.name} href={link.href} className="text-xs font-black uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors">
+            <Link 
+              key={link.name} 
+              href={link.href} 
+              className="relative text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors group py-2"
+            >
               {link.name}
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full" />
             </Link>
           ))}
         </div>
