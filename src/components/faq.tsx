@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -26,16 +27,12 @@ export function Faq() {
       answer: "We currently facilitate orders primarily via WhatsApp for pickup and local delivery in nearby areas of Malad East. You can browse our menu on this site and click 'Order' to finalize your request with us on WhatsApp."
     },
     {
-      question: "What are your opening hours?",
-      answer: "We are open every day from 4:00 PM to 10:30 PM. We are the perfect destination for your evening cravings and late-night snacks."
+      question: "Where can I find Jain momos in Malad East?",
+      answer: "You can find authentic Jain momos at Meow Momo in Kurar Village, Malad East. We offer a dedicated Jain menu prepared without onion and garlic. Our Jain special momos are highly popular among customers looking for pure Jain food in Mumbai."
     },
     {
-      question: "How do I pay for my order?",
-      answer: "We accept all major UPI apps (GPay, PhonePe, Paytm) and Cash on Delivery. For a faster experience, we recommend using UPI when you visit our shop."
-    },
-    {
-      question: "What makes your momos 'Tech-Powered'?",
-      answer: "Our founders are Data Scientists who have applied their analytical skills to optimize our supply chain. We use demand forecasting to ensure we only source fresh ingredients daily, reducing waste and ensuring every momo is as fresh as possible."
+      question: "What varieties of veg momos do you offer in Malad East?",
+      answer: "At Meow Momo, we offer a wide variety of veg momos including steam momos, fried momos, kurkure momos, cheese momos, and paneer momos. Each variety is crafted to deliver a unique taste experience. Whether you prefer spicy peri peri momos or classic flavors, we have something for everyone."
     }
   ];
 
@@ -45,7 +42,7 @@ export function Faq() {
         <div className="text-center mb-16 space-y-4">
           <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Got Questions?</h2>
           <h3 className="text-3xl md:text-5xl font-black font-headline tracking-tighter">Frequently Asked Questions</h3>
-          <p className="text-muted-foreground text-lg">Everything you need to know about our delicious momos and service.</p>
+          <p className="text-muted-foreground text-lg">Everything you need to know about our delicious momos and service in Malad East.</p>
         </div>
 
         <Accordion type="single" collapsible className="space-y-4">
