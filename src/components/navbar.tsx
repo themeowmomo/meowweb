@@ -6,26 +6,65 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [activeSection, setActiveSection] = useState("");
+  const pathname = usePathname();
 
   // official brand logo
   const BRAND_LOGO_URL = 'https://res.cloudinary.com/di4onfrel/image/upload/v1774028552/momomeow_logo.pdf_pnbic1.png?v=2';
 
   useEffect(() => {
     setMounted(true);
-  }, []);
+
+    // Scroll Spy Logic
+    if (pathname === "/") {
+      const observerOptions = {
+        root: null,
+        rootMargin: "-20% 0px -70% 0px",
+        threshold: 0,
+      };
+
+      const observerCallback = (entries: IntersectionObserverEntry[]) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        });
+      };
+
+      const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+      // Sections to observe
+      const sectionIds = ["menu", "why-choose-us", "testimonials", "faq"];
+      sectionIds.forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) observer.observe(el);
+      });
+
+      return () => observer.disconnect();
+    }
+  }, [pathname]);
 
   const navLinks = [
-    { name: "Menu", href: "/#menu" },
-    { name: "Why Us", href: "/#why-choose-us" },
-    { name: "Reviews", href: "/#testimonials" },
-    { name: "FAQ", href: "/#faq" },
-    { name: "About", href: "/about" },
-    { name: "Contact", href: "/contact" },
+    { name: "Menu", href: "/#menu", id: "menu" },
+    { name: "Why Us", href: "/#why-choose-us", id: "why-choose-us" },
+    { name: "Reviews", href: "/#testimonials", id: "testimonials" },
+    { name: "FAQ", href: "/#faq", id: "faq" },
+    { name: "About", href: "/about", id: "about" },
+    { name: "Contact", href: "/contact", id: "contact" },
   ];
+
+  const isLinkActive = (link: { href: string; id: string }) => {
+    if (pathname === "/about" && link.id === "about") return true;
+    if (pathname === "/contact" && link.id === "contact") return true;
+    if (pathname === "/" && activeSection === link.id) return true;
+    return false;
+  };
 
   return (
     <nav className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b">
@@ -44,16 +83,25 @@ export function Navbar() {
 
         {/* Desktop Links */}
         <div className="hidden lg:flex items-center gap-8">
-          {navLinks.map((link) => (
-            <Link 
-              key={link.name} 
-              href={link.href} 
-              className="relative text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors group py-2"
-            >
-              {link.name}
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full" />
-            </Link>
-          ))}
+          {navLinks.map((link) => {
+            const active = isLinkActive(link);
+            return (
+              <Link 
+                key={link.name} 
+                href={link.href} 
+                className={cn(
+                  "relative text-[10px] font-black uppercase tracking-[0.2em] transition-colors group py-2",
+                  active ? "text-primary" : "text-muted-foreground hover:text-primary"
+                )}
+              >
+                {link.name}
+                <span className={cn(
+                  "absolute bottom-0 left-0 h-0.5 bg-primary transition-all duration-300",
+                  active ? "w-full" : "w-0 group-hover:w-full"
+                )} />
+              </Link>
+            );
+          })}
         </div>
 
         {/* Mobile Menu */}
@@ -78,7 +126,10 @@ export function Navbar() {
                       key={link.name} 
                       href={link.href} 
                       onClick={() => setIsOpen(false)} 
-                      className="text-lg font-bold py-4 border-b hover:text-primary transition-colors uppercase tracking-tighter"
+                      className={cn(
+                        "text-lg font-bold py-4 border-b hover:text-primary transition-colors uppercase tracking-tighter",
+                        isLinkActive(link) ? "text-primary" : "text-foreground"
+                      )}
                     >
                       {link.name}
                     </Link>
