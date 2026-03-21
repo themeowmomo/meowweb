@@ -27,7 +27,7 @@ export function Hero() {
         <div className="max-w-4xl mx-auto text-center space-y-6 md:space-y-8">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary text-primary text-xs font-bold uppercase tracking-wider">
             <span className="flex h-2 w-2 rounded-full bg-accent animate-pulse"></span>
-            {profile?.category || "Pure Veg & Jain Specialist in Malad East"}
+            {profile?.category || "Best Pure Veg & Jain Momos in Malad East, Mumbai"}
           </div>
           
           <h1 className="text-4xl md:text-7xl font-extrabold font-headline tracking-tight text-foreground leading-[1.1]">
