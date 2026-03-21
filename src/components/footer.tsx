@@ -3,11 +3,10 @@
 import { Phone, MapPin, Clock, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
 
 export function Footer() {
   const mapUrl = "https://maps.app.goo.gl/f2t4bVi6X3GNizrc8";
-  const brandLogo = PlaceHolderImages.find(img => img.id === "brand-logo")!;
+  const BRAND_LOGO_URL = 'https://res.cloudinary.com/di4onfrel/image/upload/v1774028552/momomeow_logo.pdf_pnbic1.png?v=2';
   
   return (
     <footer id="footer" className="bg-foreground text-white pt-20 pb-10">
@@ -18,7 +17,7 @@ export function Footer() {
             <Link href="/" className="flex items-center gap-3 group">
               <div className="relative w-12 h-12 overflow-hidden rounded-xl bg-white p-1 group-hover:bg-accent transition-all duration-300">
                 <Image 
-                  src={brandLogo.imageUrl} 
+                  src={BRAND_LOGO_URL} 
                   alt="Meow Momo Logo" 
                   fill 
                   className="object-contain"
@@ -59,12 +58,13 @@ export function Footer() {
 
           {/* Quick Links Column */}
           <div>
-            <h3 className="font-bold text-lg mb-6 text-white">Company</h3>
+            <h3 className="font-bold text-lg mb-6 text-white">Explore</h3>
             <ul className="space-y-4 text-sm text-muted-foreground">
+              <li><Link href="/#why-choose-us" className="hover:text-primary transition-colors">The Difference</Link></li>
+              <li><Link href="/#faq" className="hover:text-primary transition-colors">FAQ</Link></li>
               <li><Link href="/about" className="hover:text-primary transition-colors">About Founders</Link></li>
               <li><Link href="/contact" className="hover:text-primary transition-colors">Contact Us</Link></li>
               <li><Link href="/terms" className="hover:text-primary transition-colors">Terms of Service</Link></li>
-              <li><a href={mapUrl} target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors flex items-center gap-2">Get Directions <ExternalLink className="w-3 h-3" /></a></li>
             </ul>
           </div>
 

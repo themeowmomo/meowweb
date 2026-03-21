@@ -1,4 +1,3 @@
-
 "use client";
 
 import dynamic from 'next/dynamic';
@@ -6,16 +5,18 @@ import { Navbar } from "@/components/navbar";
 import { Hero } from "@/components/hero";
 import { Products } from "@/components/products";
 import { Footer } from "@/components/footer";
+import { WhyChooseUs } from "@/components/why-choose-us";
+import { Faq } from "@/components/faq";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Star } from "lucide-react";
 
-// Dynamically import heavy/non-critical components to reduce initial JS
+// Dynamically import heavy/non-critical components
 const AiRecommender = dynamic(() => import("@/components/ai-recommender").then(mod => mod.AiRecommender), {
   loading: () => <div className="h-64 flex items-center justify-center bg-muted/10">Loading Momo Finder...</div>
 });
 
 const Testimonials = dynamic(() => import("@/components/testimonials").then(mod => mod.Testimonials), {
-  ssr: false // testimonials often rely on browser-only state/randomization
+  ssr: false
 });
 
 const CartSheet = dynamic(() => import("@/components/cart-sheet").then(mod => mod.CartSheet), {
@@ -28,17 +29,28 @@ export default function Home() {
   return (
     <main className="min-h-screen">
       <Navbar />
+      
+      {/* 1. Hero */}
       <Hero />
       
+      {/* 2. Menu */}
       <div id="menu">
         <Products />
       </div>
 
+      {/* AI Tool can live here as part of the menu exploration */}
       <AiRecommender />
+
+      {/* 3. Why Choose Us */}
+      <WhyChooseUs />
       
+      {/* 4. Reviews */}
       <div id="testimonials">
         <Testimonials />
       </div>
+
+      {/* 5. FAQ */}
+      <Faq />
 
       <section className="py-16 relative overflow-hidden bg-primary text-white text-center">
         <div className="container mx-auto px-4 space-y-6">
@@ -50,25 +62,9 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="p-8 md:p-10 bg-foreground text-white rounded-[2rem] flex flex-col lg:flex-row items-center gap-8 shadow-2xl overflow-hidden group">
-            <div className="lg:w-1/4 bg-white/10 backdrop-blur-xl p-8 rounded-[1.5rem] rotate-3 group-hover:rotate-0 transition-all"><Star className="w-16 h-16 text-accent" fill="currentColor" /></div>
-            <div className="lg:w-1/2 text-center lg:text-left space-y-3">
-              <div className="inline-block bg-accent/20 text-accent px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">Loyalty Reward</div>
-              <h3 className="text-3xl md:text-4xl font-black font-headline tracking-tighter">Meow Momo Rewards</h3>
-              <p className="text-primary-foreground/70 text-lg">Every plate earns you a stamp! Buy 10 plates and your 11th plate of <span className="text-accent font-bold">Classic Steam Momos</span> is FREE.</p>
-            </div>
-            <div className="lg:w-1/4 w-full">
-              <Button size="lg" className="w-full bg-accent text-accent-foreground hover:bg-white hover:text-primary transition-all font-black h-16 text-lg rounded-2xl shadow-xl" asChild>
-                <a href={`https://wa.me/${shopNumber}?text=Hi, I want to join the Meow Momo Loyalty Club!`}>Join Now</a>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
-
+      {/* 6. Footer */}
       <Footer />
+      
       <CartSheet />
     </main>
   );

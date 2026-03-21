@@ -12,7 +12,8 @@ export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
-  const brandLogo = PlaceHolderImages.find(img => img.id === "brand-logo")!;
+  // official brand logo
+  const BRAND_LOGO_URL = 'https://res.cloudinary.com/di4onfrel/image/upload/v1774028552/momomeow_logo.pdf_pnbic1.png?v=2';
 
   useEffect(() => {
     setMounted(true);
@@ -20,6 +21,9 @@ export function Navbar() {
 
   const navLinks = [
     { name: "Menu", href: "/#menu" },
+    { name: "Why Us", href: "/#why-choose-us" },
+    { name: "Reviews", href: "/#testimonials" },
+    { name: "FAQ", href: "/#faq" },
     { name: "About", href: "/about" },
     { name: "Contact", href: "/contact" },
   ];
@@ -30,7 +34,7 @@ export function Navbar() {
         <Link href="/" className="flex items-center gap-3 group">
           <div className="relative w-12 h-12 overflow-hidden rounded-xl group-hover:scale-105 transition-all duration-300">
             <Image 
-              src={brandLogo.imageUrl} 
+              src={BRAND_LOGO_URL} 
               alt="Meow Momo Logo" 
               fill 
               className="object-contain"
@@ -40,16 +44,16 @@ export function Navbar() {
         </Link>
 
         {/* Desktop Links */}
-        <div className="hidden md:flex items-center gap-6">
+        <div className="hidden lg:flex items-center gap-6">
           {navLinks.map((link) => (
-            <Link key={link.name} href={link.href} className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
+            <Link key={link.name} href={link.href} className="text-xs font-black uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors">
               {link.name}
             </Link>
           ))}
         </div>
 
         {/* Mobile Menu */}
-        <div className="md:hidden flex items-center gap-4">
+        <div className="lg:hidden flex items-center gap-4">
           {mounted && (
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
@@ -64,7 +68,7 @@ export function Navbar() {
                       key={link.name} 
                       href={link.href} 
                       onClick={() => setIsOpen(false)} 
-                      className="text-lg font-bold py-4 border-b hover:text-primary transition-colors"
+                      className="text-lg font-bold py-4 border-b hover:text-primary transition-colors uppercase tracking-tighter"
                     >
                       {link.name}
                     </Link>
