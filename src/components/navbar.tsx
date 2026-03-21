@@ -3,10 +3,9 @@
 import Link from "next/link";
 import { Menu as MenuIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -62,6 +61,12 @@ export function Navbar() {
                 </Button>
               </SheetTrigger>
               <SheetContent side="right" className="w-[300px] flex flex-col pt-20 rounded-l-[2rem]">
+                <SheetHeader className="sr-only">
+                  <SheetTitle>Navigation Menu</SheetTitle>
+                  <SheetDescription>
+                    Access links to our menu, testimonials, and contact information.
+                  </SheetDescription>
+                </SheetHeader>
                 <div className="flex flex-col gap-2">
                   {navLinks.map((link) => (
                     <Link 

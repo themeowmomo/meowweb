@@ -1,9 +1,8 @@
-
 'use client';
 
 import { useState, useEffect } from "react";
 import { useCart } from "@/context/cart-context";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetDescription } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart, Plus, Minus, Trash2, Send, User, MapPin, CreditCard, Wallet, Loader2, Package, ArrowRight, ChevronRight, ArrowLeft } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -152,6 +151,9 @@ export function CartSheet() {
               <div className="bg-primary/10 p-2 rounded-xl"><Package className="w-7 h-7 text-primary" /></div>
               Finalize Order
             </SheetTitle>
+            <SheetDescription className="sr-only">
+              Review your cart items and provide delivery details to complete your order.
+            </SheetDescription>
           </SheetHeader>
         </div>
 
