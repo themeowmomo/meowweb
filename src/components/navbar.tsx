@@ -16,7 +16,7 @@ export function Navbar() {
   const pathname = usePathname();
 
   // official brand logo
-  const BRAND_LOGO_URL = 'https://res.cloudinary.com/di4onfrel/image/upload/v1774028552/momomeow_logo.pdf_pnbic1.png?v=2';
+  const BRAND_LOGO_URL = 'https://res.cloudinary.com/di4onfrel/image/upload/v1774167784/Untitled_design_2_xsocq3.svg?v=2';
 
   useEffect(() => {
     setMounted(true);
