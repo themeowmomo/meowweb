@@ -6,7 +6,7 @@ import Image from "next/image";
 
 export function Footer() {
   const mapUrl = "https://maps.app.goo.gl/f2t4bVi6X3GNizrc8";
-  const BRAND_LOGO_URL = 'https://res.cloudinary.com/di4onfrel/image/upload/v1774028552/momomeow_logo.pdf_pnbic1.png?v=2';
+  const BRAND_LOGO_URL = 'https://res.cloudinary.com/di4onfrel/image/upload/v1774167784/Untitled_design_2_xsocq3.svg?v=2';
   
   return (
     <footer id="footer" className="bg-foreground text-white pt-20 pb-10">

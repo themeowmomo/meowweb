@@ -3,7 +3,7 @@
     {
       "id": "hero-bg",
       "description": "Delicious steaming momos in a basket",
-      "imageUrl": "https://picsum.photos/seed/meow-momo-hero/1200/800",
+      "imageUrl": "https://res.cloudinary.com/di4onfrel/image/upload/v1774028552/momomeow_logo.pdf_pnbic1.png",
       "imageHint": "steam momos"
     },
     {
@@ -21,7 +21,7 @@
     {
       "id": "brand-logo",
       "description": "Meow Momo Official Brand Logo",
-      "imageUrl": "https://res.cloudinary.com/di4onfrel/image/upload/v1774028552/momomeow_logo.pdf_pnbic1.png",
+      "imageUrl": "https://res.cloudinary.com/di4onfrel/image/upload/v1774167784/Untitled_design_2_xsocq3.svg",
       "imageHint": "restaurant logo"
     },
     {
