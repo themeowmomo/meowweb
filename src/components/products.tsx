@@ -1,14 +1,12 @@
-
 "use client";
 
 import { useState } from "react";
-import { Plus, Minus, Utensils, Zap, Package, Flame, Heart, Sparkles, Info, X } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Plus, Minus, Info, X, Sparkles } from "lucide-react";
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useCart } from "@/context/cart-context";
 import { useToast } from "@/hooks/use-toast";
-import { cn } from "@/lib/utils";
 import Image from "next/image";
 import {
   Dialog,
@@ -172,14 +170,8 @@ export function Products() {
   };
 
   return (
-    <section id="menu" className="py-20 bg-[#F8F9FA]">
+    <section className="py-8">
       <div className="container mx-auto px-4 max-w-5xl space-y-12">
-        <div className="text-center space-y-4">
-          <Badge className="bg-primary/10 text-primary border-none px-6 py-2 font-black tracking-widest text-[10px] rounded-full uppercase">Authentic Taste. Tech Freshness.</Badge>
-          <h2 className="text-4xl md:text-6xl font-black font-headline tracking-tighter text-foreground leading-none">Order Online</h2>
-          <p className="text-muted-foreground text-sm font-medium max-w-lg mx-auto uppercase tracking-widest">Handcrafted in Malad East</p>
-        </div>
-
         <Tabs defaultValue="momos" className="w-full">
           <div className="sticky top-16 z-40 bg-[#F8F9FA]/80 backdrop-blur-xl py-4">
             <TabsList className="flex w-full max-w-sm mx-auto h-12 bg-white rounded-full p-1 shadow-md border">

@@ -1,9 +1,13 @@
-
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useFirestore } from '@/firebase';
 import { collection, doc, setDoc, serverTimestamp } from 'firebase/firestore';
+import dynamic from 'next/dynamic';
+
+const CartSheet = dynamic(() => import("@/components/cart-sheet").then(mod => mod.CartSheet), {
+  ssr: false
+});
 
 export type CartItem = {
   id: string;
@@ -142,6 +146,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   return (
     <CartContext.Provider value={{ cart, addToCart, removeFromCart, updateQuantity, clearCart, totalItems, totalPrice, customerInfo, updateCustomerInfo, saveOrderToFirestore }}>
       {children}
+      <CartSheet />
     </CartContext.Provider>
   );
 }

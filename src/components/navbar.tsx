@@ -16,12 +16,12 @@ export function Navbar() {
   const pathname = usePathname();
 
   // official brand logo
-  const BRAND_LOGO_URL = 'https://res.cloudinary.com/di4onfrel/image/upload/v1774167784/Untitled_design_2_xsocq3.svg?v=2';
+  const BRAND_LOGO_URL = 'https://res.cloudinary.com/di4onfrel/image/upload/v1774167784/Untitled_design_2_xsocq3.svg?v=4';
 
   useEffect(() => {
     setMounted(true);
 
-    // Scroll Spy Logic
+    // Scroll Spy Logic for Homepage
     if (pathname === "/") {
       const observerOptions = {
         root: null,
@@ -40,7 +40,7 @@ export function Navbar() {
       const observer = new IntersectionObserver(observerCallback, observerOptions);
 
       // Sections to observe
-      const sectionIds = ["menu", "why-choose-us", "testimonials", "faq"];
+      const sectionIds = ["menu-preview", "why-choose-us", "testimonials", "faq"];
       sectionIds.forEach((id) => {
         const el = document.getElementById(id);
         if (el) observer.observe(el);
@@ -51,7 +51,8 @@ export function Navbar() {
   }, [pathname]);
 
   const navLinks = [
-    { name: "Menu", href: "/#menu", id: "menu" },
+    { name: "Home", href: "/", id: "home" },
+    { name: "Menu", href: "/menu", id: "menu" },
     { name: "Why Us", href: "/#why-choose-us", id: "why-choose-us" },
     { name: "Reviews", href: "/#testimonials", id: "testimonials" },
     { name: "FAQ", href: "/#faq", id: "faq" },
@@ -60,9 +61,10 @@ export function Navbar() {
   ];
 
   const isLinkActive = (link: { href: string; id: string }) => {
-    if (pathname === "/about" && link.id === "about") return true;
-    if (pathname === "/contact" && link.id === "contact") return true;
+    if (pathname === link.href) return true;
+    if (pathname === "/menu" && link.id === "menu") return true;
     if (pathname === "/" && activeSection === link.id) return true;
+    if (pathname === "/" && link.id === "home" && activeSection === "") return true;
     return false;
   };
 

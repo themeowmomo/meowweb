@@ -11,8 +11,8 @@ const inter = Inter({
   variable: '--font-inter',
 });
 
-// Brand logo URL with a version query parameter to bust browser cache
-const BRAND_LOGO_URL = 'https://res.cloudinary.com/di4onfrel/image/upload/v1774028552/momomeow_logo.pdf_pnbic1.png?v=2';
+// Brand logo URL
+const BRAND_LOGO_URL = 'https://res.cloudinary.com/di4onfrel/image/upload/v1774028552/momomeow_logo.pdf_pnbic1.png?v=4';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://meowmomo.com'),
