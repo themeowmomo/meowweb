@@ -2,7 +2,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Leaf, Star, Clock, Phone, Code, BarChart3 } from "lucide-react";
+import { ArrowRight, Leaf, Star, Clock, Phone } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useFirestore, useDoc, useMemoFirebase } from "@/firebase";
@@ -70,9 +70,6 @@ export function Hero() {
                   </div>
                   <div className="flex-grow text-left">
                     <h4 className="font-black text-sm tracking-tight text-foreground group-hover:text-white transition-colors">Amit Jaiswal</h4>
-                    <p className="text-[9px] font-bold uppercase text-muted-foreground group-hover:text-white/80 transition-colors flex items-center gap-1">
-                      <Code className="w-3 h-3" /> Technology Lead
-                    </p>
                   </div>
                   <div className="bg-primary/10 p-2 rounded-lg group-hover:bg-white/20">
                     <Phone className="w-4 h-4 text-primary group-hover:text-white" />
@@ -86,9 +83,6 @@ export function Hero() {
                   </div>
                   <div className="flex-grow text-left">
                     <h4 className="font-black text-sm tracking-tight text-foreground group-hover:text-white transition-colors">Karan Sawant</h4>
-                    <p className="text-[9px] font-bold uppercase text-muted-foreground group-hover:text-white/80 transition-colors flex items-center gap-1">
-                      <BarChart3 className="w-3 h-3" /> Data Analyst
-                    </p>
                   </div>
                   <div className="bg-primary/10 p-2 rounded-lg group-hover:bg-white/20">
                     <Phone className="w-4 h-4 text-primary group-hover:text-white" />
