@@ -2,11 +2,18 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Leaf, Star, Clock } from "lucide-react";
+import { ArrowRight, Leaf, Star, Clock, Phone } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useFirestore, useDoc, useMemoFirebase } from "@/firebase";
 import { doc } from "firebase/firestore";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const RESTAURANT_ID = 'meow-momo';
 
@@ -20,6 +27,9 @@ export function Hero() {
 
   // Use a reliable placeholder for immediate LCP while Firestore loads
   const heroImage = PlaceHolderImages.find(img => img.id === "hero-bg")!;
+
+  const amitNumber = "919867977942";
+  const karanNumber = "919324810532";
 
   return (
     <section className="relative pt-24 pb-12 md:pt-32 md:pb-16 overflow-hidden min-h-[600px] flex items-center">
@@ -40,13 +50,26 @@ export function Hero() {
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
             <Button size="lg" className="w-full sm:w-auto px-8 h-14 text-base bg-primary hover:bg-primary/90 shadow-lg shadow-primary/25" asChild>
-              <a href="#menu">
-                View Delicious Menu <ArrowRight className="ml-2 w-4 h-4" />
-              </a>
+              <Link href="/menu">
+                Order Your Plate <ArrowRight className="ml-2 w-4 h-4" />
+              </Link>
             </Button>
-            <Button size="lg" variant="outline" className="w-full sm:w-auto px-8 h-14 text-base border-primary/20 hover:bg-secondary" asChild>
-              <a href="#ai-tool">Momo Finder Tool</a>
-            </Button>
+            
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button size="lg" variant="outline" className="w-full sm:w-auto px-8 h-14 text-base border-primary/20 hover:bg-secondary">
+                  <Phone className="mr-2 w-4 h-4" /> Call to Order
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="center" className="w-56 rounded-2xl p-2">
+                <DropdownMenuItem className="rounded-xl h-12 font-black cursor-pointer" asChild>
+                  <a href={`tel:${amitNumber}`}>Call Amit (Founder)</a>
+                </DropdownMenuItem>
+                <DropdownMenuItem className="rounded-xl h-12 font-black cursor-pointer" asChild>
+                  <a href={`tel:${karanNumber}`}>Call Karan (Founder)</a>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-12 max-w-5xl mx-auto">
