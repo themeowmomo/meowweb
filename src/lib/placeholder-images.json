@@ -1,3 +1,46 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "momo-veg",
+      "description": "Steamed or fried vegetable momos",
+      "imageUrl": "https://images.unsplash.com/photo-1628766121498-3f59c287118f?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "imageHint": "steamed momos"
+    },
+    {
+      "id": "momo-paneer",
+      "description": "Steamed or fried paneer momos",
+      "imageUrl": "https://images.unsplash.com/photo-1628766121498-3f59c287118f?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "imageHint": "paneer momos"
+    },
+    {
+      "id": "momo-kurkure",
+      "description": "Crispy kurkure coated momos",
+      "imageUrl": "https://images.unsplash.com/photo-1628766121498-3f59c287118f?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "imageHint": "kurkure momos"
+    },
+    {
+      "id": "momo-jain",
+      "description": "Jain-friendly momos with no onion or garlic",
+      "imageUrl": "https://images.unsplash.com/photo-1628766121498-3f59c287118f?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "imageHint": "jain momos"
+    },
+    {
+      "id": "momo-peri-peri",
+      "description": "Spicy peri peri momos",
+      "imageUrl": "https://images.unsplash.com/photo-1628766121498-3f59c287118f?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "imageHint": "peri peri momos"
+    },
+    {
+      "id": "fries-side",
+      "description": "A side of crispy french fries",
+      "imageUrl": "https://images.unsplash.com/photo-1541592106381-b6d9625a610f?q=80&w=2832&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "imageHint": "french fries"
+    },
+    {
+      "id": "combo-meal",
+      "description": "A combo meal with momos, fries, and a drink",
+      "imageUrl": "https://images.unsplash.com/photo-1596739417867-2934a8a5f573?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "imageHint": "combo meal"
+    }
+  ]
 }

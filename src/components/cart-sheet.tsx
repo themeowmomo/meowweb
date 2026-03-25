@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -13,6 +12,9 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/hooks/use-toast";
 import Image from "next/image";
+import { PlaceHolderImages } from "@/lib/placeholder-images";
+
+const DEFAULT_IMAGE = PlaceHolderImages.find(img => img.id === "brand-logo")?.imageUrl || "https://picsum.photos/seed/momo/100/100";
 
 export function CartSheet() {
   const { cart, removeFromCart, updateQuantity, totalPrice, totalItems, customerInfo, updateCustomerInfo, clearCart, saveOrderToFirestore } = useCart();
@@ -115,7 +117,7 @@ export function CartSheet() {
                 {cart.map((item) => (
                   <div key={item.id} className="flex gap-4 bg-muted/20 p-4 rounded-3xl group transition-all hover:bg-white hover:shadow-lg border border-transparent hover:border-primary/5">
                     <div className="relative h-16 w-16 shrink-0 rounded-2xl overflow-hidden shadow-inner bg-white">
-                      <Image src={item.image || ''} alt={item.name} fill className="object-cover" />
+                      <Image src={item.image || DEFAULT_IMAGE} alt={item.name} fill className="object-cover" />
                     </div>
                     <div className="flex-grow space-y-1">
                       <div className="flex items-center gap-1.5">
@@ -162,13 +164,21 @@ export function CartSheet() {
                 <CreditCard className="w-4 h-4 text-primary" /> Payment
               </h3>
               <RadioGroup value={customerInfo.paymentMethod} onValueChange={(val) => updateCustomerInfo({ paymentMethod: val as any })} className="grid grid-cols-2 gap-4">
-                <Label htmlFor="cod" className="flex flex-col items-center justify-center gap-3 rounded-2xl border-2 p-6 cursor-pointer hover:bg-muted/20 [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-primary/5 transition-all">
+                <Label 
+                  htmlFor="cod" 
+                  className={`flex flex-col items-center justify-center gap-3 rounded-2xl border-2 p-6 cursor-pointer transition-all ${customerInfo.paymentMethod === 'cod' ? 'border-primary bg-primary/5' : 'border-muted/50 bg-white hover:bg-muted/20'}`}
+                >
                   <RadioGroupItem value="cod" id="cod" className="sr-only" />
-                  <Wallet className="w-6 h-6 text-muted-foreground" /> <span className="text-[9px] font-black uppercase tracking-widest">Cash on Delivery</span>
+                  <Wallet className={`w-6 h-6 ${customerInfo.paymentMethod === 'cod' ? 'text-primary' : 'text-muted-foreground'}`} /> 
+                  <span className="text-[9px] font-black uppercase tracking-widest">Cash on Delivery</span>
                 </Label>
-                <Label htmlFor="upi" className="flex flex-col items-center justify-center gap-3 rounded-2xl border-2 p-6 cursor-pointer hover:bg-muted/20 [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-primary/5 transition-all">
+                <Label 
+                  htmlFor="upi" 
+                  className={`flex flex-col items-center justify-center gap-3 rounded-2xl border-2 p-6 cursor-pointer transition-all ${customerInfo.paymentMethod === 'upi' ? 'border-primary bg-primary/5' : 'border-muted/50 bg-white hover:bg-muted/20'}`}
+                >
                   <RadioGroupItem value="upi" id="upi" className="sr-only" />
-                  <Send className="w-6 h-6 text-muted-foreground" /> <span className="text-[9px] font-black uppercase tracking-widest">Pay via UPI</span>
+                  <Send className={`w-6 h-6 ${customerInfo.paymentMethod === 'upi' ? 'text-primary' : 'text-muted-foreground'}`} /> 
+                  <span className="text-[9px] font-black uppercase tracking-widest">Pay via UPI</span>
                 </Label>
               </RadioGroup>
             </div>
