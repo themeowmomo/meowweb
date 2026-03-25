@@ -49,23 +49,23 @@ export function Hero() {
           </p>
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
-            <Button size="lg" className="w-full sm:w-auto px-8 h-14 text-base bg-primary hover:bg-primary/90 shadow-lg shadow-primary/25" asChild>
+            <Button size="lg" className="w-full sm:w-auto px-10 h-16 text-lg font-black bg-primary hover:bg-primary/90 shadow-xl shadow-primary/25 rounded-2xl" asChild>
               <Link href="/menu">
-                Order Your Plate <ArrowRight className="ml-2 w-4 h-4" />
+                Explore the Menu <ArrowRight className="ml-2 w-5 h-5" />
               </Link>
             </Button>
             
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button size="lg" variant="outline" className="w-full sm:w-auto px-8 h-14 text-base border-primary/20 hover:bg-secondary">
-                  <Phone className="mr-2 w-4 h-4" /> Call to Order
+                <Button size="lg" variant="outline" className="w-full sm:w-auto px-10 h-16 text-lg font-black border-2 border-primary/20 hover:bg-secondary rounded-2xl">
+                  <Phone className="mr-2 w-5 h-5" /> Call to Order
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="center" className="w-56 rounded-2xl p-2">
-                <DropdownMenuItem className="rounded-xl h-12 font-black cursor-pointer" asChild>
+              <DropdownMenuContent align="center" className="w-64 rounded-[2rem] p-3 shadow-2xl border-none">
+                <DropdownMenuItem className="rounded-xl h-14 font-black cursor-pointer focus:bg-primary focus:text-white mb-1" asChild>
                   <a href={`tel:${amitNumber}`}>Call Amit (Founder)</a>
                 </DropdownMenuItem>
-                <DropdownMenuItem className="rounded-xl h-12 font-black cursor-pointer" asChild>
+                <DropdownMenuItem className="rounded-xl h-14 font-black cursor-pointer focus:bg-primary focus:text-white" asChild>
                   <a href={`tel:${karanNumber}`}>Call Karan (Founder)</a>
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -78,9 +78,9 @@ export function Hero() {
               { icon: Star, title: "4.9 Google Rating", desc: "Loved by the community for taste and quality." },
               { icon: Clock, title: "Quick Evening Bites", desc: "Open 4:00 PM – 10:30 PM for your daily cravings." }
             ].map((feature, idx) => (
-              <div key={idx} className="flex flex-col items-center justify-center text-center p-6 rounded-[2rem] bg-white/50 backdrop-blur-sm border border-muted/50 hover:border-primary/20 hover:shadow-xl transition-all group duration-500">
+              <div key={idx} className="flex flex-col items-center justify-center text-center p-6 rounded-[2.5rem] bg-white/50 backdrop-blur-sm border border-muted/50 hover:border-primary/20 hover:shadow-xl transition-all group duration-500">
                 <feature.icon className="w-10 h-10 text-primary mb-3 group-hover:scale-110 transition-transform" />
-                <h3 className="font-black text-lg mb-1 tracking-tight">{feature.title}</h3>
+                <h3 className="font-black text-lg mb-1 tracking-tight uppercase">{feature.title}</h3>
                 <p className="text-xs text-muted-foreground font-medium leading-relaxed max-w-[200px]">{feature.desc}</p>
               </div>
             ))}
