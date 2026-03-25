@@ -63,10 +63,6 @@ export function Hero() {
                 </Button>
               </PopoverTrigger>
               <PopoverContent align="center" className="w-[320px] rounded-[2.5rem] p-4 shadow-2xl border-none bg-white space-y-3 z-[60]">
-                <div className="px-2 pt-1 pb-3 text-center border-b border-muted/30">
-                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Direct Line to Founders</p>
-                </div>
-                
                 {/* Amit Card */}
                 <a href={`tel:${amitNumber}`} className="group flex items-center gap-4 p-3 rounded-2xl bg-muted/20 hover:bg-primary transition-all duration-300">
                   <div className="relative h-14 w-14 rounded-xl overflow-hidden shrink-0 shadow-sm">
