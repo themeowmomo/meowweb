@@ -58,33 +58,40 @@ export function Hero() {
             
             <Popover modal={false}>
               <PopoverTrigger asChild>
-                <Button size="lg" variant="outline" className="w-full sm:w-auto px-10 h-16 text-lg font-black border-2 border-primary/20 hover:bg-secondary rounded-2xl">
+                <Button size="lg" variant="outline" className="w-full sm:w-auto px-10 h-16 text-lg font-black border-2 border-primary/20 md:hover:bg-secondary rounded-2xl">
                   <Phone className="mr-2 w-5 h-5" /> Call to Order
                 </Button>
               </PopoverTrigger>
-              <PopoverContent align="center" className="w-[320px] rounded-[2.5rem] p-4 shadow-2xl border-none bg-white space-y-3 z-[60]">
+              <PopoverContent 
+                align="center" 
+                sideOffset={12}
+                onOpenAutoFocus={(e) => e.preventDefault()}
+                className="w-[320px] rounded-[2.5rem] p-4 shadow-2xl border-none bg-white space-y-3 z-[60]"
+              >
                 {/* Amit Card */}
                 <a href={`tel:${amitNumber}`} className="group flex items-center gap-4 p-3 rounded-2xl bg-muted/20 hover:bg-primary transition-all duration-300">
-                  <div className="relative h-14 w-14 rounded-xl overflow-hidden shrink-0 shadow-sm">
+                  <div className="relative h-14 w-14 rounded-xl overflow-hidden shrink-0 shadow-sm border-2 border-white">
                     <Image src={amitImg.imageUrl} alt="Amit" fill className="object-cover group-hover:scale-110 transition-transform duration-500" />
                   </div>
                   <div className="flex-grow text-left">
+                    <p className="text-[10px] font-black uppercase text-muted-foreground group-hover:text-white/60 transition-colors">Founder</p>
                     <h4 className="font-black text-sm tracking-tight text-foreground group-hover:text-white transition-colors">Amit Jaiswal</h4>
                   </div>
-                  <div className="bg-primary/10 p-2 rounded-lg group-hover:bg-white/20">
+                  <div className="bg-primary/10 p-2.5 rounded-xl group-hover:bg-white/20 transition-colors">
                     <Phone className="w-4 h-4 text-primary group-hover:text-white" />
                   </div>
                 </a>
 
                 {/* Karan Card */}
                 <a href={`tel:${karanNumber}`} className="group flex items-center gap-4 p-3 rounded-2xl bg-muted/20 hover:bg-primary transition-all duration-300">
-                  <div className="relative h-14 w-14 rounded-xl overflow-hidden shrink-0 shadow-sm">
+                  <div className="relative h-14 w-14 rounded-xl overflow-hidden shrink-0 shadow-sm border-2 border-white">
                     <Image src={karanImg.imageUrl} alt="Karan" fill className="object-cover group-hover:scale-110 transition-transform duration-500" />
                   </div>
                   <div className="flex-grow text-left">
+                    <p className="text-[10px] font-black uppercase text-muted-foreground group-hover:text-white/60 transition-colors">Founder</p>
                     <h4 className="font-black text-sm tracking-tight text-foreground group-hover:text-white transition-colors">Karan Sawant</h4>
                   </div>
-                  <div className="bg-primary/10 p-2 rounded-lg group-hover:bg-white/20">
+                  <div className="bg-primary/10 p-2.5 rounded-xl group-hover:bg-white/20 transition-colors">
                     <Phone className="w-4 h-4 text-primary group-hover:text-white" />
                   </div>
                 </a>
