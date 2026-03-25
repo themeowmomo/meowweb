@@ -2,18 +2,17 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Leaf, Star, Clock, Phone } from "lucide-react";
+import { ArrowRight, Leaf, Star, Clock, Phone, Code, BarChart3 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useFirestore, useDoc, useMemoFirebase } from "@/firebase";
 import { doc } from "firebase/firestore";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 const RESTAURANT_ID = 'meow-momo';
 
@@ -25,17 +24,19 @@ export function Hero() {
   }, [db]);
   const { data: profile } = useDoc(profileRef);
 
-  // Use a reliable placeholder for immediate LCP while Firestore loads
+  // Use reliable placeholders for immediate LCP while Firestore loads
   const heroImage = PlaceHolderImages.find(img => img.id === "hero-bg")!;
+  const amitImg = PlaceHolderImages.find(img => img.id === "founder-amit")!;
+  const karanImg = PlaceHolderImages.find(img => img.id === "founder-karan")!;
 
   const amitNumber = "919867977942";
   const karanNumber = "919324810532";
 
   return (
-    <section className="relative pt-24 pb-12 md:pt-32 md:pb-16 overflow-hidden min-h-[600px] flex items-center">
+    <section className="relative pt-24 pb-12 md:pt-32 md:pb-16 overflow-hidden min-h-[600px] flex items-center text-center md:text-left">
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-4xl mx-auto text-center space-y-6 md:space-y-8">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary text-primary text-xs font-bold uppercase tracking-wider">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary text-primary text-xs font-bold uppercase tracking-wider mx-auto">
             <span className="flex h-2 w-2 rounded-full bg-accent animate-pulse"></span>
             {profile?.category || "Best Pure Veg & Jain Momos in Malad East, Mumbai"}
           </div>
@@ -55,21 +56,52 @@ export function Hero() {
               </Link>
             </Button>
             
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
+            <Popover modal={false}>
+              <PopoverTrigger asChild>
                 <Button size="lg" variant="outline" className="w-full sm:w-auto px-10 h-16 text-lg font-black border-2 border-primary/20 hover:bg-secondary rounded-2xl">
                   <Phone className="mr-2 w-5 h-5" /> Call to Order
                 </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="center" className="w-64 rounded-[2rem] p-3 shadow-2xl border-none">
-                <DropdownMenuItem className="rounded-xl h-14 font-black cursor-pointer focus:bg-primary focus:text-white mb-1" asChild>
-                  <a href={`tel:${amitNumber}`}>Call Amit (Founder)</a>
-                </DropdownMenuItem>
-                <DropdownMenuItem className="rounded-xl h-14 font-black cursor-pointer focus:bg-primary focus:text-white" asChild>
-                  <a href={`tel:${karanNumber}`}>Call Karan (Founder)</a>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+              </PopoverTrigger>
+              <PopoverContent align="center" className="w-[320px] rounded-[2.5rem] p-4 shadow-2xl border-none bg-white space-y-3 z-[60]">
+                <div className="px-2 pt-1 pb-3 text-center border-b border-muted/30">
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Direct Line to Founders</p>
+                </div>
+                
+                {/* Amit Card */}
+                <a href={`tel:${amitNumber}`} className="group flex items-center gap-4 p-3 rounded-2xl bg-muted/20 hover:bg-primary transition-all duration-300">
+                  <div className="relative h-14 w-14 rounded-xl overflow-hidden shrink-0 shadow-sm">
+                    <Image src={amitImg.imageUrl} alt="Amit" fill className="object-cover group-hover:scale-110 transition-transform duration-500" />
+                  </div>
+                  <div className="flex-grow text-left">
+                    <h4 className="font-black text-sm tracking-tight text-foreground group-hover:text-white transition-colors">Amit Jaiswal</h4>
+                    <p className="text-[9px] font-bold uppercase text-muted-foreground group-hover:text-white/80 transition-colors flex items-center gap-1">
+                      <Code className="w-3 h-3" /> Technology Lead
+                    </p>
+                  </div>
+                  <div className="bg-primary/10 p-2 rounded-lg group-hover:bg-white/20">
+                    <Phone className="w-4 h-4 text-primary group-hover:text-white" />
+                  </div>
+                </a>
+
+                {/* Karan Card */}
+                <a href={`tel:${karanNumber}`} className="group flex items-center gap-4 p-3 rounded-2xl bg-muted/20 hover:bg-primary transition-all duration-300">
+                  <div className="relative h-14 w-14 rounded-xl overflow-hidden shrink-0 shadow-sm">
+                    <Image src={karanImg.imageUrl} alt="Karan" fill className="object-cover group-hover:scale-110 transition-transform duration-500" />
+                  </div>
+                  <div className="flex-grow text-left">
+                    <h4 className="font-black text-sm tracking-tight text-foreground group-hover:text-white transition-colors">Karan Sawant</h4>
+                    <p className="text-[9px] font-bold uppercase text-muted-foreground group-hover:text-white/80 transition-colors flex items-center gap-1">
+                      <BarChart3 className="w-3 h-3" /> Data Analyst
+                    </p>
+                  </div>
+                  <div className="bg-primary/10 p-2 rounded-lg group-hover:bg-white/20">
+                    <Phone className="w-4 h-4 text-primary group-hover:text-white" />
+                  </div>
+                </a>
+                
+                <p className="text-[8px] text-center font-bold text-muted-foreground/50 uppercase tracking-widest pt-2">Available 4:00 PM – 10:30 PM</p>
+              </PopoverContent>
+            </Popover>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-12 max-w-5xl mx-auto">
