@@ -2,125 +2,62 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, Minus, Utensils, Zap, Package, Flame, Heart, Sparkles } from "lucide-react";
+import { Plus, Minus, Utensils, Zap, Package, Flame, Heart, Sparkles, Info, X } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useCart } from "@/context/cart-context";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs";
+import { PlaceHolderImages } from "@/lib/placeholder-images";
 
 const MENU_DATA = {
   momos: [
     {
-      category: "Classic Veg (Pure)",
+      category: "Classic Veg",
       items: [
-        {
-          name: "Classic Veg",
-          variants: [
-            { label: "Steam", price5: 50, price11: 100, id: "cv-steam" },
-            { label: "Fried", price5: 60, price11: 120, id: "cv-fried" }
-          ]
-        },
-        {
-          name: "Cheese Veg",
-          variants: [
-            { label: "Steam", price5: 70, price11: 140, id: "cv-cheese-steam" },
-            { label: "Fried", price5: 80, price11: 160, id: "cv-cheese-fried" }
-          ]
-        },
-        {
-          name: "Peri Peri Veg",
-          variants: [
-            { label: "Steam", price5: 70, price11: 140, id: "cv-peri-steam" },
-            { label: "Fried", price5: 80, price11: 160, id: "cv-peri-fried" }
-          ]
-        }
+        { id: "cv-steam", name: "Classic Veg Steam", price: 50, description: "Traditional steamed dumplings filled with farm-fresh vegetables and secret spices.", imageId: "momo-veg", variant: "5 PCS" },
+        { id: "cv-fried", name: "Classic Veg Fried", price: 60, description: "Crispy golden-fried momos with a juicy vegetable filling.", imageId: "momo-veg", variant: "5 PCS" },
+        { id: "cv-cheese-steam", name: "Cheese Veg Steam", price: 70, description: "Steamed momos loaded with gooey melted cheese and vegetables.", imageId: "momo-veg", variant: "5 PCS" },
+        { id: "cv-cheese-fried", name: "Cheese Veg Fried", price: 80, description: "Crunchy fried momos with a rich cheesy core.", imageId: "momo-veg", variant: "5 PCS" }
       ]
     },
     {
-      category: "Paneer Momos",
+      category: "Paneer Special",
       items: [
-        {
-          name: "Paneer",
-          variants: [
-            { label: "Steam", price5: 60, price11: 120, id: "pn-steam" },
-            { label: "Fried", price5: 70, price11: 140, id: "pn-fried" }
-          ]
-        },
-        {
-          name: "Paneer Cheese",
-          variants: [
-            { label: "Steam", price5: 80, price11: 160, id: "pn-cheese-steam" },
-            { label: "Fried", price5: 90, price11: 180, id: "pn-cheese-fried" }
-          ]
-        },
-        {
-          name: "Paneer Peri Peri",
-          variants: [
-            { label: "Steam", price5: 90, price11: 180, id: "pn-peri-steam" },
-            { label: "Fried", price5: 99, price11: 199, id: "pn-peri-fried" }
-          ]
-        }
+        { id: "pn-steam", name: "Paneer Steam", price: 60, description: "Soft steamed momos packed with fresh marinated paneer chunks.", imageId: "momo-paneer", variant: "5 PCS" },
+        { id: "pn-fried", name: "Paneer Fried", price: 70, description: "Paneer momos deep-fried to perfection for that extra crunch.", imageId: "momo-paneer", variant: "5 PCS" },
+        { id: "pn-cheese-fried", name: "Paneer Cheese Fried", price: 90, description: "A lethal combination of paneer and extra cheese, fried till golden.", imageId: "momo-paneer", variant: "5 PCS" }
       ]
     },
     {
-      category: "Kurkure Momos",
+      category: "Kurkure Crunch",
       items: [
-        {
-          name: "Kurkure Veg",
-          variants: [
-            { label: "Fried", price5: 70, price11: 140, id: "kk-fried" },
-            { label: "Cheese Fried", price5: 90, price11: 180, id: "kk-cheese" },
-            { label: "Peri Peri Fried", price5: 90, price11: 180, id: "kk-peri" }
-          ]
-        },
-        {
-          name: "Kurkure Paneer",
-          variants: [
-            { label: "Fried", price5: 99, price11: 199, id: "kk-paneer" },
-            { label: "Cheese Fried", price5: 110, price11: 200, id: "kk-paneer-cheese" },
-            { label: "Peri Peri Fried", price5: 110, price11: 200, id: "kk-paneer-peri" }
-          ]
-        }
+        { id: "kk-veg", name: "Kurkure Veg Fried", price: 70, description: "Ultra-crunchy momos with a special kurkure coating.", imageId: "momo-kurkure", variant: "5 PCS" },
+        { id: "kk-paneer", name: "Kurkure Paneer Fried", price: 99, description: "The ultimate crunch paired with soft, juicy paneer.", imageId: "momo-kurkure", variant: "5 PCS" },
+        { id: "kk-paneer-cheese", name: "Kurkure Paneer Cheese", price: 110, description: "Premium crispy coating with paneer and molten cheese inside.", imageId: "momo-kurkure", variant: "5 PCS" }
       ]
     },
     {
       category: "Jain Special",
       items: [
-        {
-          name: "Jain Veg",
-          variants: [
-            { label: "Steam", price5: 80, price11: 150, id: "jn-steam" },
-            { label: "Fried", price5: 90, price11: 170, id: "jn-fried" }
-          ]
-        },
-        {
-          name: "Jain Cheese",
-          variants: [
-            { label: "Steam", price5: 90, price11: 180, id: "jn-cheese-steam" },
-            { label: "Fried", price5: 99, price11: 190, id: "jn-cheese-fried" }
-          ]
-        },
-        {
-          name: "Jain Peri Peri",
-          variants: [
-            { label: "Steam", price5: 90, price11: 180, id: "jn-peri-steam" },
-            { label: "Fried", price5: 99, price11: 190, id: "jn-peri-fried" }
-          ]
-        }
+        { id: "jn-steam", name: "Jain Veg Steam", price: 80, description: "No onion, no garlic, pure taste. Prepared strictly per Jain standards.", imageId: "momo-jain", variant: "5 PCS" },
+        { id: "jn-fried", name: "Jain Veg Fried", price: 90, description: "Crunchy Jain-friendly momos with zero root vegetables.", imageId: "momo-jain", variant: "5 PCS" },
+        { id: "jn-cheese-fried", name: "Jain Cheese Fried", price: 99, description: "Cheesy goodness for our Jain customers, fried to perfection.", imageId: "momo-jain", variant: "5 PCS" }
       ]
     }
   ],
@@ -128,10 +65,10 @@ const MENU_DATA = {
     {
       category: "Crispy Fries",
       items: [
-        { name: "Salted Fries", priceHalf: 40, priceFull: 70, id: "fr-salted" },
-        { name: "Cheese Fries", priceHalf: 60, priceFull: 110, id: "fr-cheese" },
-        { name: "Peri Peri Fries", priceHalf: 50, priceFull: 90, id: "fr-peri" },
-        { name: "Masala Fries", priceHalf: 50, priceFull: 90, id: "fr-masala" }
+        { id: "fr-salted", name: "Salted Fries", price: 40, description: "Classic golden fries lightly seasoned with sea salt.", imageId: "fries-side", variant: "Half" },
+        { id: "fr-cheese", name: "Cheese Fries", price: 60, description: "Loaded with creamy cheese sauce and herbs.", imageId: "fries-side", variant: "Half" },
+        { id: "fr-peri", name: "Peri Peri Fries", price: 50, description: "Spicy and tangy fries tossed in our signature peri peri mix.", imageId: "fries-side", variant: "Half" },
+        { id: "fr-masala", name: "Masala Fries", price: 50, description: "Mumbai-style masala fries with a local twist.", imageId: "fries-side", variant: "Half" }
       ]
     }
   ],
@@ -139,12 +76,10 @@ const MENU_DATA = {
     {
       category: "Meal Combos",
       items: [
-        { id: "ml-classic-steam", name: "Classic Steam Meal", price: 110, desc: "5pcs Steam Momos + Half Masala Fries + Drink" },
-        { id: "ml-classic-fried", name: "Classic Fried Meal", price: 120, desc: "5pcs Fried Momos + Half Masala Fries + Drink" },
-        { id: "ml-cheese", name: "Cheese Meal", price: 140, desc: "5pcs Cheese Fried + Half Cheese Fries + Drink" },
-        { id: "ml-peri", name: "Peri Peri Meal", price: 140, desc: "5pcs Peri Peri Fried + Half Peri Peri Fries + Drink" },
-        { id: "ml-paneer-steam", name: "Paneer Steam Meal", price: 120, desc: "5pcs Paneer Steam + Half Masala Fries + Drink" },
-        { id: "ml-paneer-fried", name: "Paneer Fried Meal", price: 130, desc: "5pcs Paneer Fried + Half Masala Fries + Drink" }
+        { id: "ml-classic-steam", name: "Classic Steam Meal", price: 110, description: "5pcs Steam Momos + Half Masala Fries + Cold Drink.", imageId: "combo-meal", variant: "Combo" },
+        { id: "ml-classic-fried", name: "Classic Fried Meal", price: 120, description: "5pcs Fried Momos + Half Masala Fries + Cold Drink.", imageId: "combo-meal", variant: "Combo" },
+        { id: "ml-cheese", name: "Cheese Meal", price: 140, description: "5pcs Cheese Fried + Half Cheese Fries + Cold Drink.", imageId: "combo-meal", variant: "Combo" },
+        { id: "ml-paneer-fried", name: "Paneer Fried Meal", price: 130, description: "5pcs Paneer Fried + Half Masala Fries + Cold Drink.", imageId: "combo-meal", variant: "Combo" }
       ]
     }
   ]
@@ -153,164 +88,196 @@ const MENU_DATA = {
 export function Products() {
   const { addToCart, cart, updateQuantity } = useCart();
   const { toast } = useToast();
+  const [selectedProduct, setSelectedProduct] = useState<any>(null);
 
-  const handleAddToCart = (name: string, price: number, variant: string, id: string) => {
-    addToCart({ id: `${id}-${variant}`, name, price, variant });
-    toast({ title: "Added to Order", description: `${name} (${variant}) - ₹${price}` });
+  const handleAddToCart = (item: any) => {
+    addToCart({ 
+      id: item.id, 
+      name: item.name, 
+      price: item.price, 
+      variant: item.variant,
+      image: PlaceHolderImages.find(img => img.id === item.imageId)?.imageUrl
+    });
+    toast({ title: "Added to Order", description: `${item.name} - ₹${item.price}` });
   };
 
-  const QuantityControl = ({ name, variant, price, id }: { name: string, variant: string, price: number, id: string }) => {
-    const itemId = `${id}-${variant}`;
-    const cartItem = cart.find(item => item.id === itemId);
+  const QuantityControl = ({ item }: { item: any }) => {
+    const cartItem = cart.find(i => i.id === item.id);
     const quantity = cartItem ? cartItem.quantity : 0;
 
     if (quantity > 0) {
       return (
-        <div className="flex items-center gap-1.5 bg-primary text-white rounded-lg p-1 shadow-sm shrink-0">
-          <Button size="icon" variant="ghost" className="h-6 w-6 rounded-md hover:bg-white/20 text-white p-0" onClick={() => updateQuantity(itemId, quantity - 1, variant)}><Minus className="h-3 w-3" /></Button>
-          <span className="text-xs font-black w-4 text-center">{quantity}</span>
-          <Button size="icon" variant="ghost" className="h-6 w-6 rounded-md hover:bg-white/20 text-white p-0" onClick={() => updateQuantity(itemId, quantity + 1, variant)}><Plus className="h-3 w-3" /></Button>
+        <div className="flex items-center gap-2 bg-primary text-white rounded-xl p-1 shadow-lg shrink-0">
+          <Button size="icon" variant="ghost" className="h-8 w-8 rounded-lg hover:bg-white/20 text-white p-0" onClick={(e) => { e.stopPropagation(); updateQuantity(item.id, quantity - 1, item.variant); }}><Minus className="h-4 w-4" /></Button>
+          <span className="text-sm font-black w-6 text-center">{quantity}</span>
+          <Button size="icon" variant="ghost" className="h-8 w-8 rounded-lg hover:bg-white/20 text-white p-0" onClick={(e) => { e.stopPropagation(); updateQuantity(item.id, quantity + 1, item.variant); }}><Plus className="h-4 w-4" /></Button>
         </div>
       );
     }
-    return <Button size="sm" variant="outline" className="h-8 px-2 min-w-[50px] text-[10px] font-black rounded-lg border-primary text-primary hover:bg-primary hover:text-white transition-all shrink-0" onClick={() => handleAddToCart(name, price, variant, id)}>Add</Button>;
+    return (
+      <Button 
+        size="sm" 
+        className="h-10 px-6 font-black rounded-xl bg-white text-primary border-2 border-primary hover:bg-primary hover:text-white transition-all shadow-md uppercase text-xs"
+        onClick={(e) => { e.stopPropagation(); handleAddToCart(item); }}
+      >
+        Add
+      </Button>
+    );
+  };
+
+  const ProductCard = ({ item }: { item: any }) => {
+    const imageUrl = PlaceHolderImages.find(img => img.id === item.imageId)?.imageUrl;
+    
+    return (
+      <Card 
+        className="group relative overflow-hidden rounded-[2rem] border-none bg-white shadow-sm hover:shadow-xl transition-all cursor-pointer"
+        onClick={() => setSelectedProduct(item)}
+      >
+        <div className="flex p-4 gap-4">
+          <div className="flex-grow space-y-2">
+            <div className="flex items-center gap-2">
+              <span className="h-4 w-4 flex items-center justify-center border border-green-600 rounded-sm">
+                <span className="h-2 w-2 rounded-full bg-green-600" />
+              </span>
+              <h5 className="font-black text-sm tracking-tight text-foreground uppercase">{item.name}</h5>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-lg font-black text-primary">₹{item.price}</span>
+              <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">{item.variant}</span>
+            </div>
+            <p className="text-[11px] text-muted-foreground line-clamp-2 leading-relaxed">
+              {item.description}
+            </p>
+          </div>
+          <div className="relative h-24 w-24 shrink-0 rounded-2xl overflow-hidden shadow-inner bg-muted">
+            <Image 
+              src={imageUrl || ''} 
+              alt={item.name} 
+              fill 
+              className="object-cover group-hover:scale-110 transition-transform duration-500" 
+              data-ai-hint="momo dish"
+            />
+            <div className="absolute bottom-1 right-1">
+              <div className="bg-white/90 backdrop-blur-sm p-1 rounded-lg">
+                <Info className="w-3 h-3 text-primary" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="px-4 pb-4 flex justify-end">
+          <QuantityControl item={item} />
+        </div>
+      </Card>
+    );
   };
 
   return (
-    <section id="menu" className="py-16 bg-[#FDFBF7]">
+    <section id="menu" className="py-20 bg-[#F8F9FA]">
       <div className="container mx-auto px-4 max-w-5xl space-y-12">
         <div className="text-center space-y-4">
-          <Badge className="bg-primary/10 text-primary border-none px-6 py-2 font-black tracking-widest text-[10px] rounded-full uppercase">Verified Pure Veg & Jain Preparation</Badge>
-          <h2 className="text-4xl md:text-6xl font-black font-headline tracking-tighter text-foreground leading-none">The Momo Collection</h2>
-          <p className="text-muted-foreground text-base font-medium max-w-lg mx-auto">Handcrafted with premium ingredients, served with our signature spicy chutney.</p>
+          <Badge className="bg-primary/10 text-primary border-none px-6 py-2 font-black tracking-widest text-[10px] rounded-full uppercase">Authentic Taste. Tech Freshness.</Badge>
+          <h2 className="text-4xl md:text-6xl font-black font-headline tracking-tighter text-foreground leading-none">Order Online</h2>
+          <p className="text-muted-foreground text-sm font-medium max-w-lg mx-auto uppercase tracking-widest">Handcrafted in Malad East</p>
         </div>
 
         <Tabs defaultValue="momos" className="w-full">
-          <div className="sticky top-16 z-40 bg-[#FDFBF7]/60 backdrop-blur-xl py-6">
-            <TabsList className="flex w-full max-w-md mx-auto h-14 bg-white/90 backdrop-blur-xl border border-white/20 rounded-full p-1 shadow-lg ring-1 ring-black/5">
-              <TabsTrigger value="momos" className="flex-1 rounded-full font-black text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 transition-all duration-300 data-[state=active]:bg-primary data-[state=active]:text-white data-[state=active]:shadow-md">
-                <Utensils className="w-3.5 h-3.5" /> Momos
-              </TabsTrigger>
-              <TabsTrigger value="fries" className="flex-1 rounded-full font-black text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 transition-all duration-300 data-[state=active]:bg-primary data-[state=active]:text-white data-[state=active]:shadow-md">
-                <Zap className="w-3.5 h-3.5" /> Fries
-              </TabsTrigger>
-              <TabsTrigger value="combos" className="flex-1 rounded-full font-black text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 transition-all duration-300 data-[state=active]:bg-primary data-[state=active]:text-white data-[state=active]:shadow-md">
-                <Package className="w-3.5 h-3.5" /> Combos
-              </TabsTrigger>
+          <div className="sticky top-16 z-40 bg-[#F8F9FA]/80 backdrop-blur-xl py-4">
+            <TabsList className="flex w-full max-w-sm mx-auto h-12 bg-white rounded-full p-1 shadow-md border">
+              <TabsTrigger value="momos" className="flex-1 rounded-full font-black text-[10px] uppercase tracking-widest data-[state=active]:bg-primary data-[state=active]:text-white">Momos</TabsTrigger>
+              <TabsTrigger value="fries" className="flex-1 rounded-full font-black text-[10px] uppercase tracking-widest data-[state=active]:bg-primary data-[state=active]:text-white">Fries</TabsTrigger>
+              <TabsTrigger value="combos" className="flex-1 rounded-full font-black text-[10px] uppercase tracking-widest data-[state=active]:bg-primary data-[state=active]:text-white">Meals</TabsTrigger>
             </TabsList>
           </div>
 
-          <TabsContent value="momos" className="mt-4">
-            <Accordion type="multiple" defaultValue={["momos-0"]} className="space-y-10">
-              {MENU_DATA.momos.map((category, catIdx) => (
-                <AccordionItem 
-                  key={catIdx} 
-                  value={`momos-${catIdx}`} 
-                  className="border-none bg-white rounded-[2rem] shadow-sm border border-primary/5 overflow-hidden transition-all data-[state=open]:shadow-xl data-[state=open]:ring-1 data-[state=open]:ring-primary/10"
-                >
-                  <AccordionTrigger className="sticky top-[152px] z-30 bg-white/90 backdrop-blur-md hover:no-underline px-6 py-6 sm:px-8 group transition-all data-[state=open]:border-b border-muted/50">
-                    <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-primary/5 flex items-center justify-center text-primary group-data-[state=open]:bg-primary group-data-[state=open]:text-white transition-all shadow-sm">
-                        <Utensils className="w-5 h-5 sm:w-6 sm:h-6" />
-                      </div>
-                      <h4 className="text-base sm:text-lg font-black text-foreground uppercase tracking-[0.2em]">{category.category}</h4>
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent className="px-4 py-8 sm:px-10">
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
-                      {category.items.map((item: any, itemIdx: number) => (
-                        <Card key={itemIdx} className="rounded-3xl border-none shadow-sm bg-muted/20 overflow-hidden hover:shadow-md transition-all group/card">
-                          <CardContent className="p-6 sm:p-8 space-y-6">
-                            <h5 className="text-base sm:text-lg font-black tracking-tight flex items-center gap-2 uppercase text-foreground">
-                              {item.name.toLowerCase().includes('peri') ? <Flame className="w-4 h-4 sm:w-5 sm:h-5 text-primary" /> : item.name.toLowerCase().includes('cheese') ? <Heart className="w-4 h-4 sm:w-5 sm:h-5 text-primary" /> : <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />}
-                              {item.name}
-                            </h5>
-                            <div className="grid grid-cols-2 gap-3 sm:gap-6">
-                              {item.variants.map((v: any, vIdx: number) => (
-                                <div key={vIdx} className="space-y-3">
-                                  <div className="text-center">
-                                    <span className="text-[11px] sm:text-xs font-black text-primary uppercase tracking-[0.2em]">{v.label}</span>
-                                  </div>
-                                  <div className="space-y-2.5">
-                                    <div className="flex items-center justify-between bg-white p-2.5 rounded-xl border border-primary/5 shadow-sm group-hover/card:border-primary/20 transition-colors">
-                                      <div className="flex flex-col">
-                                        <span className="text-[7px] font-black text-muted-foreground uppercase tracking-widest">5 PCS</span>
-                                        <span className="text-xs sm:text-sm font-black text-foreground">₹{v.price5}</span>
-                                      </div>
-                                      <QuantityControl name={`${item.name} ${v.label}`} variant="5 PCS" price={v.price5} id={`${v.id}-5`} />
-                                    </div>
-                                    <div className="flex items-center justify-between bg-white p-2.5 rounded-xl border border-primary/5 shadow-sm group-hover/card:border-primary/20 transition-colors">
-                                      <div className="flex flex-col">
-                                        <span className="text-[7px] font-black text-muted-foreground uppercase tracking-widest">11 PCS</span>
-                                        <span className="text-xs sm:text-sm font-black text-foreground">₹{v.price11}</span>
-                                      </div>
-                                      <QuantityControl name={`${item.name} ${v.label}`} variant="11 PCS" price={v.price11} id={`${v.id}-11`} />
-                                    </div>
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                          </CardContent>
-                        </Card>
-                      ))}
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
-          </TabsContent>
-
-          <TabsContent value="fries" className="mt-4">
-            <Card className="rounded-[2.5rem] border-none shadow-xl bg-white p-6 sm:p-10 ring-1 ring-primary/5">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
-                {MENU_DATA.fries[0].items.map((item: any, idx: number) => (
-                  <div key={idx} className="bg-muted/20 p-6 sm:p-8 rounded-3xl space-y-6 border border-primary/5 hover:border-primary/20 transition-all">
-                    <h5 className="text-base sm:text-lg font-black uppercase tracking-widest flex items-center gap-3">
-                      <Zap className="w-5 h-5 sm:w-6 sm:h-6 text-primary" /> {item.name}
-                    </h5>
-                    <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                      <div className="bg-white p-3 rounded-xl flex items-center justify-between shadow-sm border border-primary/5">
-                        <div className="flex flex-col"><span className="text-[7px] sm:text-[8px] font-black text-muted-foreground uppercase tracking-widest">Half</span><span className="text-xs sm:text-sm font-black">₹{item.priceHalf}</span></div>
-                        <QuantityControl name={item.name} variant="Half" price={item.priceHalf} id={`${item.id}-half`} />
-                      </div>
-                      <div className="bg-white p-3 rounded-xl flex items-center justify-between shadow-sm border border-primary/5">
-                        <div className="flex flex-col"><span className="text-[7px] sm:text-[8px] font-black text-muted-foreground uppercase tracking-widest">Full</span><span className="text-xs sm:text-sm font-black">₹{item.priceFull}</span></div>
-                        <QuantityControl name={item.name} variant="Full" price={item.priceFull} id={`${item.id}-full`} />
-                      </div>
-                    </div>
-                  </div>
-                ))}
+          <TabsContent value="momos" className="mt-8 space-y-12">
+            {MENU_DATA.momos.map((cat, idx) => (
+              <div key={idx} className="space-y-6">
+                <h3 className="text-xl font-black uppercase tracking-[0.2em] text-foreground border-l-4 border-primary pl-4">{cat.category}</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {cat.items.map((item) => (
+                    <ProductCard key={item.id} item={item} />
+                  ))}
+                </div>
               </div>
-            </Card>
+            ))}
           </TabsContent>
 
-          <TabsContent value="combos" className="mt-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
-              {MENU_DATA.combos[0].items.map((item: any, idx: number) => (
-                <Card key={idx} className="rounded-[2.5rem] border-none shadow-xl bg-white overflow-hidden group hover:scale-[1.01] transition-all ring-1 ring-primary/5">
-                  <CardContent className="p-8 sm:p-10 space-y-6">
-                    <div className="flex justify-between items-start">
-                      <div className="p-3 sm:p-4 bg-primary/10 rounded-xl text-primary shadow-inner"><Package className="w-6 h-6 sm:w-7 sm:h-7" /></div>
-                      <Badge className="bg-primary text-white border-none font-black text-[9px] uppercase px-4 py-1.5 tracking-widest shadow-md">Best Value</Badge>
-                    </div>
-                    <div className="space-y-2">
-                      <h5 className="text-lg sm:text-xl font-black uppercase tracking-tight text-foreground">{item.name}</h5>
-                      <p className="text-[10px] sm:text-xs text-muted-foreground font-medium italic leading-relaxed">{item.desc}</p>
-                    </div>
-                    <div className="flex items-center justify-between pt-6 border-t border-dashed border-primary/10">
-                      <div className="flex flex-col">
-                        <span className="text-[8px] sm:text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em]">Meal Combo</span>
-                        <span className="text-2xl sm:text-3xl font-black text-primary tracking-tighter">₹{item.price}</span>
-                      </div>
-                      <QuantityControl name={item.name} variant="Combo" price={item.price} id={item.id} />
-                    </div>
-                  </CardContent>
-                </Card>
+          <TabsContent value="fries" className="mt-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {MENU_DATA.fries[0].items.map((item) => (
+                <ProductCard key={item.id} item={item} />
+              ))}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="combos" className="mt-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {MENU_DATA.combos[0].items.map((item) => (
+                <ProductCard key={item.id} item={item} />
               ))}
             </div>
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Product Detail Modal */}
+      <Dialog open={!!selectedProduct} onOpenChange={() => setSelectedProduct(null)}>
+        <DialogContent className="p-0 sm:max-w-[450px] overflow-hidden rounded-[2.5rem] border-none shadow-2xl">
+          <DialogHeader className="sr-only">
+            <DialogTitle>{selectedProduct?.name}</DialogTitle>
+            <DialogDescription>{selectedProduct?.description}</DialogDescription>
+          </DialogHeader>
+          {selectedProduct && (
+            <div className="flex flex-col">
+              <div className="relative h-64 w-full">
+                <Image 
+                  src={PlaceHolderImages.find(img => img.id === selectedProduct.imageId)?.imageUrl || ''} 
+                  alt={selectedProduct.name} 
+                  fill 
+                  className="object-cover"
+                />
+                <Button 
+                  size="icon" 
+                  variant="ghost" 
+                  className="absolute top-4 right-4 bg-black/20 backdrop-blur-md text-white rounded-full hover:bg-black/40"
+                  onClick={() => setSelectedProduct(null)}
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+                <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/60 to-transparent" />
+                <div className="absolute bottom-6 left-6 text-white">
+                  <Badge className="bg-primary text-white mb-2 uppercase tracking-widest text-[9px]">Freshly Made</Badge>
+                  <h4 className="text-2xl font-black uppercase tracking-tight">{selectedProduct.name}</h4>
+                </div>
+              </div>
+              <div className="p-8 space-y-6 bg-white">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="h-5 w-5 flex items-center justify-center border border-green-600 rounded-sm">
+                      <span className="h-2.5 w-2.5 rounded-full bg-green-600" />
+                    </span>
+                    <span className="text-xs font-black text-muted-foreground uppercase tracking-widest">100% Pure Veg</span>
+                  </div>
+                  <span className="text-2xl font-black text-primary">₹{selectedProduct.price}</span>
+                </div>
+                <div className="space-y-2">
+                  <h5 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">About this Dish</h5>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {selectedProduct.description} This dish is prepared with the finest ingredients sourced directly from local vendors in Malad East. Our tech-driven supply chain ensures maximum freshness.
+                  </p>
+                </div>
+                <div className="pt-4 border-t flex items-center justify-between">
+                  <div className="flex flex-col">
+                    <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Portion Size</span>
+                    <span className="text-sm font-black text-foreground">{selectedProduct.variant}</span>
+                  </div>
+                  <QuantityControl item={selectedProduct} />
+                </div>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </section>
   );
 }

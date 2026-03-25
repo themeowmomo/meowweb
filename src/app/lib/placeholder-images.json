@@ -1,3 +1,4 @@
+
 {
   "placeholderImages": [
     {
@@ -25,22 +26,40 @@
       "imageHint": "restaurant logo"
     },
     {
-      "id": "user-1",
-      "description": "Happy customer Rohan",
-      "imageUrl": "https://picsum.photos/seed/rohan/100/100",
-      "imageHint": "happy person"
+      "id": "momo-veg",
+      "description": "Classic Veg Momos",
+      "imageUrl": "https://picsum.photos/seed/momo1/400/400",
+      "imageHint": "veg momos"
     },
     {
-      "id": "user-2",
-      "description": "Happy customer Akash",
-      "imageUrl": "https://picsum.photos/seed/akash/100/100",
-      "imageHint": "person eating"
+      "id": "momo-paneer",
+      "description": "Paneer Special Momos",
+      "imageUrl": "https://picsum.photos/seed/momo2/400/400",
+      "imageHint": "paneer momos"
     },
     {
-      "id": "testimonial-user-1",
-      "description": "Verified customer testimonial",
-      "imageUrl": "https://picsum.photos/seed/exec1/100/100",
-      "imageHint": "business person"
+      "id": "momo-kurkure",
+      "description": "Crispy Kurkure Momos",
+      "imageUrl": "https://picsum.photos/seed/momo3/400/400",
+      "imageHint": "crispy momos"
+    },
+    {
+      "id": "momo-jain",
+      "description": "Jain Special Momos",
+      "imageUrl": "https://picsum.photos/seed/momo4/400/400",
+      "imageHint": "jain food"
+    },
+    {
+      "id": "fries-side",
+      "description": "Crispy French Fries",
+      "imageUrl": "https://picsum.photos/seed/fries1/400/400",
+      "imageHint": "french fries"
+    },
+    {
+      "id": "combo-meal",
+      "description": "Full Meal Combo",
+      "imageUrl": "https://picsum.photos/seed/combo1/400/400",
+      "imageHint": "food combo"
     }
   ]
 }

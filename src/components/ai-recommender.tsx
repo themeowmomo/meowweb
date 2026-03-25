@@ -9,29 +9,26 @@ import { aiProductRecommendation, type AiProductRecommendationOutput } from "@/a
 import { Sparkles, Loader2, CheckCircle2, Flame, Utensils, Heart, Plus, Minus } from "lucide-react";
 import { useCart } from "@/context/cart-context";
 import { useToast } from "@/hooks/use-toast";
+import { PlaceHolderImages } from "@/lib/placeholder-images";
 
-const PRODUCT_MAP: Record<string, { price: number; variant: string }> = {
-  "Classic Steam": { price: 50, variant: "5 PCS" },
-  "Classic Fried": { price: 60, variant: "5 PCS" },
-  "Cheese Steam": { price: 70, variant: "5 PCS" },
-  "Cheese Fried": { price: 80, variant: "5 PCS" },
-  "Peri Peri Steam": { price: 70, variant: "5 PCS" },
-  "Peri Peri Fried": { price: 80, variant: "5 PCS" },
-  "Paneer Steam": { price: 60, variant: "5 PCS" },
-  "Paneer Fried": { price: 70, variant: "5 PCS" },
-  "Kurkure Veg Fried": { price: 70, variant: "5 PCS" },
-  "Jain Steam": { price: 80, variant: "5 PCS" },
-  "Jain Fried": { price: 90, variant: "5 PCS" },
-  "Salted Fries": { price: 40, variant: "Half" },
-  "Cheese Fries": { price: 60, variant: "Half" },
-  "Peri Peri Fries": { price: 50, variant: "Half" },
-  "Masala Fries": { price: 50, variant: "Half" },
-  "Classic Steam Meal": { price: 110, variant: "Combo" },
-  "Classic Fried Meal": { price: 120, variant: "Combo" },
-  "Paneer Steam Meal": { price: 120, variant: "Combo" },
-  "Cheese Meal": { price: 140, variant: "Combo" },
-  "Peri Peri Meal": { price: 140, variant: "Combo" },
-  "Paneer Fried Meal": { price: 130, variant: "Combo" },
+const PRODUCT_MAP: Record<string, { price: number; variant: string; imageId: string }> = {
+  "Classic Steam": { price: 50, variant: "5 PCS", imageId: "momo-veg" },
+  "Classic Fried": { price: 60, variant: "5 PCS", imageId: "momo-veg" },
+  "Cheese Steam": { price: 70, variant: "5 PCS", imageId: "momo-veg" },
+  "Cheese Fried": { price: 80, variant: "5 PCS", imageId: "momo-veg" },
+  "Paneer Steam": { price: 60, variant: "5 PCS", imageId: "momo-paneer" },
+  "Paneer Fried": { price: 70, variant: "5 PCS", imageId: "momo-paneer" },
+  "Kurkure Veg Fried": { price: 70, variant: "5 PCS", imageId: "momo-kurkure" },
+  "Jain Veg Steam": { price: 80, variant: "5 PCS", imageId: "momo-jain" },
+  "Jain Veg Fried": { price: 90, variant: "5 PCS", imageId: "momo-jain" },
+  "Salted Fries": { price: 40, variant: "Half", imageId: "fries-side" },
+  "Cheese Fries": { price: 60, variant: "Half", imageId: "fries-side" },
+  "Peri Peri Fries": { price: 50, variant: "Half", imageId: "fries-side" },
+  "Masala Fries": { price: 50, variant: "Half", imageId: "fries-side" },
+  "Classic Steam Meal": { price: 110, variant: "Combo", imageId: "combo-meal" },
+  "Classic Fried Meal": { price: 120, variant: "Combo", imageId: "combo-meal" },
+  "Cheese Meal": { price: 140, variant: "Combo", imageId: "combo-meal" },
+  "Paneer Fried Meal": { price: 130, variant: "Combo", imageId: "combo-meal" },
 };
 
 export function AiRecommender() {
@@ -56,14 +53,20 @@ export function AiRecommender() {
 
   const handleAddToCart = (name: string) => {
     const matchKey = Object.keys(PRODUCT_MAP).find(key => name.toLowerCase().includes(key.toLowerCase())) || "";
-    const productData = PRODUCT_MAP[matchKey] || { price: 70, variant: "5 PCS" };
-    addToCart({ id: `${name}-${productData.variant}`, name, price: productData.price, variant: productData.variant });
+    const productData = PRODUCT_MAP[matchKey] || { price: 70, variant: "5 PCS", imageId: "momo-veg" };
+    addToCart({ 
+      id: `${name}-${productData.variant}`, 
+      name, 
+      price: productData.price, 
+      variant: productData.variant,
+      image: PlaceHolderImages.find(img => img.id === productData.imageId)?.imageUrl
+    });
     toast({ title: "Added to cart", description: `${name} added to your order!` });
   };
 
   const AddButton = ({ name }: { name: string }) => {
     const matchKey = Object.keys(PRODUCT_MAP).find(key => name.toLowerCase().includes(key.toLowerCase())) || "";
-    const productData = PRODUCT_MAP[matchKey] || { price: 70, variant: "5 PCS" };
+    const productData = PRODUCT_MAP[matchKey] || { price: 70, variant: "5 PCS", imageId: "momo-veg" };
     const itemId = `${name}-${productData.variant}`;
     const cartItem = cart.find(item => item.id === itemId);
     const quantity = cartItem ? cartItem.quantity : 0;
@@ -77,7 +80,7 @@ export function AiRecommender() {
         </div>
       );
     }
-    return <Button onClick={() => handleAddToCart(name)} variant="outline" className="h-9 px-4 rounded-lg font-black border-primary text-primary text-xs"><Plus className="mr-1 w-3.5 h-3.5" /> Add to Order</Button>;
+    return <Button onClick={() => handleAddToCart(name)} variant="outline" className="h-9 px-4 rounded-lg font-black border-primary text-primary text-xs"><Plus className="mr-1 w-3.5 h-3.5" /> Add</Button>;
   };
 
   return (

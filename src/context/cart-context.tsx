@@ -11,6 +11,7 @@ export type CartItem = {
   price: number;
   quantity: number;
   variant?: string;
+  image?: string;
 };
 
 export type PaymentMethod = 'cod' | 'upi';
