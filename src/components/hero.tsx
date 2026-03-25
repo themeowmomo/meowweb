@@ -74,7 +74,6 @@ export function Hero() {
                     <Image src={amitImg.imageUrl} alt="Amit" fill className="object-cover group-hover:scale-110 transition-transform duration-500" />
                   </div>
                   <div className="flex-grow text-left">
-                    <p className="text-[10px] font-black uppercase text-muted-foreground group-hover:text-white/60 transition-colors">Founder</p>
                     <h4 className="font-black text-sm tracking-tight text-foreground group-hover:text-white transition-colors">Amit Jaiswal</h4>
                   </div>
                   <div className="bg-primary/10 p-2.5 rounded-xl group-hover:bg-white/20 transition-colors">
@@ -88,7 +87,6 @@ export function Hero() {
                     <Image src={karanImg.imageUrl} alt="Karan" fill className="object-cover group-hover:scale-110 transition-transform duration-500" />
                   </div>
                   <div className="flex-grow text-left">
-                    <p className="text-[10px] font-black uppercase text-muted-foreground group-hover:text-white/60 transition-colors">Founder</p>
                     <h4 className="font-black text-sm tracking-tight text-foreground group-hover:text-white transition-colors">Karan Sawant</h4>
                   </div>
                   <div className="bg-primary/10 p-2.5 rounded-xl group-hover:bg-white/20 transition-colors">
