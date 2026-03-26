@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Heart, ShieldCheck, Leaf, Brain, Code, BarChart3, Users } from "lucide-react";
 import Image from "next/image";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
+import { placeholderImages as PlaceHolderImages } from "@/app/lib/placeholder-images.json";
 
 export default function AboutPage() {
   const heroImage = PlaceHolderImages.find(img => img.id === "hero-bg")!;
