@@ -28,169 +28,169 @@
     {
       "id": "momo-veg-steam",
       "description": "Classic veg steamed momos",
-      "imageUrl": "https://images.unsplash.com/photo-1628766121498-3f59c287118f?w=800&auto=format&fit=crop",
+      "imageUrl": "https://res.cloudinary.com/di4onfrel/image/upload/v1774527673/Gemini_Generated_Image_gvw8pegvw8pegvw8_fo0gjk.png",
       "imageHint": "steamed vegetable momos"
     },
     {
       "id": "momo-veg-fried",
       "description": "Classic veg fried momos",
-      "imageUrl": "https://images.unsplash.com/photo-1496116218417-1a781b1c416c?w=800&auto=format&fit=crop",
+      "imageUrl": "https://res.cloudinary.com/di4onfrel/image/upload/v1774527783/Gemini_Generated_Image_vuaiodvuaiodvuai_kchxmc.png",
       "imageHint": "fried vegetable momos"
     },
     {
       "id": "momo-veg-cheese-steam",
       "description": "Cheese veg steamed momos",
-      "imageUrl": "https://images.unsplash.com/photo-1628766121498-3f59c287118f?w=800&auto=format&fit=crop",
+      "imageUrl": "https://res.cloudinary.com/di4onfrel/image/upload/v1774530700/Gemini_Generated_Image_8hjaln8hjaln8hja_xnmgqy.png",
       "imageHint": "steamed cheese momos"
     },
     {
       "id": "momo-veg-cheese-fried",
       "description": "Cheese veg fried momos",
-      "imageUrl": "https://images.unsplash.com/photo-1496116218417-1a781b1c416c?w=800&auto=format&fit=crop",
+      "imageUrl": "https://res.cloudinary.com/di4onfrel/image/upload/v1774529509/Gemini_Generated_Image_dpdn0xdpdn0xdpdn_mrsurs.png",
       "imageHint": "fried cheese momos"
     },
     {
       "id": "momo-veg-peri-peri-steam",
       "description": "Peri peri veg steamed momos",
-      "imageUrl": "https://images.unsplash.com/photo-1628766121498-3f59c287118f?w=800&auto=format&fit=crop",
+      "imageUrl": "https://res.cloudinary.com/di4onfrel/image/upload/v1774530850/Gemini_Generated_Image_37nwdy37nwdy37nw_iyqtdy.png",
       "imageHint": "steamed peri peri momos"
     },
     {
       "id": "momo-veg-peri-peri-fried",
       "description": "Peri peri veg fried momos",
-      "imageUrl": "https://images.unsplash.com/photo-1496116218417-1a781b1c416c?w=800&auto=format&fit=crop",
+      "imageUrl": "https://res.cloudinary.com/di4onfrel/image/upload/v1774531162/Gemini_Generated_Image_o19cpvo19cpvo19c_1_hrzajf.png",
       "imageHint": "fried peri peri momos"
     },
     {
       "id": "momo-paneer-steam",
       "description": "Paneer steamed momos",
-      "imageUrl": "https://images.unsplash.com/photo-1628766121498-3f59c287118f?w=800&auto=format&fit=crop",
+      "imageUrl": "https://res.cloudinary.com/di4onfrel/image/upload/v1774527800/Gemini_Generated_Image_hj87bshj87bshj87_g2vvft.png",
       "imageHint": "steamed paneer momos"
     },
     {
       "id": "momo-paneer-fried",
       "description": "Paneer fried momos",
-      "imageUrl": "https://images.unsplash.com/photo-1496116218417-1a781b1c416c?w=800&auto=format&fit=crop",
+      "imageUrl": "https://res.cloudinary.com/di4onfrel/image/upload/v1774530248/Gemini_Generated_Image_m75qbsm75qbsm75q_yyi9ds.png",
       "imageHint": "fried paneer momos"
     },
     {
       "id": "momo-paneer-cheese-steam",
       "description": "Paneer cheese steamed momos",
-      "imageUrl": "https://images.unsplash.com/photo-1628766121498-3f59c287118f?w=800&auto=format&fit=crop",
+      "imageUrl": "https://res.cloudinary.com/di4onfrel/image/upload/v1774531362/Gemini_Generated_Image_85acjh85acjh85ac_j8sdnc.png",
       "imageHint": "steamed paneer cheese momos"
     },
     {
       "id": "momo-paneer-cheese-fried",
       "description": "Paneer cheese fried momos",
-      "imageUrl": "https://images.unsplash.com/photo-1496116218417-1a781b1c416c?w=800&auto=format&fit=crop",
+      "imageUrl": "https://res.cloudinary.com/di4onfrel/image/upload/v1774531425/Gemini_Generated_Image_sne3qzsne3qzsne3_hnmrn2.png",
       "imageHint": "fried paneer cheese momos"
     },
     {
       "id": "momo-paneer-peri-peri-steam",
       "description": "Paneer peri peri steamed momos",
-      "imageUrl": "https://images.unsplash.com/photo-1628766121498-3f59c287118f?w=800&auto=format&fit=crop",
+      "imageUrl": "https://res.cloudinary.com/di4onfrel/image/upload/v1774530910/Gemini_Generated_Image_w634c8w634c8w634_h7dqfi.png",
       "imageHint": "steamed paneer peri peri momos"
     },
     {
       "id": "momo-paneer-peri-peri-fried",
       "description": "Paneer peri peri fried momos",
-      "imageUrl": "https://images.unsplash.com/photo-1496116218417-1a781b1c416c?w=800&auto=format&fit=crop",
+      "imageUrl": "https://res.cloudinary.com/di4onfrel/image/upload/v1774531043/Gemini_Generated_Image_nzm7cdnzm7cdnzm7_m8ebrm.png",
       "imageHint": "fried paneer peri peri momos"
     },
     {
       "id": "momo-kurkure-veg",
       "description": "Kurkure veg momos",
-      "imageUrl": "https://images.unsplash.com/photo-1608039829572-78524f79c4c7?w=800&auto=format&fit=crop",
+      "imageUrl": "https://res.cloudinary.com/di4onfrel/image/upload/v1774532418/Gemini_Generated_Image_t8vajtt8vajtt8va_hsm07e.png",
       "imageHint": "kurkure veg momos"
     },
     {
       "id": "momo-kurkure-cheese",
       "description": "Kurkure cheese momos",
-      "imageUrl": "https://images.unsplash.com/photo-1608039829572-78524f79c4c7?w=800&auto=format&fit=crop",
+      "imageUrl": "https://res.cloudinary.com/di4onfrel/image/upload/v1774533549/Gemini_Generated_Image_c80w3jc80w3jc80w_nq3oa4.png",
       "imageHint": "kurkure cheese momos"
     },
     {
       "id": "momo-kurkure-peri-peri",
       "description": "Kurkure peri peri momos",
-      "imageUrl": "https://images.unsplash.com/photo-1608039829572-78524f79c4c7?w=800&auto=format&fit=crop",
+      "imageUrl": "https://res.cloudinary.com/di4onfrel/image/upload/v1774532719/Gemini_Generated_Image_jic124jic124jic1_vovyyq.png",
       "imageHint": "kurkure peri peri momos"
     },
     {
       "id": "momo-kurkure-paneer",
       "description": "Kurkure paneer momos",
-      "imageUrl": "https://images.unsplash.com/photo-1608039829572-78524f79c4c7?w=800&auto=format&fit=crop",
+      "imageUrl": "https://res.cloudinary.com/di4onfrel/image/upload/v1774523919/Gemini_Generated_Image_dx1zrydx1zrydx1z_rjohcg.png",
       "imageHint": "kurkure paneer momos"
     },
     {
       "id": "momo-kurkure-paneer-cheese",
       "description": "Kurkure paneer cheese momos",
-      "imageUrl": "https://images.unsplash.com/photo-1608039829572-78524f79c4c7?w=800&auto=format&fit=crop",
+      "imageUrl": "https://res.cloudinary.com/di4onfrel/image/upload/v1774533976/Gemini_Generated_Image_pbc40rpbc40rpbc4_niylni.png",
       "imageHint": "kurkure paneer cheese momos"
     },
     {
       "id": "momo-kurkure-paneer-peri-peri",
       "description": "Kurkure paneer peri peri momos",
-      "imageUrl": "https://images.unsplash.com/photo-1608039829572-78524f79c4c7?w=800&auto=format&fit=crop",
+      "imageUrl": "https://res.cloudinary.com/di4onfrel/image/upload/v1774534599/Gemini_Generated_Image_73exm773exm773ex_skgo2c.png",
       "imageHint": "kurkure paneer peri peri momos"
     },
     {
       "id": "momo-jain-steam",
       "description": "Jain steamed momos",
-      "imageUrl": "https://images.unsplash.com/photo-1628766121498-3f59c287118f?w=800&auto=format&fit=crop",
+      "imageUrl": "https://res.cloudinary.com/di4onfrel/image/upload/v1774527673/Gemini_Generated_Image_gvw8pegvw8pegvw8_fo0gjk.png",
       "imageHint": "steamed jain momos"
     },
     {
       "id": "momo-jain-fried",
       "description": "Jain fried momos",
-      "imageUrl": "https://images.unsplash.com/photo-1496116218417-1a781b1c416c?w=800&auto=format&fit=crop",
+      "imageUrl": "https://res.cloudinary.com/di4onfrel/image/upload/v1774527783/Gemini_Generated_Image_vuaiodvuaiodvuai_kchxmc.png",
       "imageHint": "fried jain momos"
     },
     {
       "id": "momo-jain-cheese-steam",
       "description": "Jain cheese steamed momos",
-      "imageUrl": "https://images.unsplash.com/photo-1628766121498-3f59c287118f?w=800&auto=format&fit=crop",
+      "imageUrl": "https://res.cloudinary.com/di4onfrel/image/upload/v1774530700/Gemini_Generated_Image_8hjaln8hjaln8hja_xnmgqy.png",
       "imageHint": "steamed jain cheese momos"
     },
     {
       "id": "momo-jain-cheese-fried",
       "description": "Jain cheese fried momos",
-      "imageUrl": "https://images.unsplash.com/photo-1496116218417-1a781b1c416c?w=800&auto=format&fit=crop",
+      "imageUrl": "https://res.cloudinary.com/di4onfrel/image/upload/v1774529509/Gemini_Generated_Image_dpdn0xdpdn0xdpdn_mrsurs.png",
       "imageHint": "fried jain cheese momos"
     },
     {
       "id": "momo-jain-peri-peri-steam",
       "description": "Jain peri peri steamed momos",
-      "imageUrl": "https://images.unsplash.com/photo-1628766121498-3f59c287118f?w=800&auto=format&fit=crop",
+      "imageUrl": "https://res.cloudinary.com/di4onfrel/image/upload/v1774530850/Gemini_Generated_Image_37nwdy37nwdy37nw_iyqtdy.png",
       "imageHint": "steamed jain peri peri momos"
     },
     {
       "id": "momo-jain-peri-peri-fried",
       "description": "Jain peri peri fried momos",
-      "imageUrl": "https://images.unsplash.com/photo-1496116218417-1a781b1c416c?w=800&auto=format&fit=crop",
+      "imageUrl": "https://res.cloudinary.com/di4onfrel/image/upload/v1774531162/Gemini_Generated_Image_o19cpvo19cpvo19c_1_hrzajf.png",
       "imageHint": "fried jain peri peri momos"
     },
     {
       "id": "fries-salted",
       "description": "Salted fries",
-      "imageUrl": "https://images.unsplash.com/photo-1541592106381-b6d9625a610f?w=800&auto=format&fit=crop",
+      "imageUrl": "https://res.cloudinary.com/di4onfrel/image/upload/v1774534643/Gemini_Generated_Image_hmc10lhmc10lhmc1_yvxwgs.png",
       "imageHint": "salted fries"
     },
     {
       "id": "fries-cheese",
       "description": "Cheese fries",
-      "imageUrl": "https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=800&auto=format&fit=crop",
+      "imageUrl": "https://res.cloudinary.com/di4onfrel/image/upload/v1774533849/Gemini_Generated_Image_1whmt21whmt21whm_cizpmi.png",
       "imageHint": "cheese fries"
     },
     {
       "id": "fries-peri-peri",
       "description": "Peri peri fries",
-      "imageUrl": "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=800&auto=format&fit=crop",
+      "imageUrl": "https://res.cloudinary.com/di4onfrel/image/upload/v1774533835/Gemini_Generated_Image_84abku84abku84ab_zyo3we.png",
       "imageHint": "peri peri fries"
     },
     {
       "id": "fries-masala",
       "description": "Masala fries",
-      "imageUrl": "https://images.unsplash.com/photo-1606755962773-d324e0a13086?w=800&auto=format&fit=crop",
+      "imageUrl": "https://res.cloudinary.com/di4onfrel/image/upload/v1774534151/Gemini_Generated_Image_myvyxqmyvyxqmyvy_iirgcp.png",
       "imageHint": "masala fries"
     },
     {

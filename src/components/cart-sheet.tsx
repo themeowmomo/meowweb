@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/hooks/use-toast";
 import Image from "next/image";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
+import { placeholderImages as PlaceHolderImages } from "@/app/lib/placeholder-images.json";
 
 const DEFAULT_IMAGE = PlaceHolderImages.find(img => img.id === "brand-logo")?.imageUrl || "https://picsum.photos/seed/momo/100/100";
 

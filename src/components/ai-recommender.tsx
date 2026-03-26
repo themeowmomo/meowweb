@@ -9,7 +9,7 @@ import { aiProductRecommendation, type AiProductRecommendationOutput } from "@/a
 import { Sparkles, Loader2, CheckCircle2, Flame, Utensils, Heart, Plus, Minus } from "lucide-react";
 import { useCart } from "@/context/cart-context";
 import { useToast } from "@/hooks/use-toast";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
+import { placeholderImages as PlaceHolderImages } from "@/app/lib/placeholder-images.json";
 
 const PRODUCT_MAP: Record<string, { price: number; variant: string; imageId: string }> = {
   "Classic Steam": { price: 50, variant: "Plate", imageId: "momo-veg-steam" },

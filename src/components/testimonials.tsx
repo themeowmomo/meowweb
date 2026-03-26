@@ -8,7 +8,7 @@ import { Star, Loader2, Copy, ExternalLink, Sparkles, Check, MessageSquare } fro
 import { generateReview } from "@/ai/flows/generate-review-flow";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
+import { placeholderImages as PlaceHolderImages } from "@/app/lib/placeholder-images.json";
 
 const STATIC_REVIEWS = [
   {

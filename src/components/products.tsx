@@ -28,7 +28,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
+import { placeholderImages as PlaceHolderImages } from "@/app/lib/placeholder-images.json";
 
 const FALLBACK_IMAGE = PlaceHolderImages.find(img => img.id === "brand-logo")?.imageUrl || "https://picsum.photos/seed/momo/400/400";
 

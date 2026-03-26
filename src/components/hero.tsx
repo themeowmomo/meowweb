@@ -7,7 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useFirestore, useDoc, useMemoFirebase } from "@/firebase";
 import { doc } from "firebase/firestore";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
+import { placeholderImages as PlaceHolderImages } from "@/app/lib/placeholder-images.json";
 import {
   Popover,
   PopoverContent,
