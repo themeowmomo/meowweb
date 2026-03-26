@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -29,52 +30,52 @@ import {
 } from "@/components/ui/accordion";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 
-const DEFAULT_MOMO_IMAGE = PlaceHolderImages.find(img => img.id === "momo-veg")?.imageUrl || "https://picsum.photos/seed/momo/400/400";
+const FALLBACK_IMAGE = PlaceHolderImages.find(img => img.id === "brand-logo")?.imageUrl || "https://picsum.photos/seed/momo/400/400";
 
 const MENU_DATA = {
   momos: [
     {
       category: "Classic Veg",
       items: [
-        { id: "cv-steam", name: "Classic Veg Steam", price: 50, description: "Traditional steamed dumplings filled with farm-fresh vegetables and secret spices.", imageId: "momo-veg", variant: "Plate" },
-        { id: "cv-fried", name: "Classic Veg Fried", price: 60, description: "Crispy golden-fried momos with a juicy vegetable filling.", imageId: "momo-veg", variant: "Plate" },
-        { id: "cv-cheese-steam", name: "Cheese Veg Steam", price: 70, description: "Steamed momos loaded with gooey melted cheese and vegetables.", imageId: "momo-veg", variant: "Plate" },
-        { id: "cv-cheese-fried", name: "Cheese Veg Fried", price: 80, description: "Crunchy fried momos with a rich cheesy core.", imageId: "momo-veg", variant: "Plate" },
-        { id: "cv-peri-peri-steam", name: "Peri Peri Veg Steam", price: 70, description: "Steamed momos tossed in spicy peri peri seasoning.", imageId: "momo-peri-peri", variant: "Plate" },
-        { id: "cv-peri-peri-fried", name: "Peri Peri Veg Fried", price: 80, description: "Crispy fried momos with a fiery peri peri kick.", imageId: "momo-peri-peri", variant: "Plate" }
+        { id: "cv-steam", name: "Classic Veg Steam", price: 50, description: "Traditional steamed dumplings filled with farm-fresh vegetables and secret spices.", imageId: "momo-veg-steam", variant: "Plate" },
+        { id: "cv-fried", name: "Classic Veg Fried", price: 60, description: "Crispy golden-fried momos with a juicy vegetable filling.", imageId: "momo-veg-fried", variant: "Plate" },
+        { id: "cv-cheese-steam", name: "Cheese Veg Steam", price: 70, description: "Steamed momos loaded with gooey melted cheese and vegetables.", imageId: "momo-veg-cheese-steam", variant: "Plate" },
+        { id: "cv-cheese-fried", name: "Cheese Veg Fried", price: 80, description: "Crunchy fried momos with a rich cheesy core.", imageId: "momo-veg-cheese-fried", variant: "Plate" },
+        { id: "cv-peri-peri-steam", name: "Peri Peri Veg Steam", price: 70, description: "Steamed momos tossed in spicy peri peri seasoning.", imageId: "momo-veg-peri-peri-steam", variant: "Plate" },
+        { id: "cv-peri-peri-fried", name: "Peri Peri Veg Fried", price: 80, description: "Crispy fried momos with a fiery peri peri kick.", imageId: "momo-veg-peri-peri-fried", variant: "Plate" }
       ]
     },
     {
       category: "Paneer Special",
       items: [
-        { id: "pn-steam", name: "Paneer Steam", price: 60, description: "Soft steamed momos packed with fresh marinated paneer chunks.", imageId: "momo-paneer", variant: "Plate" },
-        { id: "pn-fried", name: "Paneer Fried", price: 70, description: "Paneer momos deep-fried to perfection for that extra crunch.", imageId: "momo-paneer", variant: "Plate" },
-        { id: "pn-cheese-steam", name: "Paneer Cheese Steam", price: 80, description: "Steamed momos with paneer and cheese.", imageId: "momo-paneer", variant: "Plate" },
-        { id: "pn-cheese-fried", name: "Paneer Cheese Fried", price: 90, description: "A lethal combination of paneer and extra cheese, fried till golden.", imageId: "momo-paneer", variant: "Plate" },
-        { id: "pn-peri-peri-steam", name: "Paneer Peri Peri Steam", price: 90, description: "Steamed paneer momos with peri peri spice.", imageId: "momo-peri-peri", variant: "Plate" },
-        { id: "pn-peri-peri-fried", name: "Paneer Peri Peri Fried", price: 99, description: "Fried paneer momos with peri peri spice.", imageId: "momo-peri-peri", variant: "Plate" }
+        { id: "pn-steam", name: "Paneer Steam", price: 60, description: "Soft steamed momos packed with fresh marinated paneer chunks.", imageId: "momo-paneer-steam", variant: "Plate" },
+        { id: "pn-fried", name: "Paneer Fried", price: 70, description: "Paneer momos deep-fried to perfection for that extra crunch.", imageId: "momo-paneer-fried", variant: "Plate" },
+        { id: "pn-cheese-steam", name: "Paneer Cheese Steam", price: 80, description: "Steamed momos with paneer and cheese.", imageId: "momo-paneer-cheese-steam", variant: "Plate" },
+        { id: "pn-cheese-fried", name: "Paneer Cheese Fried", price: 90, description: "A lethal combination of paneer and extra cheese, fried till golden.", imageId: "momo-paneer-cheese-fried", variant: "Plate" },
+        { id: "pn-peri-peri-steam", name: "Paneer Peri Peri Steam", price: 90, description: "Steamed paneer momos with peri peri spice.", imageId: "momo-paneer-peri-peri-steam", variant: "Plate" },
+        { id: "pn-peri-peri-fried", name: "Paneer Peri Peri Fried", price: 99, description: "Fried paneer momos with peri peri spice.", imageId: "momo-paneer-peri-peri-fried", variant: "Plate" }
       ]
     },
     {
       category: "Kurkure Crunch",
       items: [
-        { id: "kk-veg-fried", name: "Kurkure Veg", price: 70, description: "Ultra-crunchy momos with a special kurkure coating.", imageId: "momo-kurkure", variant: "Plate" },
-        { id: "kk-cheese-fried", name: "Kurkure Cheese", price: 90, description: "Kurkure momos with a cheesy filling.", imageId: "momo-kurkure", variant: "Plate" },
-        { id: "kk-peri-peri-fried", name: "Kurkure Peri Peri", price: 90, description: "Spicy and crunchy kurkure momos.", imageId: "momo-kurkure", variant: "Plate" },
-        { id: "kk-paneer-fried", name: "Kurkure Paneer", price: 99, description: "The ultimate crunch paired with soft, juicy paneer.", imageId: "momo-kurkure", variant: "Plate" },
-        { id: "kk-paneer-cheese-fried", name: "Kurkure Paneer Cheese", price: 110, description: "Premium crispy coating with paneer and molten cheese inside.", imageId: "momo-kurkure", variant: "Plate" },
-        { id: "kk-paneer-peri-peri-fried", name: "Kurkure Paneer Peri Peri", price: 110, description: "The ultimate crunch paired with soft, juicy paneer and peri peri.", imageId: "momo-kurkure", variant: "Plate" },
+        { id: "kk-veg-fried", name: "Kurkure Veg", price: 70, description: "Ultra-crunchy momos with a special kurkure coating.", imageId: "momo-kurkure-veg", variant: "Plate" },
+        { id: "kk-cheese-fried", name: "Kurkure Cheese", price: 90, description: "Kurkure momos with a cheesy filling.", imageId: "momo-kurkure-cheese", variant: "Plate" },
+        { id: "kk-peri-peri-fried", name: "Kurkure Peri Peri", price: 90, description: "Spicy and crunchy kurkure momos.", imageId: "momo-kurkure-peri-peri", variant: "Plate" },
+        { id: "kk-paneer-fried", name: "Kurkure Paneer", price: 99, description: "The ultimate crunch paired with soft, juicy paneer.", imageId: "momo-kurkure-paneer", variant: "Plate" },
+        { id: "kk-paneer-cheese-fried", name: "Kurkure Paneer Cheese", price: 110, description: "Premium crispy coating with paneer and molten cheese inside.", imageId: "momo-kurkure-paneer-cheese", variant: "Plate" },
+        { id: "kk-paneer-peri-peri-fried", name: "Kurkure Paneer Peri Peri", price: 110, description: "The ultimate crunch paired with soft, juicy paneer and peri peri.", imageId: "momo-kurkure-paneer-peri-peri", variant: "Plate" },
       ]
     },
     {
       category: "Jain Special",
       items: [
-        { id: "jn-steam", name: "Jain Veg Steam", price: 80, description: "No onion, no garlic, pure taste. Prepared strictly per Jain standards.", imageId: "momo-jain", variant: "Plate" },
-        { id: "jn-fried", name: "Jain Veg Fried", price: 90, description: "Crunchy Jain-friendly momos with zero root vegetables.", imageId: "momo-jain", variant: "Plate" },
-        { id: "jn-cheese-steam", name: "Jain Cheese Steam", price: 90, description: "Cheesy goodness for our Jain customers, steamed to perfection.", imageId: "momo-jain", variant: "Plate" },
-        { id: "jn-cheese-fried", name: "Jain Cheese Fried", price: 99, description: "Cheesy goodness for our Jain customers, fried to perfection.", imageId: "momo-jain", variant: "Plate" },
-        { id: "jn-peri-peri-steam", name: "Jain Peri Peri Steam", price: 90, description: "Spicy Jain momos, steamed.", imageId: "momo-jain", variant: "Plate" },
-        { id: "jn-peri-peri-fried", name: "Jain Peri Peri Fried", price: 99, description: "Spicy Jain momos, fried.", imageId: "momo-jain", variant: "Plate" },
+        { id: "jn-steam", name: "Jain Veg Steam", price: 80, description: "No onion, no garlic, pure taste. Prepared strictly per Jain standards.", imageId: "momo-jain-steam", variant: "Plate" },
+        { id: "jn-fried", name: "Jain Veg Fried", price: 90, description: "Crunchy Jain-friendly momos with zero root vegetables.", imageId: "momo-jain-fried", variant: "Plate" },
+        { id: "jn-cheese-steam", name: "Jain Cheese Steam", price: 90, description: "Cheesy goodness for our Jain customers, steamed to perfection.", imageId: "momo-jain-cheese-steam", variant: "Plate" },
+        { id: "jn-cheese-fried", name: "Jain Cheese Fried", price: 99, description: "Cheesy goodness for our Jain customers, fried to perfection.", imageId: "momo-jain-cheese-fried", variant: "Plate" },
+        { id: "jn-peri-peri-steam", name: "Jain Peri Peri Steam", price: 90, description: "Spicy Jain momos, steamed.", imageId: "momo-jain-peri-peri-steam", variant: "Plate" },
+        { id: "jn-peri-peri-fried", name: "Jain Peri Peri Fried", price: 99, description: "Spicy Jain momos, fried.", imageId: "momo-jain-peri-peri-fried", variant: "Plate" },
       ]
     }
   ],
@@ -82,10 +83,10 @@ const MENU_DATA = {
     {
       category: "Crispy Fries",
       items: [
-        { id: "fr-salted", name: "Salted Fries", price: 40, description: "Classic golden fries lightly seasoned with sea salt.", imageId: "fries-side", variant: "Plate" },
-        { id: "fr-cheese", name: "Cheese Fries", price: 60, description: "Loaded with creamy cheese sauce and herbs.", imageId: "fries-side", variant: "Plate" },
-        { id: "fr-peri", name: "Peri Peri Fries", price: 50, description: "Spicy and tangy fries tossed in our signature peri peri mix.", imageId: "fries-side", variant: "Plate" },
-        { id: "fr-masala", name: "Masala Fries", price: 50, description: "Mumbai-style masala fries with a local twist.", imageId: "fries-side", variant: "Plate" }
+        { id: "fr-salted", name: "Salted Fries", price: 40, description: "Classic golden fries lightly seasoned with sea salt.", imageId: "fries-salted", variant: "Half" },
+        { id: "fr-cheese", name: "Cheese Fries", price: 60, description: "Loaded with creamy cheese sauce and herbs.", imageId: "fries-cheese", variant: "Half" },
+        { id: "fr-peri", name: "Peri Peri Fries", price: 50, description: "Spicy and tangy fries tossed in our signature peri peri mix.", imageId: "fries-peri-peri", variant: "Half" },
+        { id: "fr-masala", name: "Masala Fries", price: 50, description: "Mumbai-style masala fries with a local twist.", imageId: "fries-masala", variant: "Half" }
       ]
     }
   ],
@@ -93,12 +94,12 @@ const MENU_DATA = {
     {
       category: "Meal Combos",
       items: [
-        { id: "ml-classic-steam", name: "Classic Steam Meal", price: 110, description: "Classic Veg Steam Momos, Half Masala Fries, 250ml Soft Drink. Light, healthy & budget-friendly.", imageId: "combo-meal", variant: "Meal Combo" },
-        { id: "ml-classic-fried", name: "Classic Fried Meal", price: 120, description: "Classic Veg Fried Momos, Half Masala Fries, 250ml Soft Drink. Crispy and more flavorful.", imageId: "combo-meal", variant: "Meal Combo" },
-        { id: "ml-cheese", name: "Cheese Meal", price: 140, description: "Cheese Fried Momos, Half Cheese Fries, 250ml Soft Drink. Rich, cheesy & filling.", imageId: "combo-meal", variant: "Meal Combo" },
-        { id: "ml-peri-peri", name: "Peri Peri Meal", price: 140, description: "Peri Peri Fried Momos, Half Peri Peri Fries, 250ml Soft Drink. Spicy & best for masala lovers.", imageId: "combo-meal", variant: "Meal Combo" },
-        { id: "ml-paneer-steam", name: "Paneer Steam Meal", price: 120, description: "Paneer Steam Momos, Half Masala Fries, 250ml Soft Drink. Soft paneer filling + light meal.", imageId: "combo-meal", variant: "Meal Combo" },
-        { id: "ml-paneer-fried", name: "Paneer Fried Meal", price: 130, description: "Paneer Fried Momos, Half Masala Fries, 250ml Soft Drink. Crispy outside, juicy paneer inside.", imageId: "combo-meal", variant: "Meal Combo" }
+        { id: "ml-classic-steam", name: "Classic Steam Meal", price: 110, description: "Classic Veg Steam Momos, Half Masala Fries, 250ml Soft Drink. Light, healthy & budget-friendly.", imageId: "combo-classic-steam", variant: "Combo" },
+        { id: "ml-classic-fried", name: "Classic Fried Meal", price: 120, description: "Classic Veg Fried Momos, Half Masala Fries, 250ml Soft Drink. Crispy and more flavorful.", imageId: "combo-classic-fried", variant: "Combo" },
+        { id: "ml-cheese", name: "Cheese Meal", price: 140, description: "Cheese Fried Momos, Half Cheese Fries, 250ml Soft Drink. Rich, cheesy & filling.", imageId: "combo-cheese", variant: "Combo" },
+        { id: "ml-peri-peri", name: "Peri Peri Meal", price: 140, description: "Peri Peri Fried Momos, Half Peri Peri Fries, 250ml Soft Drink. Spicy & best for masala lovers.", imageId: "combo-peri-peri", variant: "Combo" },
+        { id: "ml-paneer-steam", name: "Paneer Steam Meal", price: 120, description: "Paneer Steam Momos, Half Masala Fries, 250ml Soft Drink. Soft paneer filling + light meal.", imageId: "combo-paneer-steam", variant: "Combo" },
+        { id: "ml-paneer-fried", name: "Paneer Fried Meal", price: 130, description: "Paneer Fried Momos, Half Masala Fries, 250ml Soft Drink. Crispy outside, juicy paneer inside.", imageId: "combo-paneer-fried", variant: "Combo" }
       ]
     }
   ]
@@ -110,71 +111,71 @@ const kurkureItems = MENU_DATA.momos.find(c => c.category === 'Kurkure Crunch')!
 const jainItems = MENU_DATA.momos.find(c => c.category === 'Jain Special')!.items;
 
 const newMomoMenuData = [
-  {
-    category: "Classic",
-    items: [
-      { subcategory: "Steam", item: classicVegItems.find(i => i.id === 'cv-steam')! },
-      { subcategory: "Fried", item: classicVegItems.find(i => i.id === 'cv-fried')! }
-    ]
-  },
-  {
-    category: "Cheese",
-    items: [
-      { subcategory: "Steam", item: classicVegItems.find(i => i.id === 'cv-cheese-steam')! },
-      { subcategory: "Fried", item: classicVegItems.find(i => i.id === 'cv-cheese-fried')! }
-    ]
-  },
-  {
-    category: "Peri Peri",
-    items: [
-      { subcategory: "Steam", item: classicVegItems.find(i => i.id === 'cv-peri-peri-steam')! },
-      { subcategory: "Fried", item: classicVegItems.find(i => i.id === 'cv-peri-peri-fried')! }
-    ]
-  },
-  {
-    category: "Paneer",
-    items: [
-      { subcategory: "Steam", item: paneerItems.find(i => i.id === 'pn-steam')! },
-      { subcategory: "Fried", item: paneerItems.find(i => i.id === 'pn-fried')! }
-    ]
-  },
-  {
-    category: "Paneer Cheese",
-    items: [
-      { subcategory: "Steam", item: paneerItems.find(i => i.id === 'pn-cheese-steam')! },
-      { subcategory: "Fried", item: paneerItems.find(i => i.id === 'pn-cheese-fried')! }
-    ]
-  },
-  {
-    category: "Paneer Peri Peri",
-    items: [
-      { subcategory: "Steam", item: paneerItems.find(i => i.id === 'pn-peri-peri-steam')! },
-      { subcategory: "Fried", item: paneerItems.find(i => i.id === 'pn-peri-peri-fried')! }
-    ]
-  },
-  {
-    category: "Kurkure",
-    items: [
-      { subcategory: "Veg", item: kurkureItems.find(i => i.id === 'kk-veg-fried')! },
-      { subcategory: "Cheese", item: kurkureItems.find(i => i.id === 'kk-cheese-fried')! },
-      { subcategory: "Peri Peri", item: kurkureItems.find(i => i.id === 'kk-peri-peri-fried')! },
-      { subcategory: "Paneer", item: kurkureItems.find(i => i.id === 'kk-paneer-fried')! },
-      { subcategory: "Paneer Cheese", item: kurkureItems.find(i => i.id === 'kk-paneer-cheese-fried')! },
-      { subcategory: "Paneer Peri Peri", item: kurkureItems.find(i => i.id === 'kk-paneer-peri-peri-fried')! }
-    ]
-  },
-  {
-    category: "Jain",
-    items: [
-      { subcategory: "Steam", item: jainItems.find(i => i.id === 'jn-steam')! },
-      { subcategory: "Fried", item: jainItems.find(i => i.id === 'jn-fried')! },
-      { subcategory: "Cheese Steam", item: jainItems.find(i => i.id === 'jn-cheese-steam')! },
-      { subcategory: "Cheese Fried", item: jainItems.find(i => i.id === 'jn-cheese-fried')! },
-      { subcategory: "Peri Peri Steam", item: jainItems.find(i => i.id === 'jn-peri-peri-steam')! },
-      { subcategory: "Peri Peri Fried", item: jainItems.find(i => i.id === 'jn-peri-peri-fried')! }
-    ]
-  }
-];
+    {
+      category: "Classic",
+      items: [
+        { subcategory: "Steam", item: classicVegItems.find(i => i.id === 'cv-steam')! },
+        { subcategory: "Fried", item: classicVegItems.find(i => i.id === 'cv-fried')! }
+      ]
+    },
+    {
+      category: "Cheese",
+      items: [
+        { subcategory: "Steam", item: classicVegItems.find(i => i.id === 'cv-cheese-steam')! },
+        { subcategory: "Fried", item: classicVegItems.find(i => i.id === 'cv-cheese-fried')! }
+      ]
+    },
+    {
+      category: "Peri Peri",
+      items: [
+        { subcategory: "Steam", item: classicVegItems.find(i => i.id === 'cv-peri-peri-steam')! },
+        { subcategory: "Fried", item: classicVegItems.find(i => i.id === 'cv-peri-peri-fried')! }
+      ]
+    },
+    {
+      category: "Paneer",
+      items: [
+        { subcategory: "Steam", item: paneerItems.find(i => i.id === 'pn-steam')! },
+        { subcategory: "Fried", item: paneerItems.find(i => i.id === 'pn-fried')! }
+      ]
+    },
+    {
+      category: "Paneer Cheese",
+      items: [
+        { subcategory: "Steam", item: paneerItems.find(i => i.id === 'pn-cheese-steam')! },
+        { subcategory: "Fried", item: paneerItems.find(i => i.id === 'pn-cheese-fried')! }
+      ]
+    },
+    {
+      category: "Paneer Peri Peri",
+      items: [
+        { subcategory: "Steam", item: paneerItems.find(i => i.id === 'pn-peri-peri-steam')! },
+        { subcategory: "Fried", item: paneerItems.find(i => i.id === 'pn-peri-peri-fried')! }
+      ]
+    },
+    {
+        category: "Kurkure",
+        items: [
+          { subcategory: "Veg", item: kurkureItems.find(i => i.id === 'kk-veg-fried')! },
+          { subcategory: "Cheese", item: kurkureItems.find(i => i.id === 'kk-cheese-fried')! },
+          { subcategory: "Peri Peri", item: kurkureItems.find(i => i.id === 'kk-peri-peri-fried')! },
+          { subcategory: "Paneer", item: kurkureItems.find(i => i.id === 'kk-paneer-fried')! },
+          { subcategory: "Paneer Cheese", item: kurkureItems.find(i => i.id === 'kk-paneer-cheese-fried')! },
+          { subcategory: "Paneer Peri Peri", item: kurkureItems.find(i => i.id === 'kk-paneer-peri-peri-fried')! }
+        ]
+    },
+    {
+      category: "Jain",
+      items: [
+        { subcategory: "Steam", item: jainItems.find(i => i.id === 'jn-steam')! },
+        { subcategory: "Fried", item: jainItems.find(i => i.id === 'jn-fried')! },
+        { subcategory: "Cheese Steam", item: jainItems.find(i => i.id === 'jn-cheese-steam')! },
+        { subcategory: "Cheese Fried", item: jainItems.find(i => i.id === 'jn-cheese-fried')! },
+        { subcategory: "Peri Peri Steam", item: jainItems.find(i => i.id === 'jn-peri-peri-steam')! },
+        { subcategory: "Peri Peri Fried", item: jainItems.find(i => i.id === 'jn-peri-peri-fried')! }
+      ]
+    }
+  ];
 
 export function Products() {
   const { addToCart, cart, updateQuantity } = useCart();
@@ -187,7 +188,7 @@ export function Products() {
       name: item.name, 
       price: item.price, 
       variant: item.variant,
-      image: PlaceHolderImages.find(img => img.id === item.imageId)?.imageUrl || DEFAULT_MOMO_IMAGE
+      image: PlaceHolderImages.find(img => img.id === item.imageId)?.imageUrl || FALLBACK_IMAGE
     });
     toast({ title: "Added to Order", description: `${item.name} - ₹${item.price}` });
   };
@@ -217,7 +218,7 @@ export function Products() {
   };
 
   const SubCategoryCard = ({ subcategory, item }: { subcategory: string; item: any }) => {
-    const imageUrl = PlaceHolderImages.find(img => img.id === item.imageId)?.imageUrl || DEFAULT_MOMO_IMAGE;
+    const imageUrl = PlaceHolderImages.find(img => img.id === item.imageId)?.imageUrl || FALLBACK_IMAGE;
     return (
         <div className="flex flex-col">
             <h4 className="font-bold text-sm text-center mb-2 text-foreground/80">{subcategory}</h4>
@@ -241,7 +242,7 @@ export function Products() {
   };
 
   const ProductCard = ({ item }: { item: any }) => {
-    const imageUrl = PlaceHolderImages.find(img => img.id === item.imageId)?.imageUrl || DEFAULT_MOMO_IMAGE;
+    const imageUrl = PlaceHolderImages.find(img => img.id === item.imageId)?.imageUrl || FALLBACK_IMAGE;
     
     return (
       <Card 
@@ -292,9 +293,9 @@ export function Products() {
         <Tabs defaultValue="momos" className="w-full">
           <div className="sticky top-16 z-40 bg-gray-50/80 backdrop-blur-xl py-4">
             <TabsList className="flex w-full max-w-sm mx-auto h-12 bg-white rounded-full p-1 shadow-md border">
-              <TabsTrigger value="momos" className="flex-1 rounded-full font-bold text-xs uppercase tracking-widest data-[state='active']:bg-primary data-[state='active']:text-white">Momos</TabsTrigger>
-              <TabsTrigger value="fries" className="flex-1 rounded-full font-bold text-xs uppercase tracking-widest data-[state='active']:bg-primary data-[state='active']:text-white">Fries</TabsTrigger>
-              <TabsTrigger value="combos" className="flex-1 rounded-full font-bold text-xs uppercase tracking-widest data-[state='active']:bg-primary data-[state='active']:text-white">Meals</TabsTrigger>
+              <TabsTrigger value="momos" className="flex-1 rounded-full font-bold text-xs uppercase tracking-widest data-[state=active]:bg-primary data-[state=active]:text-white">Momos</TabsTrigger>
+              <TabsTrigger value="fries" className="flex-1 rounded-full font-bold text-xs uppercase tracking-widest data-[state=active]:bg-primary data-[state=active]:text-white">Fries</TabsTrigger>
+              <TabsTrigger value="combos" className="flex-1 rounded-full font-bold text-xs uppercase tracking-widest data-[state=active]:bg-primary data-[state=active]:text-white">Meals</TabsTrigger>
             </TabsList>
           </div>
 
@@ -348,7 +349,7 @@ export function Products() {
             <div className="flex flex-col">
               <div className="relative h-64 w-full">
                 <Image 
-                  src={PlaceHolderImages.find(img => img.id === selectedProduct.imageId)?.imageUrl || DEFAULT_MOMO_IMAGE} 
+                  src={PlaceHolderImages.find(img => img.id === selectedProduct.imageId)?.imageUrl || FALLBACK_IMAGE} 
                   alt={selectedProduct.name} 
                   fill 
                   className="object-cover"

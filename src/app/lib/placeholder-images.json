@@ -26,40 +26,208 @@
       "imageHint": "restaurant logo"
     },
     {
-      "id": "momo-veg",
-      "description": "Classic Veg Momos",
-      "imageUrl": "https://picsum.photos/seed/momo1/400/400",
-      "imageHint": "veg momos"
+      "id": "momo-veg-steam",
+      "description": "Classic veg steamed momos",
+      "imageUrl": "https://images.unsplash.com/photo-1628766121498-3f59c287118f?w=800&auto=format&fit=crop",
+      "imageHint": "steamed vegetable momos"
     },
     {
-      "id": "momo-paneer",
-      "description": "Paneer Special Momos",
-      "imageUrl": "https://picsum.photos/seed/momo2/400/400",
-      "imageHint": "paneer momos"
+      "id": "momo-veg-fried",
+      "description": "Classic veg fried momos",
+      "imageUrl": "https://images.unsplash.com/photo-1496116218417-1a781b1c416c?w=800&auto=format&fit=crop",
+      "imageHint": "fried vegetable momos"
     },
     {
-      "id": "momo-kurkure",
-      "description": "Crispy Kurkure Momos",
-      "imageUrl": "https://picsum.photos/seed/momo3/400/400",
-      "imageHint": "crispy momos"
+      "id": "momo-veg-cheese-steam",
+      "description": "Cheese veg steamed momos",
+      "imageUrl": "https://images.unsplash.com/photo-1628766121498-3f59c287118f?w=800&auto=format&fit=crop",
+      "imageHint": "steamed cheese momos"
     },
     {
-      "id": "momo-jain",
-      "description": "Jain Special Momos",
-      "imageUrl": "https://picsum.photos/seed/momo4/400/400",
-      "imageHint": "jain food"
+      "id": "momo-veg-cheese-fried",
+      "description": "Cheese veg fried momos",
+      "imageUrl": "https://images.unsplash.com/photo-1496116218417-1a781b1c416c?w=800&auto=format&fit=crop",
+      "imageHint": "fried cheese momos"
     },
     {
-      "id": "fries-side",
-      "description": "Crispy French Fries",
-      "imageUrl": "https://picsum.photos/seed/fries1/400/400",
-      "imageHint": "french fries"
+      "id": "momo-veg-peri-peri-steam",
+      "description": "Peri peri veg steamed momos",
+      "imageUrl": "https://images.unsplash.com/photo-1628766121498-3f59c287118f?w=800&auto=format&fit=crop",
+      "imageHint": "steamed peri peri momos"
     },
     {
-      "id": "combo-meal",
-      "description": "Full Meal Combo",
-      "imageUrl": "https://picsum.photos/seed/combo1/400/400",
-      "imageHint": "food combo"
+      "id": "momo-veg-peri-peri-fried",
+      "description": "Peri peri veg fried momos",
+      "imageUrl": "https://images.unsplash.com/photo-1496116218417-1a781b1c416c?w=800&auto=format&fit=crop",
+      "imageHint": "fried peri peri momos"
+    },
+    {
+      "id": "momo-paneer-steam",
+      "description": "Paneer steamed momos",
+      "imageUrl": "https://images.unsplash.com/photo-1628766121498-3f59c287118f?w=800&auto=format&fit=crop",
+      "imageHint": "steamed paneer momos"
+    },
+    {
+      "id": "momo-paneer-fried",
+      "description": "Paneer fried momos",
+      "imageUrl": "https://images.unsplash.com/photo-1496116218417-1a781b1c416c?w=800&auto=format&fit=crop",
+      "imageHint": "fried paneer momos"
+    },
+    {
+      "id": "momo-paneer-cheese-steam",
+      "description": "Paneer cheese steamed momos",
+      "imageUrl": "https://images.unsplash.com/photo-1628766121498-3f59c287118f?w=800&auto=format&fit=crop",
+      "imageHint": "steamed paneer cheese momos"
+    },
+    {
+      "id": "momo-paneer-cheese-fried",
+      "description": "Paneer cheese fried momos",
+      "imageUrl": "https://images.unsplash.com/photo-1496116218417-1a781b1c416c?w=800&auto=format&fit=crop",
+      "imageHint": "fried paneer cheese momos"
+    },
+    {
+      "id": "momo-paneer-peri-peri-steam",
+      "description": "Paneer peri peri steamed momos",
+      "imageUrl": "https://images.unsplash.com/photo-1628766121498-3f59c287118f?w=800&auto=format&fit=crop",
+      "imageHint": "steamed paneer peri peri momos"
+    },
+    {
+      "id": "momo-paneer-peri-peri-fried",
+      "description": "Paneer peri peri fried momos",
+      "imageUrl": "https://images.unsplash.com/photo-1496116218417-1a781b1c416c?w=800&auto=format&fit=crop",
+      "imageHint": "fried paneer peri peri momos"
+    },
+    {
+      "id": "momo-kurkure-veg",
+      "description": "Kurkure veg momos",
+      "imageUrl": "https://images.unsplash.com/photo-1608039829572-78524f79c4c7?w=800&auto=format&fit=crop",
+      "imageHint": "kurkure veg momos"
+    },
+    {
+      "id": "momo-kurkure-cheese",
+      "description": "Kurkure cheese momos",
+      "imageUrl": "https://images.unsplash.com/photo-1608039829572-78524f79c4c7?w=800&auto=format&fit=crop",
+      "imageHint": "kurkure cheese momos"
+    },
+    {
+      "id": "momo-kurkure-peri-peri",
+      "description": "Kurkure peri peri momos",
+      "imageUrl": "https://images.unsplash.com/photo-1608039829572-78524f79c4c7?w=800&auto=format&fit=crop",
+      "imageHint": "kurkure peri peri momos"
+    },
+    {
+      "id": "momo-kurkure-paneer",
+      "description": "Kurkure paneer momos",
+      "imageUrl": "https://images.unsplash.com/photo-1608039829572-78524f79c4c7?w=800&auto=format&fit=crop",
+      "imageHint": "kurkure paneer momos"
+    },
+    {
+      "id": "momo-kurkure-paneer-cheese",
+      "description": "Kurkure paneer cheese momos",
+      "imageUrl": "https://images.unsplash.com/photo-1608039829572-78524f79c4c7?w=800&auto=format&fit=crop",
+      "imageHint": "kurkure paneer cheese momos"
+    },
+    {
+      "id": "momo-kurkure-paneer-peri-peri",
+      "description": "Kurkure paneer peri peri momos",
+      "imageUrl": "https://images.unsplash.com/photo-1608039829572-78524f79c4c7?w=800&auto=format&fit=crop",
+      "imageHint": "kurkure paneer peri peri momos"
+    },
+    {
+      "id": "momo-jain-steam",
+      "description": "Jain steamed momos",
+      "imageUrl": "https://images.unsplash.com/photo-1628766121498-3f59c287118f?w=800&auto=format&fit=crop",
+      "imageHint": "steamed jain momos"
+    },
+    {
+      "id": "momo-jain-fried",
+      "description": "Jain fried momos",
+      "imageUrl": "https://images.unsplash.com/photo-1496116218417-1a781b1c416c?w=800&auto=format&fit=crop",
+      "imageHint": "fried jain momos"
+    },
+    {
+      "id": "momo-jain-cheese-steam",
+      "description": "Jain cheese steamed momos",
+      "imageUrl": "https://images.unsplash.com/photo-1628766121498-3f59c287118f?w=800&auto=format&fit=crop",
+      "imageHint": "steamed jain cheese momos"
+    },
+    {
+      "id": "momo-jain-cheese-fried",
+      "description": "Jain cheese fried momos",
+      "imageUrl": "https://images.unsplash.com/photo-1496116218417-1a781b1c416c?w=800&auto=format&fit=crop",
+      "imageHint": "fried jain cheese momos"
+    },
+    {
+      "id": "momo-jain-peri-peri-steam",
+      "description": "Jain peri peri steamed momos",
+      "imageUrl": "https://images.unsplash.com/photo-1628766121498-3f59c287118f?w=800&auto=format&fit=crop",
+      "imageHint": "steamed jain peri peri momos"
+    },
+    {
+      "id": "momo-jain-peri-peri-fried",
+      "description": "Jain peri peri fried momos",
+      "imageUrl": "https://images.unsplash.com/photo-1496116218417-1a781b1c416c?w=800&auto=format&fit=crop",
+      "imageHint": "fried jain peri peri momos"
+    },
+    {
+      "id": "fries-salted",
+      "description": "Salted fries",
+      "imageUrl": "https://images.unsplash.com/photo-1541592106381-b6d9625a610f?w=800&auto=format&fit=crop",
+      "imageHint": "salted fries"
+    },
+    {
+      "id": "fries-cheese",
+      "description": "Cheese fries",
+      "imageUrl": "https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=800&auto=format&fit=crop",
+      "imageHint": "cheese fries"
+    },
+    {
+      "id": "fries-peri-peri",
+      "description": "Peri peri fries",
+      "imageUrl": "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=800&auto=format&fit=crop",
+      "imageHint": "peri peri fries"
+    },
+    {
+      "id": "fries-masala",
+      "description": "Masala fries",
+      "imageUrl": "https://images.unsplash.com/photo-1606755962773-d324e0a13086?w=800&auto=format&fit=crop",
+      "imageHint": "masala fries"
+    },
+    {
+      "id": "combo-classic-steam",
+      "description": "Classic steam meal combo",
+      "imageUrl": "https://images.unsplash.com/photo-1596739417867-2934a8a5f573?w=800&auto=format&fit=crop",
+      "imageHint": "classic steam meal combo"
+    },
+    {
+      "id": "combo-classic-fried",
+      "description": "Classic fried meal combo",
+      "imageUrl": "https://images.unsplash.com/photo-1600335895229-6e75511892c8?w=800&auto=format&fit=crop",
+      "imageHint": "classic fried meal combo"
+    },
+    {
+      "id": "combo-cheese",
+      "description": "Cheese meal combo",
+      "imageUrl": "https://images.unsplash.com/photo-1563245372-f21724e3856d?w=800&auto=format&fit=crop",
+      "imageHint": "cheese meal combo"
+    },
+    {
+      "id": "combo-peri-peri",
+      "description": "Peri peri meal combo",
+      "imageUrl": "https://images.unsplash.com/photo-1565299715199-866c917206bb?w=800&auto=format&fit=crop",
+      "imageHint": "peri peri meal combo"
+    },
+    {
+      "id": "combo-paneer-steam",
+      "description": "Paneer steam meal combo",
+      "imageUrl": "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=800&auto=format&fit=crop",
+      "imageHint": "paneer steam meal combo"
+    },
+    {
+      "id": "combo-paneer-fried",
+      "description": "Paneer fried meal combo",
+      "imageUrl": "https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=800&auto=format&fit=crop",
+      "imageHint": "paneer fried meal combo"
     }
   ]
 }
