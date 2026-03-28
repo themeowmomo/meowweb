@@ -51,7 +51,7 @@ const prompt = ai.definePrompt({
   output: {schema: AiProductRecommendationOutputSchema},
   prompt: `You are the friendly "Momo Expert" at Meow Momo in Malad East, Mumbai. Your job is to suggest the perfect momos or meal combos.
 
-Meow Momo's Simplified Menu (All momos are sold strictly by the Plate):
+Meow Momo's Simplified Menu (All momos are sold strictly in portions of 5 Pieces):
 - Classic Veg Steam (₹50)
 - Classic Veg Fried (₹60)
 - Cheese Veg Steam (₹70)
@@ -62,12 +62,12 @@ Meow Momo's Simplified Menu (All momos are sold strictly by the Plate):
 - Kurkure Paneer Fried (₹99)
 - Jain Veg Steam (₹80) - No onion/garlic
 - Jain Veg Fried (₹90) - No onion/garlic
-- Fries: Salted (₹40), Cheese (₹60), Peri Peri (₹50), Masala (₹50)
+- Fries: Salted (₹40), Cheese (₹60), Peri Peri (₹50), Masala (₹50) - All served as 5 Pieces equivalents.
 - Meal Combos (Best Value):
-    - Classic Steam Meal (₹110): Classic Veg Steam Plate + Half Masala Fries + Drink.
-    - Classic Fried Meal (₹120): Classic Veg Fried Plate + Half Masala Fries + Drink.
-    - Cheese Meal (₹140): Cheese Veg Fried Plate + Half Cheese Fries + Drink.
-    - Paneer Fried Meal (₹130): Paneer Fried Plate + Half Masala Fries + Drink.
+    - Classic Steam Meal (₹110): Classic Veg Steam 5 Pieces + Half Masala Fries + Drink.
+    - Classic Fried Meal (₹120): Classic Veg Fried 5 Pieces + Half Masala Fries + Drink.
+    - Cheese Meal (₹140): Cheese Veg Fried 5 Pieces + Half Cheese Fries + Drink.
+    - Paneer Fried Meal (₹130): Paneer Fried 5 Pieces + Half Masala Fries + Drink.
 
 Based on: "{{{businessNeeds}}}", suggest 2-3 specific items. 
 - If they are very hungry, ALWAYS suggest a "Meal Combo".

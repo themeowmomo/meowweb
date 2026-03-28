@@ -51,7 +51,7 @@ export function CartSheet() {
     const header = "*NEW MOMO ORDER*%0A";
     const separator = "--------------------------%0A";
     const customerSection = `*Recipient Details*%0AName: ${customerInfo.name}%0AAddress: ${customerInfo.address}%0A${orderId ? `Order ID: ${orderId}%0A` : ""}`;
-    const itemsSection = "%0A*Items Selection*%0A" + cart.map(item => `- ${item.name} (Plate) x ${item.quantity}: Rs.${item.price * item.quantity}`).join("%0A") + "%0A";
+    const itemsSection = "%0A*Items Selection*%0A" + cart.map(item => `- ${item.name} (5 Pieces) x ${item.quantity}: Rs.${item.price * item.quantity}`).join("%0A") + "%0A";
     const paymentText = customerInfo.paymentMethod === 'upi' ? "Digital UPI" : "Cash on Delivery";
     const summarySection = `%0A*Summary*%0APayment: ${paymentText}%0A*Total: Rs.${totalPrice}*%0A`;
     const footer = "--------------------------%0A_Sent via Meow Momo App_";
@@ -77,7 +77,7 @@ export function CartSheet() {
           <SheetTrigger asChild>
             <Button className="w-full sm:w-[320px] h-14 bg-foreground text-white rounded-full shadow-2xl flex items-center justify-between px-2 group hover:bg-foreground/95 border-none">
               <div className="flex flex-col text-left pl-4">
-                <p className="text-[10px] font-black uppercase tracking-widest opacity-60 leading-none mb-1">{totalItems} Plates</p>
+                <p className="text-[10px] font-black uppercase tracking-widest opacity-60 leading-none mb-1">{totalItems} Portions</p>
                 <p className="text-base font-black tracking-tight">₹{totalPrice}</p>
               </div>
               <div className="flex items-center gap-2 bg-primary px-5 h-10 rounded-full transition-all duration-300">
@@ -137,7 +137,7 @@ export function CartSheet() {
                           <div className="flex items-center gap-2 bg-white rounded-lg border px-1.5 py-0.5">
                             <button className="text-primary hover:bg-primary/5 rounded h-5 w-5 flex items-center justify-center" onClick={() => updateQuantity(item.id, item.quantity - 1, item.variant)}><Minus className="h-3 w-3" /></button>
                             <span className="text-xs font-black w-4 text-center">{item.quantity}</span>
-                            <button className="text-primary hover:bg-primary/5 rounded h-5 w-5 flex items-center justify-center" onClick={() => updateQuantity(item.id, item.quantity + 1, item.variant)}><Plus className="h-3 w-3" /></button>
+                            <button className="text-primary hover:bg-primary/5 rounded h-5 w-5 flex items-center justify-center" onClick={() => updateQuantity(item.id, quantity + 1, item.variant)}><Plus className="h-3 w-3" /></button>
                           </div>
                         </div>
                       </div>
