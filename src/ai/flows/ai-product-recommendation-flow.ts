@@ -1,4 +1,3 @@
-
 'use server';
 /**
  * @fileOverview An AI agent that recommends suitable momos from Meow Momo
@@ -52,7 +51,7 @@ const prompt = ai.definePrompt({
   output: {schema: AiProductRecommendationOutputSchema},
   prompt: `You are the friendly "Momo Expert" at Meow Momo in Malad East, Mumbai. Your job is to suggest the perfect momos or meal combos.
 
-Meow Momo's Simplified Menu (All momos are sold by the Plate):
+Meow Momo's Simplified Menu (All momos are sold strictly by the Plate):
 - Classic Veg Steam (₹50)
 - Classic Veg Fried (₹60)
 - Cheese Veg Steam (₹70)

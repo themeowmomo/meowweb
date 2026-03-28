@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -30,7 +29,7 @@ import {
 } from "@/components/ui/accordion";
 import { placeholderImages as PlaceHolderImages } from "@/app/lib/placeholder-images.json";
 
-const FALLBACK_IMAGE = PlaceHolderImages.find(img => img.id === "brand-logo")?.imageUrl || "https://picsum.photos/seed/momo/400/400";
+const FALLBACK_IMAGE = PlaceHolderImages.find(img => img.id === "brand-logo")?.imageUrl || "https://res.cloudinary.com/di4onfrel/image/upload/v1774167784/Untitled_design_2_xsocq3.svg";
 
 const MENU_DATA = {
   momos: [
@@ -95,7 +94,7 @@ const MENU_DATA = {
       category: "Meal Combos",
       items: [
         { id: "ml-classic-steam", name: "Classic Steam Meal", price: 110, description: "Classic Veg Steam Momos, Half Masala Fries, 250ml Soft Drink. Light, healthy & budget-friendly.", imageId: "combo-classic-steam", variant: "Combo" },
-        { id: "ml-classic-fried", name: "Classic Fried Meal", price: 120, description: "Classic Veg Fried Momos, Half Masala Fries, 250ml Soft Drink. Crispy and more flavorful.", imageId: "combo-classic-fried", variant: "Combo" },
+        { id: "ml-classic-fried", name: "Classic Veg Fried Meal", price: 120, description: "Classic Veg Fried Momos, Half Masala Fries, 250ml Soft Drink. Crispy and more flavorful.", imageId: "combo-classic-fried", variant: "Combo" },
         { id: "ml-cheese", name: "Cheese Meal", price: 140, description: "Cheese Fried Momos, Half Cheese Fries, 250ml Soft Drink. Rich, cheesy & filling.", imageId: "combo-cheese", variant: "Combo" },
         { id: "ml-peri-peri", name: "Peri Peri Meal", price: 140, description: "Peri Peri Fried Momos, Half Peri Peri Fries, 250ml Soft Drink. Spicy & best for masala lovers.", imageId: "combo-peri-peri", variant: "Combo" },
         { id: "ml-paneer-steam", name: "Paneer Steam Meal", price: 120, description: "Paneer Steam Momos, Half Masala Fries, 250ml Soft Drink. Soft paneer filling + light meal.", imageId: "combo-paneer-steam", variant: "Combo" },
@@ -227,7 +226,7 @@ export function Products() {
                 onClick={() => setSelectedProduct(item)}
             >
                 <Image 
-                    src={imageUrl} 
+                    src={imageUrl || FALLBACK_IMAGE} 
                     alt={item.name} 
                     fill 
                     className="object-cover group-hover:scale-110 transition-transform duration-500"
@@ -261,13 +260,13 @@ export function Products() {
               <span className="text-lg font-black text-primary">₹{item.price}</span>
               <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">{item.variant}</span>
             </div>
-            <p className="text-[11px] text-muted-foreground line-clamp-2 leading-relaxed">
+            <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
               {item.description}
             </p>
           </div>
           <div className="relative h-24 w-24 shrink-0 rounded-xl overflow-hidden shadow-inner bg-muted">
             <Image 
-              src={imageUrl} 
+              src={imageUrl || FALLBACK_IMAGE} 
               alt={item.name} 
               fill 
               className="object-cover group-hover:scale-110 transition-transform duration-500" 
@@ -293,9 +292,9 @@ export function Products() {
         <Tabs defaultValue="momos" className="w-full">
           <div className="sticky top-16 z-40 bg-gray-50/80 backdrop-blur-xl py-4">
             <TabsList className="flex w-full max-w-sm mx-auto h-12 bg-white rounded-full p-1 shadow-md border">
-              <TabsTrigger value="momos" className="flex-1 rounded-full font-bold text-xs uppercase tracking-widest data-[state=active]:bg-primary data-[state=active]:text-white">Momos</TabsTrigger>
-              <TabsTrigger value="fries" className="flex-1 rounded-full font-bold text-xs uppercase tracking-widest data-[state=active]:bg-primary data-[state=active]:text-white">Fries</TabsTrigger>
-              <TabsTrigger value="combos" className="flex-1 rounded-full font-bold text-xs uppercase tracking-widest data-[state=active]:bg-primary data-[state=active]:text-white">Meals</TabsTrigger>
+              <TabsTrigger value="momos" className="flex-1 rounded-full font-bold text-xs uppercase tracking-widest data-[state='active']:bg-primary data-[state='active']:text-white">Momos</TabsTrigger>
+              <TabsTrigger value="fries" className="flex-1 rounded-full font-bold text-xs uppercase tracking-widest data-[state='active']:bg-primary data-[state='active']:text-white">Fries</TabsTrigger>
+              <TabsTrigger value="combos" className="flex-1 rounded-full font-bold text-xs uppercase tracking-widest data-[state='active']:bg-primary data-[state='active']:text-white">Meals</TabsTrigger>
             </TabsList>
           </div>
 
@@ -338,7 +337,6 @@ export function Products() {
         </Tabs>
       </div>
 
-      {/* Product Detail Modal */}
       <Dialog open={!!selectedProduct} onOpenChange={() => setSelectedProduct(null)}>
         <DialogContent className="p-0 sm:max-w-[450px] overflow-hidden rounded-2xl border-none shadow-2xl">
           <DialogHeader className="sr-only">
