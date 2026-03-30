@@ -19,11 +19,13 @@ export type CartItem = {
 };
 
 export type PaymentMethod = 'cod' | 'upi';
+export type OrderType = 'delivery' | 'pickup';
 
 export type CustomerInfo = {
   name: string;
   address: string;
   paymentMethod: PaymentMethod;
+  orderType: OrderType;
 };
 
 type CartContextType = {
@@ -48,7 +50,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [customerInfo, setCustomerInfo] = useState<CustomerInfo>({ 
     name: '', 
     address: '',
-    paymentMethod: 'cod'
+    paymentMethod: 'cod',
+    orderType: 'delivery'
   });
   const db = useFirestore();
 
@@ -67,7 +70,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
         setCustomerInfo({
           name: parsed.name || '',
           address: parsed.address || '',
-          paymentMethod: parsed.paymentMethod || 'cod'
+          paymentMethod: parsed.paymentMethod || 'cod',
+          orderType: parsed.orderType || 'delivery'
         });
       } catch (e) {}
     }
@@ -116,10 +120,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
         orderDate: serverTimestamp(),
         customerName: customerInfo.name,
         customerContact: 'Guest',
-        deliveryAddress: customerInfo.address,
+        deliveryAddress: customerInfo.orderType === 'pickup' ? 'STORE PICKUP' : customerInfo.address,
         totalAmount: totalPrice,
         paymentMethod: customerInfo.paymentMethod === 'upi' ? 'UPI' : 'Cash on Delivery',
-        status: 'Pending'
+        status: 'Pending',
+        notes: `Order Type: ${customerInfo.orderType}`
       };
       await setDoc(orderRef, orderData);
       for (const item of cart) {

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useCart } from "@/context/cart-context";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { ShoppingBag, Plus, Minus, Trash2, Send, User, MapPin, Loader2, Package, ChevronRight, CreditCard, Wallet } from "lucide-react";
+import { ShoppingBag, Plus, Minus, Trash2, Send, User, MapPin, Loader2, Package, ChevronRight, CreditCard, Wallet, Store, Truck } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -29,8 +29,12 @@ export function CartSheet() {
 
   const handleWhatsAppOrder = async () => {
     if (cart.length === 0) return;
-    if (!customerInfo.name.trim() || !customerInfo.address.trim()) {
-      toast({ title: "Details Required", description: "Please fill in your name and delivery address.", variant: "destructive" });
+    if (!customerInfo.name.trim()) {
+      toast({ title: "Details Required", description: "Please fill in your name.", variant: "destructive" });
+      return;
+    }
+    if (customerInfo.orderType === 'delivery' && !customerInfo.address.trim()) {
+      toast({ title: "Details Required", description: "Please fill in your delivery address.", variant: "destructive" });
       return;
     }
 
@@ -40,7 +44,8 @@ export function CartSheet() {
     
     const header = "*NEW ORDER FROM MEOW MOMO*%0A";
     const separator = "--------------------------%0A";
-    const customerSection = `*Recipient:* ${customerInfo.name}%0A*Address:* ${customerInfo.address}%0A${orderId ? `*Order ID:* ${orderId}%0A` : ""}`;
+    const typeLabel = customerInfo.orderType === 'pickup' ? "🏪 *STORE PICKUP*" : "🚚 *DELIVERY*";
+    const customerSection = `*Recipient:* ${customerInfo.name}%0A${customerInfo.orderType === 'delivery' ? `*Address:* ${customerInfo.address}%0A` : ""}${orderId ? `*Order ID:* ${orderId}%0A` : ""}*Order Type:* ${typeLabel}%0A`;
     const itemsSection = "%0A*Items Selection:*%0A" + cart.map(item => `- ${item.name} (5 Pieces) x ${item.quantity}: Rs.${item.price * item.quantity}`).join("%0A") + "%0A";
     const paymentText = customerInfo.paymentMethod === 'upi' ? "Pay via UPI" : "Cash on Delivery";
     const summarySection = `%0A*Summary:*%0A*Payment:* ${paymentText}%0A*Total: Rs.${totalPrice}*%0A`;
@@ -140,17 +145,49 @@ export function CartSheet() {
               <>
                 <div className="space-y-4">
                   <h3 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
-                    <User className="w-4 h-4 text-primary" /> Delivery Info
+                    <Truck className="w-4 h-4 text-primary" /> Order Type
+                  </h3>
+                  <RadioGroup value={customerInfo.orderType} onValueChange={(val) => updateCustomerInfo({ orderType: val as any })} className="grid grid-cols-2 gap-3">
+                    <Label 
+                      htmlFor="delivery" 
+                      className={cn(
+                        "flex flex-col items-center justify-center gap-2 rounded-xl border p-4 cursor-pointer transition-all",
+                        customerInfo.orderType === 'delivery' ? 'border-primary bg-primary/5' : 'border-muted/50 bg-white'
+                      )}
+                    >
+                      <RadioGroupItem value="delivery" id="delivery" className="sr-only" />
+                      <Truck className={cn("w-5 h-5", customerInfo.orderType === 'delivery' ? 'text-primary' : 'text-muted-foreground')} /> 
+                      <span className="text-[9px] font-black uppercase tracking-widest">Delivery</span>
+                    </Label>
+                    <Label 
+                      htmlFor="pickup" 
+                      className={cn(
+                        "flex flex-col items-center justify-center gap-2 rounded-xl border p-4 cursor-pointer transition-all",
+                        customerInfo.orderType === 'pickup' ? 'border-primary bg-primary/5' : 'border-muted/50 bg-white'
+                      )}
+                    >
+                      <RadioGroupItem value="pickup" id="pickup" className="sr-only" />
+                      <Store className={cn("w-5 h-5", customerInfo.orderType === 'pickup' ? 'text-primary' : 'text-muted-foreground')} /> 
+                      <span className="text-[9px] font-black uppercase tracking-widest">Store Pickup</span>
+                    </Label>
+                  </RadioGroup>
+                </div>
+
+                <div className="space-y-4">
+                  <h3 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                    <User className="w-4 h-4 text-primary" /> Recipient Details
                   </h3>
                   <div className="grid gap-3">
                     <div className="space-y-1">
                       <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground ml-1">Name</Label>
                       <Input placeholder="Enter your name" value={customerInfo.name} onChange={(e) => updateCustomerInfo({ name: e.target.value })} className="rounded-xl h-11 border-muted/50 text-sm" />
                     </div>
-                    <div className="space-y-1">
-                      <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground ml-1">Address</Label>
-                      <Input placeholder="Full delivery address" value={customerInfo.address} onChange={(e) => updateCustomerInfo({ address: e.target.value })} className="rounded-xl h-11 border-muted/50 text-sm" />
-                    </div>
+                    {customerInfo.orderType === 'delivery' && (
+                      <div className="space-y-1 animate-in fade-in slide-in-from-top-2 duration-300">
+                        <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground ml-1">Delivery Address</Label>
+                        <Input placeholder="Full delivery address" value={customerInfo.address} onChange={(e) => updateCustomerInfo({ address: e.target.value })} className="rounded-xl h-11 border-muted/50 text-sm" />
+                      </div>
+                    )}
                   </div>
                 </div>
 
