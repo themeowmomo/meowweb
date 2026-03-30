@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/accordion";
 import { placeholderImages as PlaceHolderImages } from "@/app/lib/placeholder-images.json";
 
-const FALLBACK_IMAGE = PlaceHolderImages.find(img => img.id === "brand-logo")?.imageUrl || "https://res.cloudinary.com/di4onfrel/image/upload/v1774167784/Untitled_design_2_xsocq3.svg";
+const BRAND_LOGO = PlaceHolderImages.find(img => img.id === "brand-logo")?.imageUrl || "";
 
 const MENU_DATA = {
   momos: [
@@ -187,7 +187,7 @@ export function Products() {
       name: item.name, 
       price: item.price, 
       variant: item.variant,
-      image: PlaceHolderImages.find(img => img.id === item.imageId)?.imageUrl || FALLBACK_IMAGE
+      image: PlaceHolderImages.find(img => img.id === item.imageId)?.imageUrl || BRAND_LOGO
     });
     toast({ title: "Added to Order", description: `${item.name} - ₹${item.price}` });
   };
@@ -208,7 +208,7 @@ export function Products() {
     return (
       <Button 
         size="sm" 
-        className="h-8 px-4 font-bold rounded-full bg-white text-primary border-2 border-primary hover:bg-primary hover:text-white transition-all shadow-md uppercase text-xs"
+        className="h-8 px-4 font-bold rounded-full bg-white text-primary border-2 border-primary hover:bg-primary hover:text-white transition-all shadow-md uppercase text-[10px]"
         onClick={(e) => { e.stopPropagation(); handleAddToCart(item); }}
       >
         Add
@@ -217,23 +217,23 @@ export function Products() {
   };
 
   const SubCategoryCard = ({ subcategory, item }: { subcategory: string; item: any }) => {
-    const imageUrl = PlaceHolderImages.find(img => img.id === item.imageId)?.imageUrl || FALLBACK_IMAGE;
+    const imageUrl = PlaceHolderImages.find(img => img.id === item.imageId)?.imageUrl || BRAND_LOGO;
     return (
         <div className="flex flex-col">
-            <h4 className="font-bold text-sm text-center mb-2 text-foreground/80">{subcategory}</h4>
+            <h4 className="font-bold text-[10px] text-center mb-1 text-muted-foreground uppercase tracking-widest">{subcategory}</h4>
             <div 
                 className="relative w-full aspect-square rounded-2xl overflow-hidden bg-muted shadow-inner cursor-pointer group"
                 onClick={() => setSelectedProduct(item)}
             >
                 <Image 
-                    src={imageUrl || FALLBACK_IMAGE} 
+                    src={imageUrl || BRAND_LOGO} 
                     alt={item.name} 
                     fill 
                     className="object-cover group-hover:scale-110 transition-transform duration-500"
                 />
             </div>
-            <div className="flex items-center justify-between mt-3">
-                <p className="text-lg font-black text-primary">₹{item.price}</p>
+            <div className="flex items-center justify-between mt-2 px-0.5">
+                <p className="text-sm font-black text-primary">₹{item.price}</p>
                 <QuantityControl item={item} />
             </div>
         </div>
@@ -241,7 +241,7 @@ export function Products() {
   };
 
   const ProductCard = ({ item }: { item: any }) => {
-    const imageUrl = PlaceHolderImages.find(img => img.id === item.imageId)?.imageUrl || FALLBACK_IMAGE;
+    const imageUrl = PlaceHolderImages.find(img => img.id === item.imageId)?.imageUrl || BRAND_LOGO;
     
     return (
       <Card 
@@ -266,11 +266,10 @@ export function Products() {
           </div>
           <div className="relative h-24 w-24 shrink-0 rounded-xl overflow-hidden shadow-inner bg-muted">
             <Image 
-              src={imageUrl || FALLBACK_IMAGE} 
+              src={imageUrl || BRAND_LOGO} 
               alt={item.name} 
               fill 
               className="object-cover group-hover:scale-110 transition-transform duration-500" 
-              data-ai-hint="momo dish"
             />
             <div className="absolute bottom-1 right-1">
               <div className="bg-white/90 backdrop-blur-sm p-1 rounded-md">
@@ -304,7 +303,7 @@ export function Products() {
                   <Card key={cat.category} className="overflow-hidden rounded-2xl bg-white shadow-sm">
                     <AccordionItem value={cat.category} className="border-none">
                         <AccordionTrigger className="p-4 hover:no-underline">
-                            <h3 className="text-base font-black uppercase tracking-wider text-foreground/90">{cat.category}</h3>
+                            <h3 className="text-sm font-black uppercase tracking-wider text-foreground/90">{cat.category}</h3>
                         </AccordionTrigger>
                         <AccordionContent className="p-4 pt-0">
                             <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-6">
@@ -338,7 +337,7 @@ export function Products() {
       </div>
 
       <Dialog open={!!selectedProduct} onOpenChange={() => setSelectedProduct(null)}>
-        <DialogContent className="p-0 sm:max-w-[450px] overflow-hidden rounded-2xl border-none shadow-2xl">
+        <DialogContent className="p-0 sm:max-w-[450px] overflow-hidden rounded-3xl border-none shadow-2xl">
           <DialogHeader className="sr-only">
             <DialogTitle>{selectedProduct?.name}</DialogTitle>
             <DialogDescription>{selectedProduct?.description}</DialogDescription>
@@ -347,7 +346,7 @@ export function Products() {
             <div className="flex flex-col">
               <div className="relative h-64 w-full">
                 <Image 
-                  src={PlaceHolderImages.find(img => img.id === selectedProduct.imageId)?.imageUrl || FALLBACK_IMAGE} 
+                  src={PlaceHolderImages.find(img => img.id === selectedProduct.imageId)?.imageUrl || BRAND_LOGO} 
                   alt={selectedProduct.name} 
                   fill 
                   className="object-cover"
@@ -362,8 +361,8 @@ export function Products() {
                 </Button>
                 <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/60 to-transparent" />
                 <div className="absolute bottom-6 left-6 text-white">
-                  <Badge className="bg-primary text-white mb-2 uppercase tracking-widest text-[9px]">Freshly Made</Badge>
-                  <h4 className="text-2xl font-black uppercase tracking-tight">{selectedProduct.name}</h4>
+                  <Badge className="bg-primary text-white mb-2 uppercase tracking-widest text-[9px] font-black">Freshly Prepared</Badge>
+                  <h4 className="text-2xl font-black uppercase tracking-tight leading-none">{selectedProduct.name}</h4>
                 </div>
               </div>
               <div className="p-8 space-y-6 bg-white">
@@ -372,20 +371,20 @@ export function Products() {
                     <span className="h-5 w-5 flex items-center justify-center border border-green-600 rounded-sm">
                       <span className="h-2.5 w-2.5 rounded-full bg-green-600" />
                     </span>
-                    <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">100% Pure Veg</span>
+                    <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">100% Pure Veg</span>
                   </div>
                   <span className="text-2xl font-black text-primary">₹{selectedProduct.price}</span>
                 </div>
                 <div className="space-y-2">
-                  <h5 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">About this Dish</h5>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    {selectedProduct.description} This dish is prepared with the finest ingredients sourced directly from local vendors in Malad East. Our tech-driven supply chain ensures maximum freshness.
+                  <h5 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">About this Dish</h5>
+                  <p className="text-sm text-muted-foreground leading-relaxed font-medium">
+                    {selectedProduct.description} Prepared with premium ingredients and our signature spice blend.
                   </p>
                 </div>
                 <div className="pt-4 border-t flex items-center justify-between">
                   <div className="flex flex-col">
-                    <span className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">Portion Size</span>
-                    <span className="text-sm font-bold text-foreground">5 Pieces</span>
+                    <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Portion Size</span>
+                    <span className="text-sm font-black text-foreground">5 Pieces</span>
                   </div>
                   <QuantityControl item={selectedProduct} />
                 </div>
