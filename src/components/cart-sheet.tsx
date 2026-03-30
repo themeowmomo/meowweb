@@ -88,13 +88,13 @@ export function CartSheet() {
         onOpenAutoFocus={(e) => e.preventDefault()}
         className="w-full sm:max-w-md flex flex-col p-0 border-none rounded-t-[2.5rem] sm:rounded-l-[2.5rem] overflow-hidden shadow-2xl"
       >
-        <div className="px-6 py-4 border-b bg-white">
+        <div className="px-5 py-4 border-b bg-white">
           <SheetHeader className="text-left">
             <div className="flex items-center gap-3">
-              <div className="bg-primary/10 p-2 rounded-xl"><ShoppingBag className="w-6 h-6 text-primary" /></div>
+              <div className="bg-primary/10 p-2 rounded-xl"><ShoppingBag className="w-5 h-5 text-primary" /></div>
               <div>
-                <SheetTitle className="text-xl font-black tracking-tighter text-foreground uppercase">Your Basket</SheetTitle>
-                <SheetDescription className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Checkout summary</SheetDescription>
+                <SheetTitle className="text-lg font-black tracking-tighter text-foreground uppercase">Your Basket</SheetTitle>
+                <SheetDescription className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">Checkout summary</SheetDescription>
               </div>
             </div>
           </SheetHeader>
@@ -105,7 +105,7 @@ export function CartSheet() {
             <div className="space-y-4">
               <div className="flex justify-between items-center">
                 <h3 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Order Items</h3>
-                <Button variant="ghost" size="sm" onClick={clearCart} className="text-[9px] text-destructive uppercase font-black h-7 px-2">Clear</Button>
+                <Button variant="ghost" size="sm" onClick={clearCart} className="text-[9px] text-destructive uppercase font-black h-7 px-2">Clear All</Button>
               </div>
               <div className="space-y-3">
                 {cart.length === 0 ? (
@@ -119,7 +119,13 @@ export function CartSheet() {
                   cart.map((item) => (
                     <div key={item.id} className="flex gap-4 bg-muted/20 p-3 rounded-2xl">
                       <div className="relative h-14 w-14 shrink-0 rounded-xl overflow-hidden bg-white shadow-inner">
-                        <Image src={item.image || DEFAULT_IMAGE} alt={item.name} fill className="object-cover" />
+                        <Image 
+                          src={item.image || DEFAULT_IMAGE} 
+                          alt={item.name} 
+                          fill 
+                          className="object-cover" 
+                          onError={(e) => { (e.target as any).src = DEFAULT_IMAGE }} 
+                        />
                       </div>
                       <div className="flex-grow flex flex-col justify-between py-0.5">
                         <div className="flex justify-between items-start">
@@ -127,11 +133,11 @@ export function CartSheet() {
                           <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-destructive h-5 w-5 -mt-1" onClick={() => removeFromCart(item.id, item.variant)}><Trash2 className="h-3.5 w-3.5" /></Button>
                         </div>
                         <div className="flex items-center justify-between">
-                          <p className="text-sm font-black text-primary">₹{item.price * item.quantity}</p>
-                          <div className="flex items-center gap-2 bg-white rounded-lg border px-1.5 py-0.5">
-                            <button className="text-primary hover:bg-primary/5 rounded h-5 w-5 flex items-center justify-center" onClick={() => updateQuantity(item.id, item.quantity - 1, item.variant)}><Minus className="h-3 w-3" /></button>
-                            <span className="text-xs font-black w-4 text-center">{item.quantity}</span>
-                            <button className="text-primary hover:bg-primary/5 rounded h-5 w-5 flex items-center justify-center" onClick={() => updateQuantity(item.id, item.quantity + 1, item.variant)}><Plus className="h-3 w-3" /></button>
+                          <p className="text-base font-black text-primary">₹{item.price * item.quantity}</p>
+                          <div className="flex items-center gap-2 bg-white rounded-lg border px-1.5 py-0.5 shadow-sm">
+                            <button className="text-primary hover:bg-primary/5 rounded h-6 w-6 flex items-center justify-center transition-colors" onClick={() => updateQuantity(item.id, item.quantity - 1, item.variant)}><Minus className="h-3.5 w-3.5" /></button>
+                            <span className="text-sm font-black w-5 text-center">{item.quantity}</span>
+                            <button className="text-primary hover:bg-primary/5 rounded h-6 w-6 flex items-center justify-center transition-colors" onClick={() => updateQuantity(item.id, item.quantity + 1, item.variant)}><Plus className="h-3.5 w-3.5" /></button>
                           </div>
                         </div>
                       </div>
@@ -149,17 +155,6 @@ export function CartSheet() {
                   </h3>
                   <RadioGroup value={customerInfo.orderType} onValueChange={(val) => updateCustomerInfo({ orderType: val as any })} className="grid grid-cols-2 gap-3">
                     <Label 
-                      htmlFor="delivery" 
-                      className={cn(
-                        "flex flex-col items-center justify-center gap-2 rounded-xl border p-4 cursor-pointer transition-all",
-                        customerInfo.orderType === 'delivery' ? 'border-primary bg-primary/5' : 'border-muted/50 bg-white'
-                      )}
-                    >
-                      <RadioGroupItem value="delivery" id="delivery" className="sr-only" />
-                      <Truck className={cn("w-5 h-5", customerInfo.orderType === 'delivery' ? 'text-primary' : 'text-muted-foreground')} /> 
-                      <span className="text-[9px] font-black uppercase tracking-widest">Delivery</span>
-                    </Label>
-                    <Label 
                       htmlFor="pickup" 
                       className={cn(
                         "flex flex-col items-center justify-center gap-2 rounded-xl border p-4 cursor-pointer transition-all",
@@ -170,6 +165,17 @@ export function CartSheet() {
                       <Store className={cn("w-5 h-5", customerInfo.orderType === 'pickup' ? 'text-primary' : 'text-muted-foreground')} /> 
                       <span className="text-[9px] font-black uppercase tracking-widest">Store Pickup</span>
                     </Label>
+                    <Label 
+                      htmlFor="delivery" 
+                      className={cn(
+                        "flex flex-col items-center justify-center gap-2 rounded-xl border p-4 cursor-pointer transition-all",
+                        customerInfo.orderType === 'delivery' ? 'border-primary bg-primary/5' : 'border-muted/50 bg-white'
+                      )}
+                    >
+                      <RadioGroupItem value="delivery" id="delivery" className="sr-only" />
+                      <Truck className={cn("w-5 h-5", customerInfo.orderType === 'delivery' ? 'text-primary' : 'text-muted-foreground')} /> 
+                      <span className="text-[9px] font-black uppercase tracking-widest">Delivery</span>
+                    </Label>
                   </RadioGroup>
                 </div>
 
@@ -179,13 +185,13 @@ export function CartSheet() {
                   </h3>
                   <div className="grid gap-3">
                     <div className="space-y-1">
-                      <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground ml-1">Name</Label>
-                      <Input placeholder="Enter your name" value={customerInfo.name} onChange={(e) => updateCustomerInfo({ name: e.target.value })} className="rounded-xl h-11 border-muted/50 text-sm" />
+                      <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground ml-1">Your Name</Label>
+                      <Input placeholder="Enter your name" value={customerInfo.name} onChange={(e) => updateCustomerInfo({ name: e.target.value })} className="rounded-xl h-11 border-muted/50 text-base" />
                     </div>
                     {customerInfo.orderType === 'delivery' && (
                       <div className="space-y-1 animate-in fade-in slide-in-from-top-2 duration-300">
                         <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground ml-1">Delivery Address</Label>
-                        <Input placeholder="Full delivery address" value={customerInfo.address} onChange={(e) => updateCustomerInfo({ address: e.target.value })} className="rounded-xl h-11 border-muted/50 text-sm" />
+                        <Input placeholder="Full delivery address" value={customerInfo.address} onChange={(e) => updateCustomerInfo({ address: e.target.value })} className="rounded-xl h-11 border-muted/50 text-base" />
                       </div>
                     )}
                   </div>
@@ -193,7 +199,7 @@ export function CartSheet() {
 
                 <div className="space-y-4 pb-4">
                   <h3 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
-                    <CreditCard className="w-4 h-4 text-primary" /> Payment
+                    <CreditCard className="w-4 h-4 text-primary" /> Payment Method
                   </h3>
                   <RadioGroup value={customerInfo.paymentMethod} onValueChange={(val) => updateCustomerInfo({ paymentMethod: val as any })} className="grid grid-cols-2 gap-3">
                     <Label 
@@ -226,7 +232,7 @@ export function CartSheet() {
         </ScrollArea>
 
         {cart.length > 0 && (
-          <div className="p-6 bg-white border-t">
+          <div className="p-5 bg-white border-t">
             <div className="flex justify-between items-center mb-4 px-1">
               <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Total Payable</span>
               <span className="text-xl font-black text-primary tracking-tighter">Rs. {totalPrice}</span>
@@ -239,7 +245,6 @@ export function CartSheet() {
                 Continue Shopping
               </Button>
             </div>
-            <p className="text-[8px] text-center text-muted-foreground font-black uppercase tracking-widest mt-4 opacity-50">Inclusive of all taxes</p>
           </div>
         )}
       </SheetContent>

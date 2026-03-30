@@ -26,7 +26,7 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion";
+} from "@/components/accordion";
 import { placeholderImages as PlaceHolderImages } from "@/app/lib/placeholder-images.json";
 
 const BRAND_LOGO = PlaceHolderImages.find(img => img.id === "brand-logo")?.imageUrl || "";
@@ -230,6 +230,7 @@ export function Products() {
                     alt={item.name} 
                     fill 
                     className="object-cover group-hover:scale-110 transition-transform duration-500"
+                    onError={(e) => { (e.target as any).src = BRAND_LOGO }}
                 />
             </div>
             <div className="flex items-center justify-between mt-2 px-0.5">
@@ -254,13 +255,13 @@ export function Products() {
               <span className="h-4 w-4 flex items-center justify-center border border-green-600 rounded-sm">
                 <span className="h-2 w-2 rounded-full bg-green-600" />
               </span>
-              <h5 className="font-bold text-sm tracking-tight text-foreground uppercase">{item.name}</h5>
+              <h5 className="font-bold text-base tracking-tight text-foreground uppercase">{item.name}</h5>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-lg font-black text-primary">₹{item.price}</span>
+              <span className="text-xl font-black text-primary">₹{item.price}</span>
               <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">{item.variant}</span>
             </div>
-            <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+            <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
               {item.description}
             </p>
           </div>
@@ -270,6 +271,7 @@ export function Products() {
               alt={item.name} 
               fill 
               className="object-cover group-hover:scale-110 transition-transform duration-500" 
+              onError={(e) => { (e.target as any).src = BRAND_LOGO }}
             />
             <div className="absolute bottom-1 right-1">
               <div className="bg-white/90 backdrop-blur-sm p-1 rounded-md">
@@ -303,7 +305,7 @@ export function Products() {
                   <Card key={cat.category} className="overflow-hidden rounded-2xl bg-white shadow-sm">
                     <AccordionItem value={cat.category} className="border-none">
                         <AccordionTrigger className="p-4 hover:no-underline">
-                            <h3 className="text-sm font-black uppercase tracking-wider text-foreground/90">{cat.category}</h3>
+                            <h3 className="text-base font-black uppercase tracking-wider text-foreground/90">{cat.category}</h3>
                         </AccordionTrigger>
                         <AccordionContent className="p-4 pt-0">
                             <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-6">
@@ -350,6 +352,7 @@ export function Products() {
                   alt={selectedProduct.name} 
                   fill 
                   className="object-cover"
+                  onError={(e) => { (e.target as any).src = BRAND_LOGO }}
                 />
                 <Button 
                   size="icon" 
@@ -371,7 +374,7 @@ export function Products() {
                     <span className="h-5 w-5 flex items-center justify-center border border-green-600 rounded-sm">
                       <span className="h-2.5 w-2.5 rounded-full bg-green-600" />
                     </span>
-                    <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">100% Pure Veg</span>
+                    <span className="text-sm font-black text-muted-foreground uppercase tracking-widest">100% Pure Veg</span>
                   </div>
                   <span className="text-2xl font-black text-primary">₹{selectedProduct.price}</span>
                 </div>
@@ -384,7 +387,7 @@ export function Products() {
                 <div className="pt-4 border-t flex items-center justify-between">
                   <div className="flex flex-col">
                     <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Portion Size</span>
-                    <span className="text-sm font-black text-foreground">5 Pieces</span>
+                    <span className="text-base font-black text-foreground">5 Pieces</span>
                   </div>
                   <QuantityControl item={selectedProduct} />
                 </div>

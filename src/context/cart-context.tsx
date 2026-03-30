@@ -51,7 +51,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     name: '', 
     address: '',
     paymentMethod: 'cod',
-    orderType: 'delivery'
+    orderType: 'pickup' // Changed default to 'pickup'
   });
   const db = useFirestore();
 
@@ -71,7 +71,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
           name: parsed.name || '',
           address: parsed.address || '',
           paymentMethod: parsed.paymentMethod || 'cod',
-          orderType: parsed.orderType || 'delivery'
+          orderType: parsed.orderType || 'pickup'
         });
       } catch (e) {}
     }
@@ -88,7 +88,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         updated[idx].quantity += 1;
         return updated;
       }
-      return [...prev, { ...newItem, quantity: 1 }];
+      return [...prev, { ...newItem, quantity: 1, variant: '5 Pieces' }]; // Ensure 5 Pieces terminology
     });
   };
 
@@ -128,9 +128,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
       };
       await setDoc(orderRef, orderData);
       for (const item of cart) {
-        const itemRef = doc(db, 'restaurants', RESTAURANT_ID, 'orders', orderId, 'orderItems', `${item.id}-${item.variant || 'default'}`);
+        const itemRef = doc(db, 'restaurants', RESTAURANT_ID, 'orders', orderId, 'orderItems', `${item.id}-${item.variant || '5-pieces'}`);
         await setDoc(itemRef, {
-          id: `${item.id}-${item.variant || 'default'}`,
+          id: `${item.id}-${item.variant || '5-pieces'}`,
           orderId: orderId,
           menuItemId: item.id,
           quantity: item.quantity,
