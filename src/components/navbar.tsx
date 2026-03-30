@@ -1,22 +1,21 @@
 "use client";
 
 import Link from "next/link";
-import { Menu as MenuIcon, Phone, ShoppingBag, X, Instagram, Facebook } from "lucide-react";
+import { Menu as MenuIcon, Phone, X, Instagram, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription, SheetClose } from "@/components/ui/sheet";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { useCart } from "@/context/cart-context";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
-  const { totalItems } = useCart();
 
   const BRAND_LOGO_URL = 'https://res.cloudinary.com/di4onfrel/image/upload/v1774167784/Untitled_design_2_xsocq3.svg?v=4';
+  const INSTAGRAM_URL = "https://www.instagram.com/meowmomo43/";
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -141,8 +140,11 @@ export function Navbar() {
                 <div className="space-y-4">
                   <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Contact & Social</p>
                   <div className="flex flex-col gap-3">
-                    <a href="tel:+918850859140" className="flex items-center gap-3 text-sm font-bold text-foreground hover:text-primary">
+                    <a href="tel:+918850859140" className="flex items-center gap-3 text-sm font-bold text-foreground hover:text-primary transition-colors">
                       <Phone className="w-4 h-4 text-primary" /> +91 88508 59140
+                    </a>
+                    <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-sm font-bold text-foreground hover:text-primary transition-colors">
+                      <Instagram className="w-4 h-4 text-primary" /> @meowmomo43
                     </a>
                   </div>
                 </div>

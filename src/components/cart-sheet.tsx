@@ -4,11 +4,10 @@ import { useState, useEffect } from "react";
 import { useCart } from "@/context/cart-context";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { ShoppingBag, Plus, Minus, Trash2, Send, User, MapPin, Wallet, Loader2, Package, ChevronRight, CreditCard } from "lucide-react";
+import { ShoppingBag, Plus, Minus, Trash2, Send, User, MapPin, Loader2, Package, ChevronRight, CreditCard, Wallet } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/hooks/use-toast";
 import Image from "next/image";
@@ -89,7 +88,7 @@ export function CartSheet() {
             <div className="flex items-center gap-3">
               <div className="bg-primary/10 p-2 rounded-xl"><ShoppingBag className="w-6 h-6 text-primary" /></div>
               <div>
-                <SheetTitle className="text-xl font-black tracking-tighter text-foreground">Your Basket</SheetTitle>
+                <SheetTitle className="text-xl font-black tracking-tighter text-foreground uppercase">Your Basket</SheetTitle>
                 <SheetDescription className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Checkout summary</SheetDescription>
               </div>
             </div>
