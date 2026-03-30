@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -26,7 +27,7 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/accordion";
+} from "@/components/ui/accordion";
 import { placeholderImages as PlaceHolderImages } from "@/app/lib/placeholder-images.json";
 
 const BRAND_LOGO = PlaceHolderImages.find(img => img.id === "brand-logo")?.imageUrl || "";
@@ -93,12 +94,12 @@ const MENU_DATA = {
     {
       category: "Meal Combos",
       items: [
-        { id: "ml-classic-steam", name: "Classic Steam Meal", price: 110, description: "Classic Veg Steam Momos, Half Masala Fries, 250ml Soft Drink. Light, healthy & budget-friendly.", imageId: "combo-classic-steam", variant: "Combo" },
-        { id: "ml-classic-fried", name: "Classic Veg Fried Meal", price: 120, description: "Classic Veg Fried Momos, Half Masala Fries, 250ml Soft Drink. Crispy and more flavorful.", imageId: "combo-classic-fried", variant: "Combo" },
-        { id: "ml-cheese", name: "Cheese Meal", price: 140, description: "Cheese Fried Momos, Half Cheese Fries, 250ml Soft Drink. Rich, cheesy & filling.", imageId: "combo-cheese", variant: "Combo" },
-        { id: "ml-peri-peri", name: "Peri Peri Meal", price: 140, description: "Peri Peri Fried Momos, Half Peri Peri Fries, 250ml Soft Drink. Spicy & best for masala lovers.", imageId: "combo-peri-peri", variant: "Combo" },
-        { id: "ml-paneer-steam", name: "Paneer Steam Meal", price: 120, description: "Paneer Steam Momos, Half Masala Fries, 250ml Soft Drink. Soft paneer filling + light meal.", imageId: "combo-paneer-steam", variant: "Combo" },
-        { id: "ml-paneer-fried", name: "Paneer Fried Meal", price: 130, description: "Paneer Fried Momos, Half Masala Fries, 250ml Soft Drink. Crispy outside, juicy paneer inside.", imageId: "combo-paneer-fried", variant: "Combo" }
+        { id: "ml-classic-steam", name: "Classic Steam Meal", price: 110, description: "Classic Veg Steam Momos, Half Masala Fries, 250ml Soft Drink. Light, healthy & budget-friendly.", imageId: "combo-classic-steam", variant: "5 Pieces" },
+        { id: "ml-classic-fried", name: "Classic Veg Fried Meal", price: 120, description: "Classic Veg Fried Momos, Half Masala Fries, 250ml Soft Drink. Crispy and more flavorful.", imageId: "combo-classic-fried", variant: "5 Pieces" },
+        { id: "ml-cheese", name: "Cheese Meal", price: 140, description: "Cheese Fried Momos, Half Cheese Fries, 250ml Soft Drink. Rich, cheesy & filling.", imageId: "combo-cheese", variant: "5 Pieces" },
+        { id: "ml-peri-peri", name: "Peri Peri Meal", price: 140, description: "Peri Peri Fried Momos, Half Peri Peri Fries, 250ml Soft Drink. Spicy & best for masala lovers.", imageId: "combo-peri-peri", variant: "5 Pieces" },
+        { id: "ml-paneer-steam", name: "Paneer Steam Meal", price: 120, description: "Paneer Steam Momos, Half Masala Fries, 250ml Soft Drink. Soft paneer filling + light meal.", imageId: "combo-paneer-steam", variant: "5 Pieces" },
+        { id: "ml-paneer-fried", name: "Paneer Fried Meal", price: 130, description: "Paneer Fried Momos, Half Masala Fries, 250ml Soft Drink. Crispy outside, juicy paneer inside.", imageId: "combo-paneer-fried", variant: "5 Pieces" }
       ]
     }
   ]
@@ -186,7 +187,7 @@ export function Products() {
       id: item.id, 
       name: item.name, 
       price: item.price, 
-      variant: item.variant,
+      variant: "5 Pieces",
       image: PlaceHolderImages.find(img => img.id === item.imageId)?.imageUrl || BRAND_LOGO
     });
     toast({ title: "Added to Order", description: `${item.name} - ₹${item.price}` });
@@ -199,9 +200,9 @@ export function Products() {
     if (quantity > 0) {
       return (
         <div className="flex items-center gap-1 bg-primary text-white rounded-full p-0.5 shadow-lg shrink-0">
-          <Button size="icon" variant="ghost" className="h-7 w-7 rounded-full hover:bg-white/20 text-white p-0" onClick={(e) => { e.stopPropagation(); updateQuantity(item.id, quantity - 1, item.variant); }}><Minus className="h-4 w-4" /></Button>
+          <Button size="icon" variant="ghost" className="h-7 w-7 rounded-full hover:bg-white/20 text-white p-0" onClick={(e) => { e.stopPropagation(); updateQuantity(item.id, quantity - 1, "5 Pieces"); }}><Minus className="h-4 w-4" /></Button>
           <span className="text-sm font-bold w-5 text-center">{quantity}</span>
-          <Button size="icon" variant="ghost" className="h-7 w-7 rounded-full hover:bg-white/20 text-white p-0" onClick={(e) => { e.stopPropagation(); updateQuantity(item.id, quantity + 1, item.variant); }}><Plus className="h-4 w-4" /></Button>
+          <Button size="icon" variant="ghost" className="h-7 w-7 rounded-full hover:bg-white/20 text-white p-0" onClick={(e) => { e.stopPropagation(); updateQuantity(item.id, quantity + 1, "5 Pieces"); }}><Plus className="h-4 w-4" /></Button>
         </div>
       );
     }
@@ -259,7 +260,7 @@ export function Products() {
             </div>
             <div className="flex items-center gap-2">
               <span className="text-xl font-black text-primary">₹{item.price}</span>
-              <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">{item.variant}</span>
+              <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">5 Pieces</span>
             </div>
             <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
               {item.description}

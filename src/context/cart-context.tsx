@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
@@ -51,7 +52,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     name: '', 
     address: '',
     paymentMethod: 'cod',
-    orderType: 'pickup' // Changed default to 'pickup'
+    orderType: 'pickup'
   });
   const db = useFirestore();
 
@@ -88,7 +89,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         updated[idx].quantity += 1;
         return updated;
       }
-      return [...prev, { ...newItem, quantity: 1, variant: '5 Pieces' }]; // Ensure 5 Pieces terminology
+      return [...prev, { ...newItem, quantity: 1, variant: '5 Pieces' }];
     });
   };
 
